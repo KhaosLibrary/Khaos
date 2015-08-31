@@ -1,0 +1,40 @@
+{
+    "name": "khaos/khaos",
+    "type": "library",
+    "description": "The Khaos PHP Library",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.5",
+        "symfony/event-dispatcher": "^2.7",
+        "aura/di": "^2.2"
+    },
+    "replace": {
+        "khaos/console": "self.version",
+        "khaos/fsm": "self.version"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.7.*",
+        "phpspec/phpspec": "~2.0",
+        "squizlabs/php_codesniffer": "^2.3",
+        "pdepend/pdepend": "^2.1"
+    },
+    "authors": [
+        {
+            "name": "David Cole",
+            "email": "dc@sourcetutor.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+          "Khaos\\Console\\": "src/Khaos/Console/src/",
+          "Khaos\\FSM\\": "src/Khaos/FSM/src/"
+        }
+    },
+    "scripts": {
+        "test": "composer unit && composer spec",
+        "unit": "vendor/bin/phpunit",
+        "spec": "vendor/bin/phpspec --ansi run",
+        "cs": "vendor/bin/phpcs --standard=PSR2 --ignore=\"*/spec/*,*/tests/*\" ./src",
+        "cbf": "vendor/bin/phpcbf --standard=PSR2 --ignore=\"*/spec/*,*/tests/*\" ./src"
+    }
+}

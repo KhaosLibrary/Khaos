@@ -1,0 +1,4 @@
+suites:
+    khaos_console:
+        namespace: Khaos\Console
+        psr4_prefix: Khaos\Console

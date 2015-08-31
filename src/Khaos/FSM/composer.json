@@ -1,0 +1,25 @@
+{
+  "name": "khaos/fsm",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": ">=5.5"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.7.*",
+    "phpspec/phpspec": "~2.0"
+  },
+  "authors": [
+    {
+      "name": "David Cole",
+      "email": "dc@sourcetutor.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": { "Khaos\\FSM\\": "src/" }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit && vendor/bin/phpspec run",
+    "cs": "phpcs --standard=PSR1 --ignore=*/vendor/*"
+  }
+}

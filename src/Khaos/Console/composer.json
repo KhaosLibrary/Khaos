@@ -1,0 +1,26 @@
+{
+  "name": "khaos/console",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": ">=5.5",
+    "symfony/event-dispatcher": "^2.7",
+    "aura/di": "^2.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.7.*",
+    "phpspec/phpspec": "~2.0"
+  },
+  "authors": [
+    {
+      "name": "David Cole",
+      "email": "dc@sourcetutor.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": { "Khaos\\Console\\": "src/" }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit && vendor/bin/phpspec run"
+  }
+}
