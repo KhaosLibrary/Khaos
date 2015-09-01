@@ -5,7 +5,8 @@
   "require": {
     "php": ">=5.5",
     "symfony/event-dispatcher": "^2.7",
-    "aura/di": "^2.2"
+    "aura/di": "^2.2",
+    "khaos/fsm": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": "4.7.*",

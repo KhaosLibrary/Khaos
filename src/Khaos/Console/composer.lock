@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1c7a9389db2c49d1a3f7f6bef155f63a",
+    "hash": "469b1e85f0669eb918bedd17b27a16fc",
     "packages": [
         {
             "name": "aura/di",
@@ -54,6 +54,45 @@
                 "di container"
             ],
             "time": "2015-05-31 20:45:07"
+        },
+        {
+            "name": "khaos/fsm",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/KhaosLibrary/FSM.git",
+                "reference": "4cf918a30ae86f6b67504325710358dca1299e2a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/KhaosLibrary/FSM/zipball/4cf918a30ae86f6b67504325710358dca1299e2a",
+                "reference": "4cf918a30ae86f6b67504325710358dca1299e2a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "phpspec/phpspec": "~2.0",
+                "phpunit/phpunit": "4.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Khaos\\FSM\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David Cole",
+                    "email": "dc@sourcetutor.com"
+                }
+            ],
+            "time": "2015-08-31 17:28:23"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -1336,7 +1375,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "khaos/fsm": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
