@@ -31,7 +31,7 @@
         }
     },
     "scripts": {
-        "test": "composer unit && composer spec",
+        "test": "vendor/bin/phpunit --testdox && vendor/bin/phpspec run -fpretty -v --ansi",
         "unit": "vendor/bin/phpunit",
         "spec": "vendor/bin/phpspec --ansi run",
         "cs": "vendor/bin/phpcs --standard=PSR2 --ignore=\"*/spec/*,*/tests/*\" ./src",
