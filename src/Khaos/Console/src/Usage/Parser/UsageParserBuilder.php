@@ -11,7 +11,6 @@ use Khaos\Console\Usage\Parser\Transition\LoopTransition;
 use Khaos\Console\Usage\Parser\Transition\OptionTransition;
 use Khaos\Console\Usage\Parser\Transition\ShortcutTransition;
 use Khaos\Console\Usage\Scanner\Scanner;
-use Khaos\Console\Usage\Scanner\LookAheadScanner;
 use Khaos\Console\Usage\Scanner\Token;
 use Khaos\FSM\Definition;
 use Khaos\FSM\State;

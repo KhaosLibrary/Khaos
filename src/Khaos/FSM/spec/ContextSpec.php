@@ -3,6 +3,7 @@
 namespace spec\Khaos\FSM;
 
 use Khaos\FSM\Context;
+use Khaos\FSM\DefaultState;
 use Khaos\FSM\State;
 use Khaos\FSM\Stateful;
 use PhpSpec\ObjectBehavior;
@@ -20,7 +21,11 @@ class ContextSpec extends ObjectBehavior
         $this->shouldHaveType(Stateful::class);
     }
 
-    function it_holds_reference_to_set_state(State $state)
+
+    /**
+     * @param \Khaos\FSM\State $state
+     */
+    function it_holds_reference_to_set_state($state)
     {
         $this->setCurrentState($state);
         $this->getCurrentState()->shouldBe($state);

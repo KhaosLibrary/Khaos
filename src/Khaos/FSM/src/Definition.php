@@ -57,7 +57,7 @@ class Definition implements StateVisitorClient
     public function addState($state, $type = State::TYPE_NORMAL)
     {
         if (!($state instanceof State)) {
-            $state = new State($state, $type);
+            $state = new DefaultState($state, $type);
         }
 
         $label = (string) $state;
