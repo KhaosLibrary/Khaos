@@ -2,40 +2,11 @@
 
 namespace Khaos\FSM;
 
-class State implements StateVisitorClient
+interface State extends StateVisitorClient
 {
     const TYPE_INITIAL  = 'initial';
     const TYPE_NORMAL   = 'normal';
     const TYPE_TERMINAL = 'terminal';
-
-    /**
-     * @var string
-     */
-    private $label;
-
-    /**
-     * @var string
-     */
-    private $type;
-
-    /**
-     * Transitions
-     *
-     * @var Transition[]
-     */
-    private $transitions = [];
-
-    /**
-     * State
-     *
-     * @param string $label
-     * @param string $type
-     */
-    public function __construct($label, $type = self::TYPE_NORMAL)
-    {
-        $this->label = $label;
-        $this->type  = $type;
-    }
 
     /**
      * Add Transition
@@ -52,14 +23,7 @@ class State implements StateVisitorClient
      *
      * @return void
      */
-    public function addTransition($transition, State $to = null, $guard = null, $action = null)
-    {
-        if (!($transition instanceof Transition)) {
-            $transition = new DefaultTransition($transition, $to, $guard, $action);
-        }
-
-        $this->transitions[] = $transition;
-    }
+    public function addTransition($transition, State $to = null, $guard = null, $action = null);
 
     /**
      * Set Type
@@ -68,50 +32,35 @@ class State implements StateVisitorClient
      *
      * @return void
      */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
+    public function setType($type);
 
     /**
      * Is Initial
      *
      * @return bool
      */
-    public function isInitial()
-    {
-        return $this->type == self::TYPE_INITIAL;
-    }
+    public function isInitial();
 
     /**
      * Is Normal
      *
      * @return bool
      */
-    public function isNormal()
-    {
-        return $this->type == self::TYPE_NORMAL;
-    }
+    public function isNormal();
 
     /**
      * Is Terminal
      *
      * @return bool
      */
-    public function isTerminal()
-    {
-        return $this->type == self::TYPE_TERMINAL;
-    }
+    public function isTerminal();
 
     /**
      * Get Transitions
      *
      * @return Transition[]
      */
-    public function getTransitions()
-    {
-        return $this->transitions;
-    }
+    public function getTransitions();
 
     /**
      * Create Transition
@@ -123,10 +72,7 @@ class State implements StateVisitorClient
      *
      * @return StateTransitionBuilder
      */
-    public function when($label, callable $guard = null)
-    {
-        return (new StateTransitionBuilder($this))->when($label, $guard);
-    }
+    public function when($label, callable $guard = null);
 
     /**
      * Copy State
@@ -137,49 +83,22 @@ class State implements StateVisitorClient
      *
      * @return State
      */
-    public function copy(&$visited = [])
-    {
-        $hash = spl_object_hash($this);
-
-        if (isset($visited[$hash])) {
-            return $visited[$hash];
-        }
-
-        $copy = $visited[$hash] = new State($this->label, $this->type);
-
-        foreach ($this->transitions as $transition) {
-            $copy->addTransition($transition->copy($visited));
-        }
-
-        return $copy;
-    }
+    public function copy(&$visited = []);
 
     /**
      * Accept Visitor
      *
-     * @param StateVisitor  $visitor
-     * @param State[]       $visited
+     * @param StateVisitor    $visitor
+     * @param State[]  $visited
      *
      * @return void
      */
-    public function accept(StateVisitor $visitor, &$visited = [])
-    {
-        if (!isset($visited[$hash = spl_object_hash($this)])) {
-            $visitor->visit($visited[$hash] = $this);
-
-            foreach ($this->transitions as $transition) {
-                $transition->accept($visitor, $visited);
-            }
-        }
-    }
+    public function accept(StateVisitor $visitor, &$visited = []);
 
     /**
      * Get Label
      *
      * @return string
      */
-    public function __toString()
-    {
-        return $this->label;
-    }
+    public function __toString();
 }

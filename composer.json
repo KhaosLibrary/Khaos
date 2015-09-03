@@ -14,7 +14,7 @@
     },
     "require-dev": {
         "phpunit/phpunit": "4.7.*",
-        "phpspec/phpspec": "~2.0",
+        "phpspec/phpspec": "~2.0@rc",
         "squizlabs/php_codesniffer": "^2.3",
         "pdepend/pdepend": "^2.1"
     },
@@ -31,7 +31,7 @@
         }
     },
     "scripts": {
-        "test": "composer unit && composer spec",
+        "test": "vendor/bin/phpunit --testdox && vendor/bin/phpspec run -fpretty -v --ansi",
         "unit": "vendor/bin/phpunit",
         "spec": "vendor/bin/phpspec --ansi run",
         "cs": "vendor/bin/phpcs --standard=PSR2 --ignore=\"*/spec/*,*/tests/*\" ./src",

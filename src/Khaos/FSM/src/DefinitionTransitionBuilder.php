@@ -144,7 +144,7 @@ class DefinitionTransitionBuilder
             throw new Exception('Missing Label');
         }
 
-        $this->from->addTransition(new Transition($this->label, $this->to, $this->guard, $this->action));
+        $this->from->addTransition(new DefaultTransition($this->label, $this->to, $this->guard, $this->action));
 
         return $this->definition;
     }

@@ -1,0 +1,4 @@
+suites:
+    khaos_fsm:
+        namespace: Khaos\FSM
+        psr4_prefix: Khaos\FSM
