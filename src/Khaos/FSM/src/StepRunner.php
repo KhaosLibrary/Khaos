@@ -76,7 +76,7 @@ class StepRunner implements Runner
     {
         $state = $this->context->getCurrentState();
 
-        if ($transition === null && !$this->can($input, $transition)) {
+        if ($transition === null && !($transition = $this->can($input))) {
             throw new StateException(sprintf(
                 'No transition from %s accepted %s',
                 (string)$state,
@@ -90,8 +90,8 @@ class StepRunner implements Runner
     /**
      * Can Advance
      *
-     * Determine if the machine can be advanced, if so set transition
-     * to the path we can take.
+     * Determine if the machine can be advanced, if so return the
+     * valid transition.
      *
      * Usage :-
      *
@@ -99,12 +99,12 @@ class StepRunner implements Runner
      * can(Input, Transition)
      *
      * @param mixed      $input        Input against which transition(s) will be tested
-     * @param Transition $transition   Placeholder for found transition or the only transition to be tested
+     * @param Transition $transition   If specified only this transition will be tested
      *
-     * @return bool
+     * @return Transition|false
      * @throws Exception
      */
-    public function can($input, &$transition = null)
+    public function can($input, $transition = null)
     {
         $state = $this->context->getCurrentState();
 
@@ -114,15 +114,13 @@ class StepRunner implements Runner
                     continue;
                 }
 
-                $transition = $candidate;
-
-                return true;
+                return $candidate;
             }
 
             return false;
         }
 
-        return $transition->can($input, $this->context, $this);
+        return $transition->can($input, $this->context, $this) ? $transition : false;
     }
 
     /**
