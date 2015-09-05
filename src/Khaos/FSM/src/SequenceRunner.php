@@ -2,14 +2,20 @@
 
 namespace Khaos\FSM;
 
+use Exception;
 use Traversable;
 
 class SequenceRunner implements Runner
 {
     /**
-     * @var StepRunner
+     * @var Stateful
      */
-    private $stepRunner;
+    private $context;
+
+    /**
+     * @var Stateful
+     */
+    private $originalContext;
 
     /**
      * Sequence Runner
@@ -17,12 +23,52 @@ class SequenceRunner implements Runner
      * Treats input as a sequence of symbols, in turn each is passed to the machine
      * taking the first accepting path at each state.
      *
-     * @param StepRunner $stepRunner
+     * @param State    $initialState
+     * @param Stateful $context
      */
-    public function __construct(StepRunner $stepRunner)
+    public function __construct(State $initialState, Stateful $context = null)
     {
-        $this->stepRunner = $stepRunner;
+        if ($context === null)
+            $context = new Context();
+
+        $context->setCurrentState($initialState);
+
+        $this->originalContext = clone $this->context = $context;
+
     }
+
+    /**
+     * Get Context
+     *
+     * @return Stateful
+     */
+    public function getContext()
+    {
+        return $this->context;
+    }
+
+    /**
+     * Set Context
+     *
+     * @param Stateful $context
+     *
+     * @return void
+     */
+    public function setContext(Stateful $context)
+    {
+        $this->context = $context;
+    }
+
+    /**
+     * Transitions available from current state
+     *
+     * @return Transition[]
+     */
+    public function getTransitions()
+    {
+        return $this->context->getCurrentState()->getTransitions();
+    }
+
 
     /**
      * Input
@@ -33,15 +79,20 @@ class SequenceRunner implements Runner
      */
     public function input($input)
     {
+        $this->context = clone $this->originalContext;
+
         $output = [];
 
         foreach ($input as $symbol) {
-            if (!$this->stepRunner->can($symbol, $transition)) {
+            if (!($transition = $this->can($symbol))) {
                 return false;
             }
 
-            $output[] = $this->stepRunner->apply($symbol, $transition);
+            $output[] = $this->apply($symbol, $transition);
         }
+
+        if (!$this->context->getCurrentState()->isTerminal())
+            return false;
 
         return $output;
     }
@@ -52,5 +103,68 @@ class SequenceRunner implements Runner
     public function getLambda()
     {
         return [$this, 'input'];
+    }
+
+    /**
+     * Advance
+     *
+     * Attempt to advance the machine with the given input, optionally try
+     * and follow the exact path as given by the transition.
+     *
+     * @param mixed      $input
+     * @param Transition $transition Take this path, otherwise try all paths
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    private function apply($input = null, Transition $transition = null)
+    {
+        $state = $this->context->getCurrentState();
+
+        if ($transition === null && !($transition = $this->can($input))) {
+            throw new StateException(sprintf(
+                'No transition from %s accepted %s',
+                (string)$state,
+                $input
+            ));
+        }
+
+        return $transition->apply($input, $this->context, $this);
+    }
+
+    /**
+     * Can Advance
+     *
+     * Determine if the machine can be advanced, if so return the
+     * valid transition.
+     *
+     * Usage :-
+     *
+     * can(Input)
+     * can(Input, Transition)
+     *
+     * @param mixed      $input        Input against which transition(s) will be tested
+     * @param Transition $transition   If specified only this transition will be tested
+     *
+     * @return Transition|false
+     * @throws Exception
+     */
+    private function can($input, $transition = null)
+    {
+        $state = $this->context->getCurrentState();
+
+        if (!($transition instanceof Transition)) {
+            foreach ($state->getTransitions() as $candidate) {
+                if (!$candidate->can($input, $this->context, $this)) {
+                    continue;
+                }
+
+                return $candidate;
+            }
+
+            return false;
+        }
+
+        return $transition->can($input, $this->context, $this) ? $transition : false;
     }
 }

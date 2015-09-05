@@ -90,6 +90,7 @@ class DefaultTransitionSpec extends ObjectBehavior
      */
     function it_can_transition_the_specified_context_to_the_set_state($to, $context, $runner)
     {
+        $to->__toString()->willReturn('To');
         $this->apply('Transition A', $context, $runner);
         $context->setCurrentState($to)->shouldHaveBeenCalled();
     }

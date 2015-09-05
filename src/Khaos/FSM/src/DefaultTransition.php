@@ -124,7 +124,7 @@ class DefaultTransition implements Transition
             $input->pop();
         }
 
-        return $this->action?:$this->to;
+        return $this->action?:(string)$this->to;
     }
 
     /**
