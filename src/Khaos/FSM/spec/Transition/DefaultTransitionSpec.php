@@ -1,20 +1,20 @@
 <?php
 
-namespace spec\Khaos\FSM;
+namespace spec\Khaos\FSM\Transition;
 
-use Khaos\FSM\DefaultState;
-use Khaos\FSM\DefaultTransition;
-use Khaos\FSM\Runner;
-use Khaos\FSM\State;
+use Khaos\FSM\State\DefaultState;
+use Khaos\FSM\Transition\DefaultTransition;
+use Khaos\FSM\Runner\Runner;
+use Khaos\FSM\State\State;
 use Khaos\FSM\Stateful;
-use Khaos\FSM\StateVisitor;
+use Khaos\FSM\State\StateVisitor;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 class DefaultTransitionSpec extends ObjectBehavior
 {
     /**
-     * @param \Khaos\FSM\State $to
+     * @param \Khaos\FSM\State\State $to
      */
     function let($to)
     {
@@ -27,7 +27,7 @@ class DefaultTransitionSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State $to
+     * @param \Khaos\FSM\State\State $to
      */
     function it_provides_state_to_be_transitioned_to($to)
     {
@@ -35,7 +35,7 @@ class DefaultTransitionSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State $newTo
+     * @param \Khaos\FSM\State\State $newTo
      */
     function it_allows_the_transition_to_state_to_be_changed($newTo)
     {
@@ -44,8 +44,8 @@ class DefaultTransitionSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\StateVisitor $visitor
-     * @param \Khaos\FSM\State        $to
+     * @param \Khaos\FSM\State\StateVisitor $visitor
+     * @param \Khaos\FSM\State\State        $to
      */
     function it_can_accept_a_state_visitor($visitor, $to)
     {
@@ -56,9 +56,9 @@ class DefaultTransitionSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State    $to
+     * @param \Khaos\FSM\State\State    $to
      * @param \Khaos\FSM\Stateful $context
-     * @param \Khaos\FSM\Runner   $runner
+     * @param \Khaos\FSM\Runner\Runner   $runner
      */
     function it_uses_guard_when_specified_to_check_if_transitioning_is_possible($to, $context, $runner)
     {
@@ -71,9 +71,9 @@ class DefaultTransitionSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State    $to
+     * @param \Khaos\FSM\State\State    $to
      * @param \Khaos\FSM\Stateful $context
-     * @param \Khaos\FSM\Runner   $runner
+     * @param \Khaos\FSM\Runner\Runner   $runner
      */
     function it_compares_input_to_label_when_no_guard_is_specified($to, $context, $runner)
     {
@@ -84,9 +84,9 @@ class DefaultTransitionSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State    $to
+     * @param \Khaos\FSM\State\State    $to
      * @param \Khaos\FSM\Stateful $context
-     * @param \Khaos\FSM\Runner   $runner
+     * @param \Khaos\FSM\Runner\Runner   $runner
      */
     function it_can_transition_the_specified_context_to_the_set_state($to, $context, $runner)
     {
@@ -96,7 +96,7 @@ class DefaultTransitionSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State $to
+     * @param \Khaos\FSM\State\State $to
      */
     function it_can_be_copied($to)
     {

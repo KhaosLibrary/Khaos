@@ -1,13 +1,13 @@
 <?php
 
-namespace spec\Khaos\FSM;
+namespace spec\Khaos\FSM\Transition;
 
 use Exception;
-use Khaos\FSM\DefaultState;
-use Khaos\FSM\DefaultTransition;
+use Khaos\FSM\State\DefaultState;
+use Khaos\FSM\Transition\DefaultTransition;
 use Khaos\FSM\Definition;
-use Khaos\FSM\DefinitionTransitionBuilder;
-use Khaos\FSM\State;
+use Khaos\FSM\Transition\DefinitionTransitionBuilder;
+use Khaos\FSM\State\State;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -32,7 +32,7 @@ class DefinitionTransitionBuilderSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State $from
+     * @param \Khaos\FSM\State\State $from
      */
     function it_throws_exception_when_target_state_is_missing($from)
     {
@@ -41,7 +41,7 @@ class DefinitionTransitionBuilderSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State $from
+     * @param \Khaos\FSM\State\State $from
      */
     function it_builds_default_transition_based_on_given_details($from)
     {
@@ -63,8 +63,8 @@ class DefinitionTransitionBuilderSpec extends ObjectBehavior
 
     /**
      * @param \Khaos\FSM\Definition  $definition
-     * @param \Khaos\FSM\State       $from
-     * @param \Khaos\FSM\State       $to
+     * @param \Khaos\FSM\State\State       $from
+     * @param \Khaos\FSM\State\State       $to
      */
     function it_returns_definition_after_successful_call_to_done($definition, $from, $to)
     {
@@ -79,8 +79,8 @@ class DefinitionTransitionBuilderSpec extends ObjectBehavior
 
     /**
      * @param \Khaos\FSM\Definition  $definition
-     * @param \Khaos\FSM\State       $from
-     * @param \Khaos\FSM\State       $to
+     * @param \Khaos\FSM\State\State       $from
+     * @param \Khaos\FSM\State\State       $to
      */
     function it_allows_the_then_step_to_be_skipped($definition, $from, $to)
     {

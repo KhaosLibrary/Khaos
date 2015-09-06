@@ -1,24 +1,24 @@
 <?php
 
-namespace spec\Khaos\FSM;
+namespace spec\Khaos\FSM\Runner;
 
-use Khaos\FSM\Runner;
-use Khaos\FSM\State;
+use Khaos\FSM\Runner\Runner;
+use Khaos\FSM\State\State;
 use Khaos\FSM\Stateful;
-use Khaos\FSM\StepRunner;
-use Khaos\FSM\Transition;
+use Khaos\FSM\Runner\StepRunner;
+use Khaos\FSM\Transition\Transition;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 class StepRunnerSpec extends ObjectBehavior
 {
     /**
-     * @param \Khaos\FSM\State $initialState
+     * @param \Khaos\FSM\State\State $initialState
      * @param \Khaos\FSM\Stateful $context
-     * @param \Khaos\FSM\Transition $t1
-     * @param \Khaos\FSM\Transition $t2
-     * @param \Khaos\FSM\State $s1
-     * @param \Khaos\FSM\State $s2
+     * @param \Khaos\FSM\Transition\Transition $t1
+     * @param \Khaos\FSM\Transition\Transition $t2
+     * @param \Khaos\FSM\State\State $s1
+     * @param \Khaos\FSM\State\State $s2
      */
     function let($initialState, $context, $t1, $t2, $s1, $s2)
     {
@@ -60,8 +60,8 @@ class StepRunnerSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State $initialState
-     * @param \Khaos\FSM\Transition $t1
+     * @param \Khaos\FSM\State\State $initialState
+     * @param \Khaos\FSM\Transition\Transition $t1
      */
     function it_provides_the_transitions_of_the_current_state($initialState, $t1)
     {
@@ -71,8 +71,8 @@ class StepRunnerSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\Transition $t1
-     * @param \Khaos\FSM\Transition $t2
+     * @param \Khaos\FSM\Transition\Transition $t1
+     * @param \Khaos\FSM\Transition\Transition $t2
      */
     function it_can_test_if_the_given_input_is_valid_for_the_fsms_current_state($t1, $t2)
     {
@@ -82,8 +82,8 @@ class StepRunnerSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\Transition $t1
-     * @param \Khaos\FSM\Transition $t2
+     * @param \Khaos\FSM\Transition\Transition $t1
+     * @param \Khaos\FSM\Transition\Transition $t2
      */
     function it_only_tests_against_given_transition_if_specified($t1, $t2)
     {

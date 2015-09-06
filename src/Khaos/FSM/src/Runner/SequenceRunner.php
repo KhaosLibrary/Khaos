@@ -1,8 +1,14 @@
 <?php
 
-namespace Khaos\FSM;
+namespace Khaos\FSM\Runner;
 
 use Exception;
+use Khaos\FSM\Context;
+use Khaos\FSM\Runner\Runner;
+use Khaos\FSM\State\State;
+use Khaos\FSM\State\StateException;
+use Khaos\FSM\Stateful;
+use Khaos\FSM\Transition\Transition;
 use Traversable;
 
 class SequenceRunner implements Runner

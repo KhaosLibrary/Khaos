@@ -3,8 +3,8 @@
 namespace spec\Khaos\FSM;
 
 use Khaos\FSM\Context;
-use Khaos\FSM\DefaultState;
-use Khaos\FSM\State;
+use Khaos\FSM\State\DefaultState;
+use Khaos\FSM\State\State;
 use Khaos\FSM\Stateful;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -23,7 +23,7 @@ class ContextSpec extends ObjectBehavior
 
 
     /**
-     * @param \Khaos\FSM\State $state
+     * @param \Khaos\FSM\State\State $state
      */
     function it_holds_reference_to_set_state($state)
     {

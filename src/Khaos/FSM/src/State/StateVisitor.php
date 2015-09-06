@@ -1,6 +1,8 @@
 <?php
 
-namespace Khaos\FSM;
+namespace Khaos\FSM\State;
+
+use Khaos\FSM\State\State;
 
 interface StateVisitor
 {

@@ -5,12 +5,12 @@ namespace Khaos\Console\Usage\Parser\Transition;
 use Khaos\Console\Usage\Model\Argument;
 use Khaos\Console\Usage\Parser\UsageParserContext;
 use Khaos\Console\Usage\Parser\InputSequence;
-use Khaos\FSM\BacktrackingRunner;
-use Khaos\FSM\Runner;
-use Khaos\FSM\State;
+use Khaos\FSM\Runner\BacktrackingRunner;
+use Khaos\FSM\Runner\Runner;
+use Khaos\FSM\State\State;
 use Khaos\FSM\Stateful;
-use Khaos\FSM\StateVisitor;
-use Khaos\FSM\Transition;
+use Khaos\FSM\State\StateVisitor;
+use Khaos\FSM\Transition\Transition;
 
 class ArgumentTransition implements Transition
 {

@@ -4,13 +4,13 @@ namespace Khaos\Console\Usage\Parser\Transition;
 
 use Khaos\Console\Usage\Model\Command;
 use Khaos\Console\Usage\Parser\UsageParserContext;
-use Khaos\FSM\BacktrackingRunner;
-use Khaos\FSM\InputSequence;
-use Khaos\FSM\Runner;
-use Khaos\FSM\State;
+use Khaos\FSM\Runner\BacktrackingRunner;
+use Khaos\FSM\Runner\InputSequence;
+use Khaos\FSM\Runner\Runner;
+use Khaos\FSM\State\State;
 use Khaos\FSM\Stateful;
-use Khaos\FSM\StateVisitor;
-use Khaos\FSM\Transition;
+use Khaos\FSM\State\StateVisitor;
+use Khaos\FSM\Transition\Transition;
 
 class CommandTransition implements Transition
 {

@@ -2,6 +2,8 @@
 
 namespace Khaos\FSM;
 
+use Khaos\FSM\State\State;
+
 interface Stateful
 {
     /**

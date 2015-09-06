@@ -1,8 +1,11 @@
 <?php
 
-namespace Khaos\FSM;
+namespace Khaos\FSM\State;
 
 use Exception;
+use Khaos\FSM\Transition\DefaultTransition;
+use Khaos\FSM\Definition;
+use Khaos\FSM\State\State;
 
 class StateTransitionBuilder
 {

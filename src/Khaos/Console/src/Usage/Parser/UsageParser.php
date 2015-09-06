@@ -4,7 +4,7 @@ namespace Khaos\Console\Usage\Parser;
 
 use Khaos\Console\Usage\Input;
 use Khaos\Console\Usage\Model\OptionDefinitionRepository;
-use Khaos\FSM\BacktrackingRunner;
+use Khaos\FSM\Runner\BacktrackingRunner;
 use Khaos\FSM\Definition;
 
 class UsageParser

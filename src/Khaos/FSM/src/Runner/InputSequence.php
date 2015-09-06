@@ -1,6 +1,6 @@
 <?php
 
-namespace Khaos\FSM;
+namespace Khaos\FSM\Runner;
 
 use Countable;
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace Test\Khaos\FSM;
+namespace Test\Khaos\FSM\Runner;
 
 use Khaos\FSM\Context;
-use Khaos\FSM\DefaultState;
-use Khaos\FSM\SequenceRunner;
-use Khaos\FSM\State;
+use Khaos\FSM\State\DefaultState;
+use Khaos\FSM\Runner\SequenceRunner;
+use Khaos\FSM\State\State;
 use PHPUnit_Framework_TestCase;
 
 class SequenceRunnerTest extends PHPUnit_Framework_TestCase

@@ -1,12 +1,12 @@
 <?php
 
-namespace spec\Khaos\FSM;
+namespace spec\Khaos\FSM\State;
 
-use Khaos\FSM\DefaultTransition;
-use Khaos\FSM\DefaultState;
-use Khaos\FSM\State;
-use Khaos\FSM\StateVisitor;
-use Khaos\FSM\Transition;
+use Khaos\FSM\Transition\DefaultTransition;
+use Khaos\FSM\State\DefaultState;
+use Khaos\FSM\State\State;
+use Khaos\FSM\State\StateVisitor;
+use Khaos\FSM\Transition\Transition;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -48,7 +48,7 @@ class DefaultStateSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\Transition $transition
+     * @param \Khaos\FSM\Transition\Transition $transition
      */
     function it_adds_transition_as_is_when_it_is_of_type_transition($transition)
     {
@@ -67,7 +67,7 @@ class DefaultStateSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\StateVisitor $visitor
+     * @param \Khaos\FSM\State\StateVisitor $visitor
      */
     function it_can_accept_visitor($visitor)
     {
@@ -76,9 +76,9 @@ class DefaultStateSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\StateVisitor $visitor
-     * @param \Khaos\FSM\Transition $t1
-     * @param \Khaos\FSM\Transition $t2
+     * @param \Khaos\FSM\State\StateVisitor $visitor
+     * @param \Khaos\FSM\Transition\Transition $t1
+     * @param \Khaos\FSM\Transition\Transition $t2
      */
     function it_will_pass_visitor_on_to_all_available_transitions($visitor, $t1, $t2)
     {

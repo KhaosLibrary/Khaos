@@ -1,6 +1,11 @@
 <?php
 
-namespace Khaos\FSM;
+namespace Khaos\FSM\Runner;
+
+use Khaos\FSM\Runner\Runner;
+use Khaos\FSM\Runner\StepRunner;
+use Khaos\FSM\State\State;
+use Khaos\FSM\Stateful;
 
 class RunnerFactory
 {
