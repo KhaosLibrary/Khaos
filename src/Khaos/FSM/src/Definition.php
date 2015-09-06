@@ -3,6 +3,15 @@
 namespace Khaos\FSM;
 
 use Exception;
+use Khaos\FSM\Runner\Runner;
+use Khaos\FSM\Runner\RunnerFactory;
+use Khaos\FSM\State\DefaultState;
+use Khaos\FSM\State\State;
+use Khaos\FSM\State\StateVisitor;
+use Khaos\FSM\State\StateVisitorClient;
+use Khaos\FSM\Transition\DefaultTransition;
+use Khaos\FSM\Transition\DefinitionTransitionBuilder;
+use Khaos\FSM\Transition\Transition;
 
 class Definition implements StateVisitorClient
 {

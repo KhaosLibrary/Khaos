@@ -1,7 +1,10 @@
 <?php
 
-namespace Khaos\FSM;
+namespace Khaos\FSM\Utility;
 
+use Khaos\FSM\State\State;
+use Khaos\FSM\State\StateVisitor;
+use Khaos\FSM\State\StateVisitorClient;
 use SplObjectStorage;
 
 class GraphBuilder implements StateVisitor

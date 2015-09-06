@@ -1,8 +1,14 @@
 <?php
 
-namespace Khaos\FSM;
+namespace Khaos\FSM\Runner;
 
 use Exception;
+use Khaos\FSM\Context;
+use Khaos\FSM\Runner\Runner;
+use Khaos\FSM\State\State;
+use Khaos\FSM\State\StateException;
+use Khaos\FSM\Stateful;
+use Khaos\FSM\Transition\Transition;
 use Traversable;
 
 class SequenceRunner implements Runner
@@ -28,8 +34,9 @@ class SequenceRunner implements Runner
      */
     public function __construct(State $initialState, Stateful $context = null)
     {
-        if ($context === null)
+        if ($context === null) {
             $context = new Context();
+        }
 
         $context->setCurrentState($initialState);
 
@@ -91,8 +98,9 @@ class SequenceRunner implements Runner
             $output[] = $this->apply($symbol, $transition);
         }
 
-        if (!$this->context->getCurrentState()->isTerminal())
+        if (!$this->context->getCurrentState()->isTerminal()) {
             return false;
+        }
 
         return $output;
     }

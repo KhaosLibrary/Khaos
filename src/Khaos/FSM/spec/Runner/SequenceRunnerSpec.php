@@ -1,9 +1,9 @@
 <?php
 
-namespace spec\Khaos\FSM;
+namespace spec\Khaos\FSM\Runner;
 
-use Khaos\FSM\SequenceRunner;
-use Khaos\FSM\State;
+use Khaos\FSM\Runner\SequenceRunner;
+use Khaos\FSM\State\State;
 use Khaos\FSM\Stateful;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -11,7 +11,7 @@ use Prophecy\Argument;
 class SequenceRunnerSpec extends ObjectBehavior
 {
     /**
-     * @param \Khaos\FSM\State       $initialState
+     * @param \Khaos\FSM\State\State       $initialState
      * @param \Khaos\FSM\Stateful    $context
      */
     function let($initialState, $context)

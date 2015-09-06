@@ -2,11 +2,11 @@
 
 namespace Khaos\Console\Usage\Parser\Transition;
 
-use Khaos\FSM\Runner;
-use Khaos\FSM\State;
+use Khaos\FSM\Runner\Runner;
+use Khaos\FSM\State\State;
 use Khaos\FSM\Stateful;
-use Khaos\FSM\StateVisitor;
-use Khaos\FSM\Transition;
+use Khaos\FSM\State\StateVisitor;
+use Khaos\FSM\Transition\Transition;
 
 class ShortcutTransition implements Transition
 {

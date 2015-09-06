@@ -1,6 +1,11 @@
 <?php
 
-namespace Khaos\FSM;
+namespace Khaos\FSM\State;
+
+use Khaos\FSM\State\StateTransitionBuilder;
+use Khaos\FSM\State\StateVisitor;
+use Khaos\FSM\State\StateVisitorClient;
+use Khaos\FSM\Transition\Transition;
 
 interface State extends StateVisitorClient
 {

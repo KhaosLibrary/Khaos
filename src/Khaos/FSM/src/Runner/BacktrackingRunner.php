@@ -1,14 +1,19 @@
 <?php
 
-namespace Khaos\FSM;
+namespace Khaos\FSM\Runner;
+
+use Khaos\FSM\Context;
+use Khaos\FSM\Runner\InputSequence;
+use Khaos\FSM\Runner\Runner;
+use Khaos\FSM\State\State;
+use Khaos\FSM\Stateful;
+use Khaos\FSM\Transition\Transition;
+use Khaos\FSM\Utility\GraphBuilder;
 
 /**
  * Class BacktrackingRunner
  *
  * @package Khaos\FSM
- *
- * TODO: allow array or input sequence to be specified as input
- * TODO: make backtrack function a while loop
  */
 class BacktrackingRunner implements Runner
 {

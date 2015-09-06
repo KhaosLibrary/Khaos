@@ -2,11 +2,11 @@
 
 namespace spec\Khaos\FSM;
 
-use Khaos\FSM\DefaultState;
-use Khaos\FSM\DefaultTransition;
-use Khaos\FSM\State;
-use Khaos\FSM\StateVisitor;
-use Khaos\FSM\Transition;
+use Khaos\FSM\State\DefaultState;
+use Khaos\FSM\Transition\DefaultTransition;
+use Khaos\FSM\State\State;
+use Khaos\FSM\State\StateVisitor;
+use Khaos\FSM\Transition\Transition;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -23,7 +23,7 @@ class DefinitionSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State $state
+     * @param \Khaos\FSM\State\State $state
      */
     function it_can_provide_states_by_state_label($state)
     {
@@ -33,7 +33,7 @@ class DefinitionSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State $state
+     * @param \Khaos\FSM\State\State $state
      */
     function it_makes_the_first_added_state_the_initial_state($state)
     {
@@ -48,8 +48,8 @@ class DefinitionSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State       $s1
-     * @param \Khaos\FSM\Transition  $t1
+     * @param \Khaos\FSM\State\State       $s1
+     * @param \Khaos\FSM\Transition\Transition  $t1
      */
     function it_can_add_transition_to_state($s1, $t1)
     {
@@ -62,7 +62,7 @@ class DefinitionSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State $s1
+     * @param \Khaos\FSM\State\State $s1
      */
     function it_can_construct_default_transition_to_add_to_state($s1)
     {
@@ -80,8 +80,8 @@ class DefinitionSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State         $s1
-     * @param \Khaos\FSM\StateVisitor  $stateVisitor
+     * @param \Khaos\FSM\State\State         $s1
+     * @param \Khaos\FSM\State\StateVisitor  $stateVisitor
      */
     function it_can_accept_state_visitor($s1, $stateVisitor)
     {
@@ -95,8 +95,8 @@ class DefinitionSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State $s1
-     * @param \Khaos\FSM\State $s2
+     * @param \Khaos\FSM\State\State $s1
+     * @param \Khaos\FSM\State\State $s2
      */
     function it_can_have_the_initial_state_changed($s1, $s2)
     {

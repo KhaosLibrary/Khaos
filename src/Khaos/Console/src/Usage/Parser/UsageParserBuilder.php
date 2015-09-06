@@ -13,7 +13,7 @@ use Khaos\Console\Usage\Parser\Transition\ShortcutTransition;
 use Khaos\Console\Usage\Scanner\Scanner;
 use Khaos\Console\Usage\Scanner\Token;
 use Khaos\FSM\Definition;
-use Khaos\FSM\State;
+use Khaos\FSM\State\State;
 
 class UsageParserBuilder
 {

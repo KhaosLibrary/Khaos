@@ -2,9 +2,9 @@
 
 namespace Khaos\Console\Usage\Parser;
 
-use Khaos\FSM\State;
+use Khaos\FSM\State\State;
 use Khaos\FSM\Stateful;
-use Khaos\FSM\Transition;
+use Khaos\FSM\Transition\Transition;
 use SplObjectStorage;
 
 class UsageParserContext implements Stateful

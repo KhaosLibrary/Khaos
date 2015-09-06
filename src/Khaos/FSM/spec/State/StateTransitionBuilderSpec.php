@@ -1,19 +1,19 @@
 <?php
 
-namespace spec\Khaos\FSM;
+namespace spec\Khaos\FSM\State;
 
 use Exception;
-use Khaos\FSM\DefaultState;
-use Khaos\FSM\DefaultTransition;
-use Khaos\FSM\State;
-use Khaos\FSM\StateTransitionBuilder;
+use Khaos\FSM\State\DefaultState;
+use Khaos\FSM\Transition\DefaultTransition;
+use Khaos\FSM\State\State;
+use Khaos\FSM\State\StateTransitionBuilder;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 class StateTransitionBuilderSpec extends ObjectBehavior
 {
     /**
-     * @param \Khaos\FSM\State $from
+     * @param \Khaos\FSM\State\State $from
      */
     function let($from)
     {
@@ -31,7 +31,7 @@ class StateTransitionBuilderSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State $to
+     * @param \Khaos\FSM\State\State $to
      */
     function it_throws_exception_when_label_is_missing($to)
     {
@@ -40,7 +40,7 @@ class StateTransitionBuilderSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State $from
+     * @param \Khaos\FSM\State\State $from
      */
     function it_builds_default_transition_based_on_given_details($from)
     {
@@ -60,8 +60,8 @@ class StateTransitionBuilderSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State $from
-     * @param \Khaos\FSM\State $to
+     * @param \Khaos\FSM\State\State $from
+     * @param \Khaos\FSM\State\State $to
      */
     function it_provides_from_state_after_successfully_building_transition($from, $to)
     {
@@ -74,8 +74,8 @@ class StateTransitionBuilderSpec extends ObjectBehavior
     }
 
     /**
-     * @param \Khaos\FSM\State $from
-     * @param \Khaos\FSM\State $to
+     * @param \Khaos\FSM\State\State $from
+     * @param \Khaos\FSM\State\State $to
      */
     function it_allows_the_then_step_to_be_skipped($from, $to)
     {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Test\Khaos\FSM;
+namespace Test\Khaos\FSM\Runner;
 
-use Khaos\FSM\BacktrackingRunner;
+use Khaos\FSM\Runner\BacktrackingRunner;
 use Khaos\FSM\Context;
-use Khaos\FSM\DefaultState;
-use Khaos\FSM\State;
+use Khaos\FSM\State\DefaultState;
+use Khaos\FSM\State\State;
 use PHPUnit_Framework_TestCase;
 
 class BacktrackingRunnerTest extends PHPUnit_Framework_TestCase
@@ -48,7 +48,7 @@ class BacktrackingRunnerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * @test
      */
     public function it_must_end_on_a_terminal_state_to_return_result()
     {
