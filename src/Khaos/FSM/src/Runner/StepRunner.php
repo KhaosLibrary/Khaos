@@ -150,4 +150,16 @@ class StepRunner implements Runner
     {
         return $this->apply($input);
     }
+
+    /**
+     * Alias of Input
+     *
+     * @param $input
+     *
+     * @return mixed
+     */
+    public function __invoke($input)
+    {
+        return $this->apply($input);
+    }
 }
