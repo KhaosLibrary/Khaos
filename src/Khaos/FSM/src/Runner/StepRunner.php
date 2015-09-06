@@ -162,4 +162,15 @@ class StepRunner implements Runner
     {
         return $this->apply($input);
     }
+
+
+    /**
+     * Get Current State
+     *
+     * @return State
+     */
+    public function getCurrentState()
+    {
+        return $this->context->getCurrentState();
+    }
 }

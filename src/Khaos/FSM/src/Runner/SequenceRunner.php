@@ -175,4 +175,26 @@ class SequenceRunner implements Runner
 
         return $transition->can($input, $this->context, $this) ? $transition : false;
     }
+
+    /**
+     * Alias of input
+     *
+     * @param $input
+     *
+     * @return mixed
+     */
+    public function __invoke($input)
+    {
+        return $this->input($input);
+    }
+
+    /**
+     * Get Current State
+     *
+     * @return State
+     */
+    public function getCurrentState()
+    {
+        return $this->context->getCurrentState();
+    }
 }
