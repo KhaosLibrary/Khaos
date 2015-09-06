@@ -34,8 +34,9 @@ class SequenceRunner implements Runner
      */
     public function __construct(State $initialState, Stateful $context = null)
     {
-        if ($context === null)
+        if ($context === null) {
             $context = new Context();
+        }
 
         $context->setCurrentState($initialState);
 
@@ -97,8 +98,9 @@ class SequenceRunner implements Runner
             $output[] = $this->apply($symbol, $transition);
         }
 
-        if (!$this->context->getCurrentState()->isTerminal())
+        if (!$this->context->getCurrentState()->isTerminal()) {
             return false;
+        }
 
         return $output;
     }

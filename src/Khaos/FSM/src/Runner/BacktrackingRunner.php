@@ -1,6 +1,7 @@
 <?php
 
 namespace Khaos\FSM\Runner;
+
 use Khaos\FSM\Context;
 use Khaos\FSM\Runner\InputSequence;
 use Khaos\FSM\Runner\Runner;
