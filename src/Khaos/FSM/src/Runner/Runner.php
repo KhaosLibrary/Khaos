@@ -2,6 +2,8 @@
 
 namespace Khaos\FSM\Runner;
 
+use Khaos\FSM\State\State;
+
 interface Runner
 {
     /**
@@ -17,4 +19,20 @@ interface Runner
      * @return callable
      */
     public function getLambda();
+
+    /**
+     * Alias of input
+     *
+     * @param $input
+     *
+     * @return mixed
+     */
+    public function __invoke($input);
+
+    /**
+     * Get Current State
+     *
+     * @return State
+     */
+    public function getCurrentState();
 }
