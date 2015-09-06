@@ -83,7 +83,7 @@ class DefinitionSpec extends ObjectBehavior
      * @param \Khaos\FSM\State         $s1
      * @param \Khaos\FSM\StateVisitor  $stateVisitor
      */
-    function it_can_accept_state_visitor($s1, StateVisitor $stateVisitor)
+    function it_can_accept_state_visitor($s1, $stateVisitor)
     {
         $s1->__toString()->willReturn('S1');
         $s1->accept(Argument::any(), Argument::any())->willReturn(null);
