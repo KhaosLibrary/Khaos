@@ -103,10 +103,6 @@ class StateTransitionBuilder
      */
     public function done()
     {
-        if ($this->from === null) {
-            throw new Exception('Missing From State');
-        }
-
         if ($this->to === null) {
             throw new Exception('Missing To State');
         }

@@ -2,7 +2,9 @@
 
 namespace Khaos\FSM;
 
-class InputSequence
+use Countable;
+
+class InputSequence implements Countable
 {
     private $input;
 
@@ -27,6 +29,11 @@ class InputSequence
     }
 
     public function size()
+    {
+        return count($this->input);
+    }
+
+    public function count()
     {
         return count($this->input);
     }
