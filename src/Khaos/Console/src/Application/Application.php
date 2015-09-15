@@ -2,14 +2,15 @@
 
 namespace Khaos\Console\Application;
 
-use Aura\Di\ContainerBuilder;
 use Khaos\Console\Application\_Config\Common;
+use Khaos\Console\Application\Bundle\Bundle;
+use Khaos\Console\Application\Bundle\ContextualHelpBundle;
+use Khaos\Console\Application\Bundle\VersionInfoBundle;
+use Khaos\Console\Application\DI\ContainerBuilder;
 use Khaos\Console\Application\Event\InvalidUsageEvent;
-use Khaos\Console\Application\Plugin\Plugin;
 use Khaos\Console\Usage\Parser\OptionDefinitionParser;
 use Khaos\Console\Usage\Parser\UsageParserBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Application
 {
@@ -48,13 +49,12 @@ class Application
     /**
      * Application
      *
-     * @param string $name
-     * @param string $version
-     * @param EventDispatcher $eventDispatcher
-     * @param ContextFactory $contextFactory
-     * @param Plugin[] $plugins
+     * @param string           $name
+     * @param string           $version
+     * @param EventDispatcher  $eventDispatcher
+     * @param ContextFactory   $contextFactory
      */
-    public function __construct($name, $version, EventDispatcher $eventDispatcher = null, ContextFactory $contextFactory = null, array $plugins = [])
+    public function __construct($name, $version, EventDispatcher $eventDispatcher = null, ContextFactory $contextFactory = null)
     {
         $this->name        = $name;
         $this->version     = $version;
@@ -64,10 +64,6 @@ class Application
         $this->contextFactory->setDefaultRoot($this->root = $this->contextFactory->create($name));
 
         $this->contexts[$name] = ['instance' => $this->root, 'children' => []];
-
-        foreach ($plugins as $plugin) {
-            $plugin->setup($this);
-        }
     }
 
     /**
@@ -75,26 +71,31 @@ class Application
      *
      * @param string   $name
      * @param string   $version
-     * @param string[] $config  Array of classes extending the Aura.Di Config class
+     * @param mixed[]  $bundles
      *
      * @return Application
      */
-    public static function create($name, $version, $config = [])
+    public static function create($name, $version, $bundles = null)
     {
-        $config = array_merge(
-            [
-                Common::class
-            ],
-            $config
-        );
+        $bundles   = ($bundles !== null) ? $bundles : [new ContextualHelpBundle(), new VersionInfoBundle()];
+        $container = (new ContainerBuilder)->newInstance([], array_merge(Common::class, $bundles));
 
-        return (new ContainerBuilder)->newInstance([], $config)->newInstance(
+        /** @var Application $application */
+        $application = $container->newInstance(
             self::class,
             [
                 'name'    => $name,
                 'version' => $version
             ]
         );
+
+        foreach ($bundles as $bundle) {
+            /** @var Bundle $bundle */
+            $bundle = (is_string($bundle)) ? new $bundle() : $bundle;
+            $bundle->setup($application);
+        }
+
+        return $application;
     }
 
     public function getRootContext()

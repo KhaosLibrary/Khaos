@@ -1,7 +1,8 @@
 <?php
 
-namespace Khaos\Console\Application\Plugin;
+namespace Khaos\Console\Application\Bundle;
 
+use Aura\Di\Container;
 use Khaos\Console\Application\Application;
 use Khaos\Console\Application\Context;
 use Khaos\Console\Application\Event\BeforeActionEvent;
@@ -9,13 +10,32 @@ use Khaos\Console\Application\Event\InvalidUsageEvent;
 use Khaos\Console\Usage\Model\OptionDefinition;
 use Khaos\Console\Usage\Model\OptionDefinitionRepository;
 
-class ContextualHelpPlugin implements Plugin
+class ContextualHelpBundle implements Bundle
 {
     /**
      * @var Application
      */
     private $application;
 
+    /**
+     * @inheritDoc
+     */
+    public function define(Container $di)
+    {
+        return;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function modify(Container $di)
+    {
+        return;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setup(Application $application)
     {
         $this->application = $application
