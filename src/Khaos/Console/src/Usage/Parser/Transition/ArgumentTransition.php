@@ -67,7 +67,7 @@ class ArgumentTransition implements Transition
      */
     public function can($input, Stateful $context, Runner $runner)
     {
-        return $input->hasPositional() && ctype_alnum($input->peek()[0]);
+        return $input->hasPositional();
     }
 
     /**

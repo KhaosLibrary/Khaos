@@ -22,7 +22,6 @@ class Scanner
         '=' => true,
         '<' => true,
         '>' => true,
-        '-' => true,
         '.' => true,
         ' ' => true
     ];
