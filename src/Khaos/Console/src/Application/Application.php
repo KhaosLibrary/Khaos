@@ -78,7 +78,7 @@ class Application
     public static function create($name, $version, $bundles = null)
     {
         $bundles   = ($bundles !== null) ? $bundles : [new ContextualHelpBundle(), new VersionInfoBundle()];
-        $container = (new ContainerBuilder)->newInstance([], array_merge(Common::class, $bundles));
+        $container = (new ContainerBuilder)->newInstance([], array_merge([Common::class], $bundles));
 
         /** @var Application $application */
         $application = $container->newInstance(
