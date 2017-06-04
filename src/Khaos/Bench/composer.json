@@ -1,0 +1,24 @@
+{
+    "name": "khaos/bench",
+    "type": "project",
+    "authors": [
+        {
+            "name": "David Cole",
+            "email": "dc@sourcetutor.com"
+        }
+    ],
+    "require": {
+        "symfony/yaml": "^3.2",
+        "rdlowrey/auryn": "^1.4",
+        "symfony/event-dispatcher": "^3.2"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "^3.0",
+        "leanphp/phpspec-code-coverage": "^3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Khaos\\Bench\\": "src/"
+        }
+    }
+}

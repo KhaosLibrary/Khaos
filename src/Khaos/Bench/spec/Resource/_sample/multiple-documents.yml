@@ -1,0 +1,7 @@
+resource: bench
+metadata:
+  title: Sample Bench Title
+  description: Sample Bench Description
+---
+import:
+ - test/file.yml
