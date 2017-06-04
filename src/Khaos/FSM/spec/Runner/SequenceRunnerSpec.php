@@ -10,11 +10,7 @@ use Prophecy\Argument;
 
 class SequenceRunnerSpec extends ObjectBehavior
 {
-    /**
-     * @param \Khaos\FSM\State\State       $initialState
-     * @param \Khaos\FSM\Stateful    $context
-     */
-    function let($initialState, $context)
+    function let(State $initialState, Stateful $context)
     {
         $this->beConstructedWith($initialState, $context);
     }
@@ -24,10 +20,7 @@ class SequenceRunnerSpec extends ObjectBehavior
         $this->shouldHaveType(SequenceRunner::class);
     }
 
-    /**
-     * @param \Khaos\FSM\Stateful $context
-     */
-    function it_holds_the_context_it_was_constructed_with($context)
+    function it_holds_the_context_it_was_constructed_with(Stateful $context)
     {
         $this->getContext()->shouldReturn($context);
     }

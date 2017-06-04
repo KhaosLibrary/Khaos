@@ -47,10 +47,7 @@ class DefaultStateSpec extends ObjectBehavior
         $this->isTerminal()->shouldBe(true);
     }
 
-    /**
-     * @param \Khaos\FSM\Transition\Transition $transition
-     */
-    function it_adds_transition_as_is_when_it_is_of_type_transition($transition)
+    function it_adds_transition_as_is_when_it_is_of_type_transition(Transition $transition)
     {
         $transitions = [$transition];
 
@@ -66,21 +63,13 @@ class DefaultStateSpec extends ObjectBehavior
         $this->getTransitions()->shouldBeLike($transitions);
     }
 
-    /**
-     * @param \Khaos\FSM\State\StateVisitor $visitor
-     */
-    function it_can_accept_visitor($visitor)
+    function it_can_accept_visitor(StateVisitor $visitor)
     {
         $this->accept($visitor);
         $visitor->visit($this->getWrappedObject())->shouldHaveBeenCalled();
     }
 
-    /**
-     * @param \Khaos\FSM\State\StateVisitor $visitor
-     * @param \Khaos\FSM\Transition\Transition $t1
-     * @param \Khaos\FSM\Transition\Transition $t2
-     */
-    function it_will_pass_visitor_on_to_all_available_transitions($visitor, $t1, $t2)
+    function it_will_pass_visitor_on_to_all_available_transitions(StateVisitor $visitor, Transition $t1, Transition $t2)
     {
         $this->addTransition($t1);
         $this->addTransition($t2);

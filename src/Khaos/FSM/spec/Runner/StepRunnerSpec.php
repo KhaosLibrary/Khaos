@@ -12,15 +12,7 @@ use Prophecy\Argument;
 
 class StepRunnerSpec extends ObjectBehavior
 {
-    /**
-     * @param \Khaos\FSM\State\State $initialState
-     * @param \Khaos\FSM\Stateful $context
-     * @param \Khaos\FSM\Transition\Transition $t1
-     * @param \Khaos\FSM\Transition\Transition $t2
-     * @param \Khaos\FSM\State\State $s1
-     * @param \Khaos\FSM\State\State $s2
-     */
-    function let($initialState, $context, $t1, $t2, $s1, $s2)
+    function let(State $initialState, Stateful $context, Transition $t1, Transition $t2, State $s1, State $s2)
     {
         $context->setCurrentState($initialState)->willReturn();
         $context->getCurrentState()->willReturn($initialState);
@@ -51,41 +43,26 @@ class StepRunnerSpec extends ObjectBehavior
         $this->shouldHaveType(Runner::class);
     }
 
-    /**
-     * @param \Khaos\FSM\Stateful $context
-     */
-    function it_holds_the_context_it_was_constructed_with($context)
+    function it_holds_the_context_it_was_constructed_with(Stateful $context)
     {
         $this->getContext()->shouldReturn($context);
     }
 
-    /**
-     * @param \Khaos\FSM\State\State $initialState
-     * @param \Khaos\FSM\Transition\Transition $t1
-     */
-    function it_provides_the_transitions_of_the_current_state($initialState, $t1)
+    function it_provides_the_transitions_of_the_current_state(State $initialState, Transition $t1)
     {
         $initialState->getTransitions()->willReturn([$t1]);
 
         $this->getTransitions()->shouldReturn([$t1]);
     }
 
-    /**
-     * @param \Khaos\FSM\Transition\Transition $t1
-     * @param \Khaos\FSM\Transition\Transition $t2
-     */
-    function it_can_test_if_the_given_input_is_valid_for_the_fsms_current_state($t1, $t2)
+    function it_can_test_if_the_given_input_is_valid_for_the_fsms_current_state(Transition $t1, Transition $t2)
     {
         $this->can('t1')->shouldReturn($t1);
         $this->can('t2')->shouldReturn($t2);
         $this->can('t0')->shouldReturn(false);
     }
 
-    /**
-     * @param \Khaos\FSM\Transition\Transition $t1
-     * @param \Khaos\FSM\Transition\Transition $t2
-     */
-    function it_only_tests_against_given_transition_if_specified($t1, $t2)
+    function it_only_tests_against_given_transition_if_specified(Transition $t1, Transition $t2)
     {
         $this->can('t1', $t1)->shouldReturn($t1);
         $this->can('t2', $t1)->shouldReturn(false);

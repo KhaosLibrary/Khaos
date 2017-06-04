@@ -2,6 +2,7 @@
 
 namespace spec\Khaos\FSM;
 
+use Khaos\FSM\Definition;
 use Khaos\FSM\State\DefaultState;
 use Khaos\FSM\Transition\DefaultTransition;
 use Khaos\FSM\State\State;
@@ -19,23 +20,17 @@ class DefinitionSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('Khaos\FSM\Definition');
+        $this->shouldHaveType(Definition::class);
     }
 
-    /**
-     * @param \Khaos\FSM\State\State $state
-     */
-    function it_can_provide_states_by_state_label($state)
+    function it_can_provide_states_by_state_label(State $state)
     {
         $state->__toString()->willReturn('S1');
         $this->addState($state);
         $this->getState('S1')->shouldReturn($state);
     }
 
-    /**
-     * @param \Khaos\FSM\State\State $state
-     */
-    function it_makes_the_first_added_state_the_initial_state($state)
+    function it_makes_the_first_added_state_the_initial_state(State $state)
     {
         $state->__toString()->willReturn('S1');
         $this->addState($state);
@@ -47,11 +42,7 @@ class DefinitionSpec extends ObjectBehavior
         $this->getState('S1')->shouldBeLike(new DefaultState('S1'));
     }
 
-    /**
-     * @param \Khaos\FSM\State\State       $s1
-     * @param \Khaos\FSM\Transition\Transition  $t1
-     */
-    function it_can_add_transition_to_state($s1, $t1)
+    function it_can_add_transition_to_state(State $s1, Transition $t1)
     {
         $s1->__toString()->willReturn('S1');
         $s1->addTransition(Argument::any())->willReturn(null);
@@ -61,10 +52,7 @@ class DefinitionSpec extends ObjectBehavior
         $s1->addTransition($t1)->shouldHaveBeenCalled();
     }
 
-    /**
-     * @param \Khaos\FSM\State\State $s1
-     */
-    function it_can_construct_default_transition_to_add_to_state($s1)
+    function it_can_construct_default_transition_to_add_to_state(State $s1)
     {
         $s1->__toString()->willReturn('S1');
         $s2 = new DefaultState('S2');
@@ -79,11 +67,7 @@ class DefinitionSpec extends ObjectBehavior
         }))->shouldHaveBeenCalled();
     }
 
-    /**
-     * @param \Khaos\FSM\State\State         $s1
-     * @param \Khaos\FSM\State\StateVisitor  $stateVisitor
-     */
-    function it_can_accept_state_visitor($s1, $stateVisitor)
+    function it_can_accept_state_visitor(State $s1, StateVisitor $stateVisitor)
     {
         $s1->__toString()->willReturn('S1');
         $s1->accept(Argument::any(), Argument::any())->willReturn(null);
@@ -94,11 +78,7 @@ class DefinitionSpec extends ObjectBehavior
         $s1->accept($stateVisitor, $visited)->shouldHaveBeenCalled();
     }
 
-    /**
-     * @param \Khaos\FSM\State\State $s1
-     * @param \Khaos\FSM\State\State $s2
-     */
-    function it_can_have_the_initial_state_changed($s1, $s2)
+    function it_can_have_the_initial_state_changed(State $s1, State $s2)
     {
         $s1->__toString()->willReturn('S1');
         $s2->__toString()->willReturn('S2');

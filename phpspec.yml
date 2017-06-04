@@ -1,4 +1,9 @@
 suites:
+    khaos_bench:
+        namespace: Khaos\Bench
+        psr4_prefix: Khaos\Bench
+        src_path: src/Khaos/Bench/src
+        spec_path: src/Khaos/Bench
     khaos_console:
         namespace: Khaos\Console
         psr4_prefix: Khaos\Console
@@ -9,3 +14,11 @@ suites:
         psr4_prefix: Khaos\FSM
         src_path: src/Khaos/FSM/src
         spec_path: src/Khaos/FSM
+extensions:
+  LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension:
+    blacklist:
+      - src/Khaos/Bench/src/_bootstrap
+      - src/Khaos/Bench/spec
+      - src/Khaos/FSM/spec
+    blacklist_files:
+      - src/Khaos/Bench/src/bootstrap.php

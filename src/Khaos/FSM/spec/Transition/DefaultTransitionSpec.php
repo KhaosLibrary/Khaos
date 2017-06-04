@@ -13,10 +13,7 @@ use Prophecy\Argument;
 
 class DefaultTransitionSpec extends ObjectBehavior
 {
-    /**
-     * @param \Khaos\FSM\State\State $to
-     */
-    function let($to)
+    function let(State $to)
     {
         $this->beConstructedWith('Transition A', $to);
     }
@@ -26,28 +23,19 @@ class DefaultTransitionSpec extends ObjectBehavior
         $this->shouldHaveType(DefaultTransition::class);
     }
 
-    /**
-     * @param \Khaos\FSM\State\State $to
-     */
-    function it_provides_state_to_be_transitioned_to($to)
+    function it_provides_state_to_be_transitioned_to(State $to)
     {
         $this->getTo()->shouldBe($to);
     }
 
-    /**
-     * @param \Khaos\FSM\State\State $newTo
-     */
-    function it_allows_the_transition_to_state_to_be_changed($newTo)
+
+    function it_allows_the_transition_to_state_to_be_changed(State $newTo)
     {
         $this->setTo($newTo);
         $this->getTo()->shouldBe($newTo);
     }
 
-    /**
-     * @param \Khaos\FSM\State\StateVisitor $visitor
-     * @param \Khaos\FSM\State\State        $to
-     */
-    function it_can_accept_a_state_visitor($visitor, $to)
+    function it_can_accept_a_state_visitor(StateVisitor $visitor, State $to)
     {
         $visited = [];
 
@@ -55,12 +43,7 @@ class DefaultTransitionSpec extends ObjectBehavior
         $to->accept($visitor, $visited)->shouldHaveBeenCalled();
     }
 
-    /**
-     * @param \Khaos\FSM\State\State    $to
-     * @param \Khaos\FSM\Stateful $context
-     * @param \Khaos\FSM\Runner\Runner   $runner
-     */
-    function it_uses_guard_when_specified_to_check_if_transitioning_is_possible($to, $context, $runner)
+    function it_uses_guard_when_specified_to_check_if_transitioning_is_possible(State $to, Stateful $context, Runner $runner)
     {
         $guard = function($input) { return $input == 'my_token'; };
 
@@ -70,12 +53,7 @@ class DefaultTransitionSpec extends ObjectBehavior
         $this->can('not_my_token', $context, $runner)->shouldBe(false);
     }
 
-    /**
-     * @param \Khaos\FSM\State\State    $to
-     * @param \Khaos\FSM\Stateful $context
-     * @param \Khaos\FSM\Runner\Runner   $runner
-     */
-    function it_compares_input_to_label_when_no_guard_is_specified($to, $context, $runner)
+    function it_compares_input_to_label_when_no_guard_is_specified(State $to, Stateful $context, Runner $runner)
     {
         $this->beConstructedWith('switch_on', $to);
 
@@ -83,22 +61,14 @@ class DefaultTransitionSpec extends ObjectBehavior
         $this->can('switch_off', $context, $runner)->shouldBe(false);
     }
 
-    /**
-     * @param \Khaos\FSM\State\State    $to
-     * @param \Khaos\FSM\Stateful $context
-     * @param \Khaos\FSM\Runner\Runner   $runner
-     */
-    function it_can_transition_the_specified_context_to_the_set_state($to, $context, $runner)
+    function it_can_transition_the_specified_context_to_the_set_state(State $to, Stateful $context, Runner $runner)
     {
         $to->__toString()->willReturn('To');
         $this->apply('Transition A', $context, $runner);
         $context->setCurrentState($to)->shouldHaveBeenCalled();
     }
 
-    /**
-     * @param \Khaos\FSM\State\State $to
-     */
-    function it_can_be_copied($to)
+    function it_can_be_copied(State $to)
     {
         $visited = [];
         $to->copy($visited)->willReturn(new DefaultState('State A'));

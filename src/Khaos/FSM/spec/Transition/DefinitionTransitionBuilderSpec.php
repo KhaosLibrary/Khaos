@@ -13,10 +13,7 @@ use Prophecy\Argument;
 
 class DefinitionTransitionBuilderSpec extends ObjectBehavior
 {
-    /**
-     * @param \Khaos\FSM\Definition $definition
-     */
-    function let($definition)
+    function let(Definition $definition)
     {
         $this->beConstructedWith($definition);
     }
@@ -31,19 +28,13 @@ class DefinitionTransitionBuilderSpec extends ObjectBehavior
         $this->shouldThrow(new Exception('Missing From State'))->duringDone();
     }
 
-    /**
-     * @param \Khaos\FSM\State\State $from
-     */
-    function it_throws_exception_when_target_state_is_missing($from)
+    function it_throws_exception_when_target_state_is_missing(State $from)
     {
         $this->from($from);
         $this->shouldThrow(new Exception('Missing To State'))->duringDone();
     }
 
-    /**
-     * @param \Khaos\FSM\State\State $from
-     */
-    function it_builds_default_transition_based_on_given_details($from)
+    function it_builds_default_transition_based_on_given_details(State $from)
     {
         $to     = new DefaultState('S2');
         $guard  = function() { return true; };
@@ -61,12 +52,7 @@ class DefinitionTransitionBuilderSpec extends ObjectBehavior
         $from->addTransition($expect)->shouldHaveBeenCalled();
     }
 
-    /**
-     * @param \Khaos\FSM\Definition  $definition
-     * @param \Khaos\FSM\State\State       $from
-     * @param \Khaos\FSM\State\State       $to
-     */
-    function it_returns_definition_after_successful_call_to_done($definition, $from, $to)
+    function it_returns_definition_after_successful_call_to_done(Definition $definition, State $from, State $to)
     {
         $this
             ->from($from)
@@ -77,12 +63,7 @@ class DefinitionTransitionBuilderSpec extends ObjectBehavior
         $this->done()->shouldReturn($definition);
     }
 
-    /**
-     * @param \Khaos\FSM\Definition  $definition
-     * @param \Khaos\FSM\State\State       $from
-     * @param \Khaos\FSM\State\State       $to
-     */
-    function it_allows_the_then_step_to_be_skipped($definition, $from, $to)
+    function it_allows_the_then_step_to_be_skipped(Definition $definition, State $from, State $to)
     {
         $this
             ->from($from)
