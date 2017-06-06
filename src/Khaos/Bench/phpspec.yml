@@ -3,8 +3,4 @@ suites:
         namespace: Khaos\Bench
         psr4_prefix: Khaos\Bench
 extensions:
-  LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension:
-    blacklist:
-      - src/_bootstrap
-    blacklist_files:
-      - src/bootstrap.php
+  LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension: ~

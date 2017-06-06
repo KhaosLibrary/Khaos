@@ -1,3 +1,5 @@
-TODO: allow bench to have tools added
-TODO: decide how to handle commands
-TODO: profile code and look for areas to improve performance
+TODO: 'command' is a single name within the namespace, 'usage' is built automatically from command name and namespace, usage can be overiden but must always contain [options]
+TODO: make id optional on command definitions
+TODO: add contextual help message
+TODO: when argv[] is empty display help
+TODO: definition must be full command, do not auto include namespace

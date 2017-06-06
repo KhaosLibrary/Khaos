@@ -3,6 +3,7 @@
 namespace spec\Khaos\Bench;
 
 use Khaos\Bench\Bench;
+use Khaos\Bench\Command\CommandRunner;
 use Khaos\Bench\Resource\Definition\BenchDefinition;
 use Khaos\Bench\Resource\ResourceDefinitionRepository;
 use Khaos\Bench\Tool\ToolFactory;
@@ -14,9 +15,9 @@ class BenchSpec extends ObjectBehavior
 {
     private $sampleBenchCallLocation = __DIR__.'/_sample/nested/directory';
 
-    function let(EventDispatcher $eventDispatcher, ResourceDefinitionRepository $resourceDefinitionRepository, ToolFactory $toolFactory)
+    function let(EventDispatcher $eventDispatcher, ResourceDefinitionRepository $resourceDefinitionRepository, ToolFactory $toolFactory, CommandRunner $commandRunner)
     {
-        $this->beConstructedWith($eventDispatcher, $resourceDefinitionRepository, $toolFactory);
+        $this->beConstructedWith($eventDispatcher, $resourceDefinitionRepository, $toolFactory, $commandRunner);
     }
 
     function it_allows_resource_definitions_to_be_imported(ResourceDefinitionRepository $resourceDefinitionRepository)

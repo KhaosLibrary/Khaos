@@ -67,7 +67,7 @@ class DefinitionRepositorySpec extends ObjectBehavior
         $this->import($importResource);
 
         $eventDispatcher->dispatch(
-            Argument::is(DefinitionRepositoryImportEvent::EVENT),
+            Argument::is(DefinitionRepositoryImportEvent::NAME),
             Argument::type(DefinitionRepositoryImportEvent::class)
         )->shouldBeCalled();
     }
@@ -80,7 +80,7 @@ class DefinitionRepositorySpec extends ObjectBehavior
         $this->import($importResource);
 
         $eventDispatcher->dispatch(
-            Argument::is(DefinitionRepositoryImportEvent::EVENT.'::'.ImportDefinition::TYPE),
+            Argument::is(DefinitionRepositoryImportEvent::NAME.'::'.ImportDefinition::TYPE),
             Argument::type(DefinitionRepositoryImportEvent::class)
         )->shouldBeCalled();
     }

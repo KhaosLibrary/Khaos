@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\Event;
 
 class DefinitionRepositoryImportEvent extends Event
 {
-    const EVENT = 'resource.definition.repository.import';
+    const NAME = 'resource.definition.repository.import';
 
     /**
      * @var ResourceDefinition

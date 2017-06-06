@@ -2,6 +2,7 @@
 
 namespace Khaos\Bench;
 
+use Khaos\Bench\Command\CommandRunner;
 use Khaos\Bench\Resource\Definition\BenchDefinition;
 use Khaos\Bench\Resource\ResourceDefinitionRepository;
 use Khaos\Bench\Tool\ToolFactory;
@@ -25,17 +26,24 @@ class Bench
     private $toolFactory;
 
     /**
+     * @var CommandRunner
+     */
+    private $commandRunner;
+
+    /**
      * Bench constructor.
      *
      * @param EventDispatcher               $eventDispatcher
      * @param ResourceDefinitionRepository  $resourceDefinitionRepository
      * @param ToolFactory                   $toolFactory
+     * @param CommandRunner                 $commandRunner
      */
-    public function __construct(EventDispatcher $eventDispatcher, ResourceDefinitionRepository $resourceDefinitionRepository, ToolFactory $toolFactory)
+    public function __construct(EventDispatcher $eventDispatcher, ResourceDefinitionRepository $resourceDefinitionRepository, ToolFactory $toolFactory, CommandRunner $commandRunner)
     {
         $this->eventDispatcher  = $eventDispatcher;
         $this->definitions      = $resourceDefinitionRepository;
         $this->toolFactory      = $toolFactory;
+        $this->commandRunner    = $commandRunner;
     }
 
     /**
@@ -47,7 +55,7 @@ class Bench
     }
 
     // bench [global-options] <command> [options]
-    public function run()
+    public function run(array $args = [])
     {
         /** @var BenchDefinition[] $benchDefinitions */
         $benchDefinitions = $this->definitions->findByType(BenchDefinition::TYPE);
@@ -58,9 +66,11 @@ class Bench
 
         // Find the bench command to be run
 
+        $this->commandRunner->run($args);
+
         // Run the bench command
 
-        return 'Hello World';
+        echo 'Hello World';
     }
 
     public static function getRootResourceDefinition($search, $file = 'bench.yml')

@@ -2,6 +2,8 @@
 
 use Auryn\Injector;
 use Khaos\Bench\Resource\DefinitionFactory\BenchDefinitionFactory;
+use Khaos\Bench\Resource\DefinitionFactory\CommandDefinitionFactory;
+use Khaos\Bench\Resource\DefinitionFactory\CommandNamespaceDefinitionFactory;
 use Khaos\Bench\Resource\DefinitionFactory\CompositeDefinitionFactory;
 use Khaos\Bench\Resource\DefinitionFactory\ImportDefinitionFactory;
 use Khaos\Bench\Resource\DefinitionLoader\ArrayDefinitionLoader;
@@ -12,6 +14,9 @@ use Khaos\Bench\Resource\DefinitionRepository\DefinitionRepository;
 use Khaos\Bench\Resource\ResourceDefinitionFactory;
 use Khaos\Bench\Resource\ResourceDefinitionLoader;
 use Khaos\Bench\Resource\ResourceDefinitionRepository;
+use Khaos\Bench\Tool\Docker\DockerTool;
+use Khaos\Bench\Tool\ToolFactory;
+use Khaos\Console\Usage\Parser\OptionDefinitionParser;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 $injector = new Injector;
@@ -32,11 +37,28 @@ $injector->alias(ResourceDefinitionFactory::class,    CompositeDefinitionFactory
 
 $injector->share(EventDispatcher::class);
 $injector->share(ResourceDefinitionRepository::class);
+$injector->share(OptionDefinitionParser::class);
+
+/*
+ * ToolFactory
+ *  - docker
+ */
+
+$injector->define(ToolFactory::class, [$injector]);
+$injector->prepare
+(
+    ToolFactory::class,
+    function(ToolFactory $toolFactory, Injector $injector)
+    {
+        $toolFactory->add('docker', DockerTool::class);
+    }
+);
 
 /*
  * CompositeDefinitionFactory
  *  - bench
- *  - import
+ *  - bench/import
+ *  - bench/command
  */
 
 $injector->prepare
@@ -46,6 +68,8 @@ $injector->prepare
     {
         $definitionFactory->add($injector->make(BenchDefinitionFactory::class));
         $definitionFactory->add($injector->make(ImportDefinitionFactory::class));
+        $definitionFactory->add($injector->make(CommandDefinitionFactory::class));
+        $definitionFactory->add($injector->make(CommandNamespaceDefinitionFactory::class));
     }
 );
 

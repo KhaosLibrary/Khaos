@@ -4,12 +4,32 @@ metadata:
   id: hello-world
   title: This is the bench for the application 'Hello World'.
   description: This bench is setup to handle various docker and kubernetes tasks.
-  _internal:
-    loader: file
-    source: bench.yml
 tools:
   - docker
-  - kubernetes
 ---
-import:
- - docker/manifest.yml
+resource: bench/command
+metadata:
+  id: test
+  title: This is my test command
+  description: This is my test command description
+definition:
+  command: bench docker build [<image>]
+  options:
+    - '-e, --environment  Environment to target [default: development].'
+  run: docker.build(resource(docker/image, input.argument(image)))
+---
+resource: bench/command
+metadata:
+  id: version
+  title: Show bench version
+definition:
+  command: bench version
+  run: bench.version()
+---
+resource: bench/command
+metadata:
+  id: help
+  title: Show help
+definition:
+  command: bench --help
+  run: Contextual Help Placeholder

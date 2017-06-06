@@ -17,8 +17,6 @@ suites:
 extensions:
   LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension:
     blacklist:
-      - src/Khaos/Bench/src/_bootstrap
+      - src/Khaos/Bench/bin
       - src/Khaos/Bench/spec
       - src/Khaos/FSM/spec
-    blacklist_files:
-      - src/Khaos/Bench/src/bootstrap.php
