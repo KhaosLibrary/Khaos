@@ -19,7 +19,8 @@ class CommandDefinitionFactorySpec extends ObjectBehavior
         ],
         'definition' => [
             'namespace' => 'docker',
-            'command'   => 'build <image=application>',
+            'command'   => 'build',
+            'usage'     => 'bench docker build <image>',
             'options'   => [
                 '-e, --environment=<environment> Environment [default: development] the image should be built to target.'
             ]

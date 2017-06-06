@@ -5,7 +5,9 @@ namespace spec\Khaos\Bench;
 use Khaos\Bench\Bench;
 use Khaos\Bench\Command\CommandRunner;
 use Khaos\Bench\Resource\Definition\BenchDefinition;
+use Khaos\Bench\Resource\ResourceDefinitionFieldParser;
 use Khaos\Bench\Resource\ResourceDefinitionRepository;
+use Khaos\Bench\Tool\Tool;
 use Khaos\Bench\Tool\ToolFactory;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -15,9 +17,9 @@ class BenchSpec extends ObjectBehavior
 {
     private $sampleBenchCallLocation = __DIR__.'/_sample/nested/directory';
 
-    function let(EventDispatcher $eventDispatcher, ResourceDefinitionRepository $resourceDefinitionRepository, ToolFactory $toolFactory, CommandRunner $commandRunner)
+    function let(EventDispatcher $eventDispatcher, ResourceDefinitionRepository $resourceDefinitionRepository, ToolFactory $toolFactory, CommandRunner $commandRunner, ResourceDefinitionFieldParser $definitionFieldParser)
     {
-        $this->beConstructedWith($eventDispatcher, $resourceDefinitionRepository, $toolFactory, $commandRunner);
+        $this->beConstructedWith($eventDispatcher, $resourceDefinitionRepository, $toolFactory, $commandRunner, $definitionFieldParser);
     }
 
     function it_allows_resource_definitions_to_be_imported(ResourceDefinitionRepository $resourceDefinitionRepository)
@@ -49,5 +51,15 @@ class BenchSpec extends ObjectBehavior
         $benchDefinition->getTools()->willReturn(['docker']);
         $this->run();
         $toolFactory->create('docker')->shouldBeCalled();
+    }
+
+    function it_adds_the_loaded_tools_as_values_to_the_definition_field_parser(BenchDefinition $benchDefinition, ToolFactory $toolFactory, ResourceDefinitionRepository $resourceDefinitionRepository, ResourceDefinitionFieldParser $definitionFieldParser, Tool $tool)
+    {
+        $resourceDefinitionRepository->findByType(BenchDefinition::TYPE)->willReturn([$benchDefinition]);
+        $benchDefinition->getTools()->willReturn(['docker']);
+        $toolFactory->create('docker')->willReturn($tool);
+        $this->run();
+
+        $definitionFieldParser->addValue('docker', $tool)->shouldBeCalled();
     }
 }

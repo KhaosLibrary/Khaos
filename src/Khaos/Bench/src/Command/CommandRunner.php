@@ -3,10 +3,13 @@
 namespace Khaos\Bench\Command;
 
 use Khaos\Bench\Resource\Definition\CommandDefinition;
+use Khaos\Bench\Resource\ResourceDefinitionFieldParser;
 use Khaos\Bench\Resource\ResourceDefinitionRepository;
 use Khaos\Console\Usage\Parser\OptionDefinitionParser;
+use Khaos\Console\Usage\Parser\UsageParser;
 use Khaos\Console\Usage\Parser\UsageParserBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 class CommandRunner
 {
@@ -19,27 +22,35 @@ class CommandRunner
      * @var CommandDefinition
      */
     private $global;
+
     /**
      * @var EventDispatcher
      */
     private $eventDispatcher;
+
     /**
      * @var UsageParserBuilder
      */
     private $usageParserBuilder;
 
     /**
+     * @var ResourceDefinitionFieldParser
+     */
+    private $fieldParser;
+
+    /**
      * CommandRunner constructor.
      *
-     * @param EventDispatcher               $eventDispatcher
-     * @param ResourceDefinitionRepository  $resourceDefinitions
-     * @param UsageParserBuilder            $usageParserBuilder
+     * @param EventDispatcher $eventDispatcher
+     * @param ResourceDefinitionRepository $resourceDefinitions
+     * @param UsageParserBuilder $usageParserBuilder
      */
-    public function __construct(EventDispatcher $eventDispatcher, ResourceDefinitionRepository $resourceDefinitions, UsageParserBuilder $usageParserBuilder)
+    public function __construct(EventDispatcher $eventDispatcher, ResourceDefinitionRepository $resourceDefinitions, UsageParserBuilder $usageParserBuilder, ResourceDefinitionFieldParser $fieldParser)
     {
         $this->eventDispatcher     = $eventDispatcher;
         $this->usageParserBuilder  = $usageParserBuilder;
         $this->resourceDefinitions = $resourceDefinitions;
+        $this->fieldParser         = $fieldParser;
 
         $this->global = new CommandDefinition
         ([
@@ -56,27 +67,23 @@ class CommandRunner
                 ]
             ]
         ], new OptionDefinitionParser());
-
     }
 
     public function run(array $args = [])
     {
-        // Iterate over and run commands until one is successful
-
         foreach ($this->resourceDefinitions->findByType(CommandDefinition::TYPE) as $commandDefinition) {
 
             /** @var CommandDefinition $commandDefinition */
 
-            if ($this->runCommandDefinition($args, $commandDefinition))
-                return;
+            if (($input = $this->runAgainstCommandDefinition($args, $commandDefinition)) === false)
+                continue;
+
+            $this->runCommandTasks($commandDefinition, $input);
+
+            return;
         }
 
-        // Trigger error event as no command found
-
-        $this->eventDispatcher->dispatch(
-            CommandRunnerInvalidUsageEvent::NAME,
-            new CommandRunnerInvalidUsageEvent($args, $this->global->getOptions())
-        );
+        $this->eventDispatcher->dispatch(CommandRunnerInvalidUsageEvent::NAME,  new CommandRunnerInvalidUsageEvent($args, $this->global->getOptions()));
     }
 
     /**
@@ -85,27 +92,42 @@ class CommandRunner
      *
      * @return bool True if the command definition was able to run against the supplied arguments
      */
-    private function runCommandDefinition(array $args = [], CommandDefinition $commandDefinition)
+    private function runAgainstCommandDefinition(array $args = [], CommandDefinition $commandDefinition)
     {
-        // Build parser and run against args
-
-        $options = $this->global->getOptions()->merge($commandDefinition->getOptions());
-        $command = $this->global->getCommand().' '.$commandDefinition->getNamespace().' '.$commandDefinition->getCommand();
-        $command = (strpos($command, '[options]') === false) ? $command.' [options]' : $command;
-        $parser  = $this->usageParserBuilder->createUsageParser($command, $options);
-
-        if (($input = $parser->parse($args)) === false)
+        if (($input = $this->buildUsageParser($commandDefinition)->parse($args)) === false)
             return false;
 
-        // We were able to parse the given args against this command
-
-        // TODO add event class tests
         $this->eventDispatcher->dispatch(CommandRunnerParsedEvent::NAME, new CommandRunnerParsedEvent($input));
 
-        // Perform this commands action/handler/run
+        return $input;
+    }
 
-        echo $input->toJSON();
+    /**
+     * @param CommandDefinition $commandDefinition
+     *
+     * @return UsageParser
+     */
+    private function buildUsageParser(CommandDefinition $commandDefinition)
+    {
+        $usage   = $commandDefinition->getUsage();
+        $options = $this->global->getOptions()->merge($commandDefinition->getOptions());
 
-        return true;
+        return $this->usageParserBuilder->createUsageParser($usage, $options);
+    }
+
+    /**
+     * @param CommandDefinition $commandDefinition
+     * @param $input
+     */
+    private function runCommandTasks(CommandDefinition $commandDefinition, $input)
+    {
+        $tasks  = $commandDefinition->getRun();
+        $values = ['input' => $input];
+
+        if (!is_array($tasks))
+            $tasks = [$tasks];
+
+        foreach ($tasks as $task)
+            echo $this->fieldParser->evaluate($task, $values);
     }
 }

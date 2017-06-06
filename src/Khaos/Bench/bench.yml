@@ -9,27 +9,27 @@ tools:
 ---
 resource: bench/command
 metadata:
-  id: test
-  title: This is my test command
-  description: This is my test command description
+  title: Show help
 definition:
-  command: bench docker build [<image>]
-  options:
-    - '-e, --environment  Environment to target [default: development].'
-  run: docker.build(resource(docker/image, input.argument(image)))
+  command: help
+  usage: bench [<command>...] --help
+  run: bench.help(input)
 ---
 resource: bench/command
 metadata:
-  id: version
   title: Show bench version
 definition:
-  command: bench version
+  command: version
   run: bench.version()
 ---
 resource: bench/command
 metadata:
-  id: help
-  title: Show help
+  title: This is my test command
+  description: This is my test command description
 definition:
-  command: bench --help
-  run: Contextual Help Placeholder
+  namespace: docker
+  command: build
+  usage: bench docker build [<image>]
+  options:
+    - '-e, --environment  Environment to target [default: development].'
+  run: docker.build(resource(docker/image, input.argument(image)))

@@ -8,7 +8,8 @@
         "symfony/yaml": "^3.2",
         "rdlowrey/auryn": "^1.4",
         "symfony/event-dispatcher": "^3.2",
-        "aura/di": "^2.2"
+        "aura/di": "^2.2",
+        "symfony/expression-language": "^3.3"
     },
     "replace": {
         "khaos/console": "self.version",

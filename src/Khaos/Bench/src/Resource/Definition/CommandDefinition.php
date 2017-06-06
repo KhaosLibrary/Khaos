@@ -24,11 +24,13 @@ class CommandDefinition extends BaseResourceDefinition implements ResourceDefini
 
     public function __construct(array $data, OptionDefinitionParser $optionDefinitionParser)
     {
-        if (!isset($data['definition']['command']))
-            throw new InvalidArgumentException('command is a required field in the command definition resource.');
+        $this->validateDefinition($data);
+
+        $data['metadata']['id'] = $data['metadata']['id'] ?? self::getUniqueId();
 
         $data['definition']['namespace'] = $data['definition']['namespace'] ?? null;
         $data['definition']['options']   = $data['definition']['options']   ?? [];
+        $data['definition']['usage']     = $this->generateUsagePattern($data);
 
         $this->optionDefinitionParser = $optionDefinitionParser;
 
@@ -61,5 +63,59 @@ class CommandDefinition extends BaseResourceDefinition implements ResourceDefini
         }
 
         return $this->optionsRepository;
+    }
+
+    public function getUsage()
+    {
+        return $this->data['definition']['usage'];
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return string
+     */
+    private function generateUsagePattern(array $data)
+    {
+        if (!isset($data['definition']['usage']))
+        {
+            $usage = 'bench ';
+
+            if ($data['definition']['namespace'] !== null)
+                $usage .= $data['definition']['namespace'] . ' ';
+
+            $usage .= $data['definition']['command'] . ' ';
+            $usage .= '[options]';
+
+            $data['definition']['usage'] = $usage;
+        }
+
+        if (strpos($data['definition']['usage'], '[options]') === false)
+            $data['definition']['usage'] .= ' [options]';
+
+        return $data['definition']['usage'];
+    }
+
+    /**
+     * @param array $data
+     */
+    private function validateDefinition(array $data)
+    {
+        if (!isset($data['definition']['command']))
+            throw new InvalidArgumentException('command is a required field in the command definition resource.');
+
+        if (str_word_count($data['definition']['command']) > 1)
+            throw new InvalidArgumentException('command must be a single word, override the usage pattern for more complexity.');
+    }
+
+    public static function getUniqueId()
+    {
+        static $count = 0;
+        return '_internal/bench/command/'.$count++;
+    }
+
+    public function getRun()
+    {
+        return $this->data['definition']['run'];
     }
 }
