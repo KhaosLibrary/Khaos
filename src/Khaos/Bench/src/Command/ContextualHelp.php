@@ -28,9 +28,6 @@ class ContextualHelp
     {
         $input = $event->getInput();
 
-        if ($input->getOption('help')) {
-            echo 'Help Screen.'."\n";
-            //die();
-        }
+
     }
 }
