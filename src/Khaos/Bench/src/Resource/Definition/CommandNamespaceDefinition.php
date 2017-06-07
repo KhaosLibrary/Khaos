@@ -2,7 +2,7 @@
 
 namespace Khaos\Bench\Resource\Definition;
 
-use Khaos\Bench\Resource\BaseResourceDefinition;
+use Khaos\Bench\Resource\Definition\BaseResourceDefinition;
 use Khaos\Bench\Resource\ResourceDefinition;
 
 class CommandNamespaceDefinition extends BaseResourceDefinition implements ResourceDefinition

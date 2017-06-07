@@ -3,7 +3,7 @@
 namespace Khaos\Bench\Resource\Definition;
 
 use InvalidArgumentException;
-use Khaos\Bench\Resource\BaseResourceDefinition;
+use Khaos\Bench\Resource\Definition\BaseResourceDefinition;
 use Khaos\Bench\Resource\ResourceDefinition;
 use Khaos\Console\Usage\Model\OptionDefinitionRepository;
 use Khaos\Console\Usage\Parser\OptionDefinitionParser;

@@ -3,7 +3,7 @@
 namespace Khaos\Bench\Resource\Definition;
 
 use InvalidArgumentException;
-use Khaos\Bench\Resource\BaseResourceDefinition;
+use Khaos\Bench\Resource\Definition\BaseResourceDefinition;
 use Khaos\Bench\Resource\ResourceDefinition;
 
 class ImportDefinition extends BaseResourceDefinition implements ResourceDefinition

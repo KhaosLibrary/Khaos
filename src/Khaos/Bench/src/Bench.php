@@ -5,6 +5,8 @@ namespace Khaos\Bench;
 use Khaos\Bench\Command\CommandRunner;
 use Khaos\Bench\Resource\Definition\BenchDefinition;
 use Khaos\Bench\Resource\Definition\CommandDefinition;
+use Khaos\Bench\Resource\Definition\CommandNamespaceDefinition;
+use Khaos\Bench\Resource\ResourceDefinition;
 use Khaos\Bench\Resource\ResourceDefinitionFieldParser;
 use Khaos\Bench\Resource\ResourceDefinitionRepository;
 use Khaos\Bench\Tool\ToolFactory;
@@ -125,7 +127,7 @@ class Bench
         // Show Root Help (ie. list of namespaces and commands in alphabetical order)
 
         echo "\n\e[1mBench\e[0m\e[32m 0.0.1\e[0m\n\n";
-        echo "\e[1mUsage:\e[0m\n";
+        echo "\e[1mUsage:\e[0m\n\n";
         echo "    bench <command> [options]\n\n";
 
         $namespace = null;
@@ -133,23 +135,33 @@ class Bench
         /** @var CommandDefinition[] $commands */
         $commands = $this->definitions->findByType(CommandDefinition::TYPE);
 
-        echo "\e[1mSub Commands:\e[0m\n";
+        echo "\e[1mSub Commands:\e[0m\n\n";
 
         foreach ($commands as $command) {
 
             if ($command->getNamespace() != $namespace)
                 continue;
 
-            echo '  '."\033[32m".str_pad($command->getCommand(), $padding) . "\033[0m" . $command->getTitle() . "\n\n";
+            echo '    '."\033[32m".str_pad($command->getCommand(), $padding) . "\033[0m" . $command->getTitle() . "\n";
         }
 
+        echo "\n";
+
         // Show Help for a specific namespace
+
+        $namespaces = $this->definitions->query(function(ResourceDefinition $definition)
+        {
+            if ($definition->getType() != CommandNamespaceDefinition::TYPE)
+                return false;
+
+            return true;
+        });
 
         // Show help for a specific command
 
         // Show global options
 
-        $this->displayOptionsHelp("\033[1mGlobal Options:\033[0m", $globalOptions);
+        $this->displayOptionsHelp("\033[1mGlobal Options:\033[0m\n", $globalOptions);
     }
 
     private function displayOptionsHelp($heading, OptionDefinitionRepository $repository)
@@ -160,7 +172,7 @@ class Bench
         foreach ($repository as $option) {
             /** @var OptionDefinition $option */
 
-            $definition  = '  ';
+            $definition  = '    ';
             $description = $option->getDescription();
 
             $definition .= $option->getShortName()?'-'.$option->getShortName().', ':'    ';

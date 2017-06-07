@@ -36,4 +36,13 @@ interface ResourceDefinitionRepository
      * @return ResourceDefinition[]
      */
     public function findByType(string $type);
+
+    /**
+     * Find By Query
+     *
+     * @param callable $matcher
+     *
+     * @return bool
+     */
+    public function query(callable $matcher);
 }

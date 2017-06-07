@@ -86,4 +86,15 @@ class DefinitionRepository implements ResourceDefinitionRepository
         $this->eventDispatcher->dispatch(DefinitionRepositoryImportEvent::NAME, $event);
         $this->eventDispatcher->dispatch(DefinitionRepositoryImportEvent::NAME.'::'.$definition->getType(), $event);
     }
+
+    public function query(callable $matcher)
+    {
+        $results = [];
+
+        foreach ($this->resourceDefinitions as $resourceDefinition)
+            if ($matcher($resourceDefinition) == true)
+                $results[] = $resourceDefinition;
+
+        return $results;
+    }
 }

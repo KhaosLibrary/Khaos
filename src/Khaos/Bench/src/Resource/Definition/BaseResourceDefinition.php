@@ -1,8 +1,9 @@
 <?php
 
-namespace Khaos\Bench\Resource;
+namespace Khaos\Bench\Resource\Definition;
 
 use InvalidArgumentException;
+use Khaos\Bench\Resource\ResourceDefinition;
 
 abstract class BaseResourceDefinition implements ResourceDefinition
 {

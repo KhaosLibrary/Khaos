@@ -3,7 +3,7 @@
 namespace Khaos\Bench\Tool\Docker\Resource\Definition;
 
 use InvalidArgumentException;
-use Khaos\Bench\Resource\BaseResourceDefinition;
+use Khaos\Bench\Resource\Definition\BaseResourceDefinition;
 use Khaos\Bench\Resource\ResourceDefinition;
 
 class DockerImageDefinition extends BaseResourceDefinition implements ResourceDefinition

@@ -45,6 +45,12 @@ class DefinitionRepositorySpec extends ObjectBehavior
         $this->findById('does-not-exist')->shouldReturn(null);
     }
 
+    function it_allows_find_by_callback(ResourceDefinition $resource)
+    {
+        $this->import($resource);
+        $this->query(function(ResourceDefinition $resourceDefinition) { return $resourceDefinition->getId() == 'example'; })->shouldBe([$resource]);
+    }
+
     function it_allows_find_by_type(BenchDefinition $applicationResource, ImportDefinition $importResource)
     {
         $applicationResource->getId()->willReturn('application-1');
