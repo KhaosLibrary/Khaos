@@ -5,6 +5,7 @@ namespace Khaos\Bench\Resource\Definition;
 use InvalidArgumentException;
 use Khaos\Bench\Resource\Definition\BaseResourceDefinition;
 use Khaos\Bench\Resource\ResourceDefinition;
+use Khaos\Console\Usage\Model\OptionDefinition;
 use Khaos\Console\Usage\Model\OptionDefinitionRepository;
 use Khaos\Console\Usage\Parser\OptionDefinitionParser;
 
@@ -52,6 +53,9 @@ class CommandDefinition extends BaseResourceDefinition implements ResourceDefini
         return $this->data['definition']['command'];
     }
 
+    /**
+     * @return OptionDefinitionRepository
+     */
     public function getOptions()
     {
         if (null == $this->optionsRepository)

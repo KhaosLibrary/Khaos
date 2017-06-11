@@ -119,6 +119,12 @@ class Bench
 
     public function help(Input $input)
     {
+        $contextualHelpBuilder = new ContextualHelpBuilder($this->definitions);
+        $contextualHelpBuilder->build($input);
+    }
+
+    public function helpOld(Input $input)
+    {
         $globalOptions = new OptionDefinitionRepository();
         $globalOptions->add(new OptionDefinition('h', 'help', 'Show help for the given command.', OptionDefinition::TYPE_BOOL));
 

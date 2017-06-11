@@ -28,6 +28,5 @@ class ContextualHelp
     {
         $input = $event->getInput();
 
-
     }
 }
