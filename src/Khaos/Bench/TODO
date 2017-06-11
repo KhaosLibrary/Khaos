@@ -1,3 +1,6 @@
-TODO: add contextual help message
+TODO: build a basic 'command router' which a tool exposes to make things like docker.build(), bench.help() etc.. work within expressions
+TODO: ensure 'import' of the ImportDefinition is an array of strings when loaded
+TODO: make the bench resource use 'definition' as the root for its configuration
+TODO: allow multiple bench resources to be handled in a composite way
 TODO: when argv[] is empty display help
-TODO: make the id on the command namespace definition optional
+TODO: have ContextualHelpBuilder get global options from a composite of the bench resources

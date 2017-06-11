@@ -15,6 +15,7 @@ $dispatcher = require_once __DIR__.'/bench/config/events.php';
 
 /** @var Bench $bench */
 $bench = $injector->make(Bench::class);
+$bench->import(__DIR__.'/bench/resources/.manifest.yml');
 $bench->import(Bench::getRootResourceDefinition(getcwd()));
 $bench->run(array_merge(['bench'], array_slice($argv, 1)));
 

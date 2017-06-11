@@ -1,0 +1,7 @@
+---
+resource: bench/command
+metadata:
+  title: Show bench version
+definition:
+  command: version
+  run: bench.version()

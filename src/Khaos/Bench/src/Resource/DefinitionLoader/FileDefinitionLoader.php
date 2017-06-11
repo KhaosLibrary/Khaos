@@ -35,7 +35,7 @@ class FileDefinitionLoader implements ResourceDefinitionLoader
      */
     public function load($source)
     {
-        if (!file_exists($source))
+        if (!is_string($source) || !file_exists($source))
             return null;
 
         $fileInfo = new SplFileInfo($source);

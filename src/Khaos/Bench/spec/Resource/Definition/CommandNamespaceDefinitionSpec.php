@@ -5,6 +5,7 @@ namespace spec\Khaos\Bench\Resource\Definition;
 use InvalidArgumentException;
 use Khaos\Bench\Resource\Definition\CommandNamespaceDefinition;
 use Khaos\Bench\Resource\ResourceDefinition;
+use Khaos\Console\Usage\Parser\OptionDefinitionParser;
 use PhpSpec\ObjectBehavior;
 
 class CommandNamespaceDefinitionSpec extends ObjectBehavior
@@ -53,5 +54,18 @@ class CommandNamespaceDefinitionSpec extends ObjectBehavior
 
         $this->beConstructedWith($sample);
         $this->shouldThrow(InvalidArgumentException::class)->duringInstantiation();
+    }
+
+    function it_assigns_an_unique_id_when_none_specified()
+    {
+        $sample = $this->sample;
+        unset($sample['metadata']['id']);
+
+        $this->beConstructedWith($sample);
+
+        $this->getId()->shouldBe('_internal/bench/command-namespace/0');
+
+        $this::getUniqueId()->shouldBe('_internal/bench/command-namespace/1');
+        $this::getUniqueId()->shouldBe('_internal/bench/command-namespace/2');
     }
 }

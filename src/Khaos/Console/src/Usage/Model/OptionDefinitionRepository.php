@@ -3,9 +3,10 @@
 namespace Khaos\Console\Usage\Model;
 
 use ArrayIterator;
+use Countable;
 use IteratorAggregate;
 
-class OptionDefinitionRepository implements IteratorAggregate
+class OptionDefinitionRepository implements IteratorAggregate, Countable
 {
     private $options = [];
 
@@ -70,5 +71,13 @@ class OptionDefinitionRepository implements IteratorAggregate
         }
 
         return $merged;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function count()
+    {
+        return count($this->options);
     }
 }

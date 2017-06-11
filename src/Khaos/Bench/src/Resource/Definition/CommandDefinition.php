@@ -29,7 +29,7 @@ class CommandDefinition extends BaseResourceDefinition implements ResourceDefini
 
         $data['metadata']['id'] = $data['metadata']['id'] ?? self::getUniqueId();
 
-        $data['definition']['namespace'] = $data['definition']['namespace'] ?? null;
+        $data['definition']['namespace'] = $data['definition']['namespace'] ?? 'bench';
         $data['definition']['options']   = $data['definition']['options']   ?? [];
         $data['definition']['usage']     = $this->generateUsagePattern($data);
 
@@ -83,7 +83,7 @@ class CommandDefinition extends BaseResourceDefinition implements ResourceDefini
     {
         if (!isset($data['definition']['usage']))
         {
-            $usage = 'bench ';
+            $usage = '';
 
             if ($data['definition']['namespace'] !== null)
                 $usage .= $data['definition']['namespace'] . ' ';

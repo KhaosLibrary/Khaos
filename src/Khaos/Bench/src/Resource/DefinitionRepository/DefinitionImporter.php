@@ -17,14 +17,14 @@ class DefinitionImporter
     /**
      * @var GlobPatternDefinitionLoader
      */
-    private $definitionLoader;
+    private $globDefinitionLoader;
 
     public function __construct(
         ResourceDefinitionRepository $definitionRepository,
         GlobPatternDefinitionLoader $definitionLoader)
     {
         $this->definitionRepository = $definitionRepository;
-        $this->definitionLoader     = $definitionLoader;
+        $this->globDefinitionLoader     = $definitionLoader;
     }
 
     public function __invoke(DefinitionRepositoryImportEvent $event)
@@ -34,8 +34,8 @@ class DefinitionImporter
         if (!$importDefinition instanceof ImportDefinition)
             throw new Exception("Only ResourceDefinitions of type '".ImportDefinition::TYPE."' accepted, got '".$importDefinition->getType()."'.");
 
-        foreach ($this->definitionLoader->load($importDefinition->getImportPatterns()) as $resourceDefinition)
-            $this->definitionRepository->import($resourceDefinition);
-
+        foreach ($importDefinition->getImportPatterns() as $globPattern)
+            foreach ($this->globDefinitionLoader->load($importDefinition->getWorkingDirectory().'/'.$globPattern) as $resourceDefinition)
+                $this->definitionRepository->import($resourceDefinition);
     }
 }

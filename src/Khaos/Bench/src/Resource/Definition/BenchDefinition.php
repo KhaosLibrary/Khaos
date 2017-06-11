@@ -11,7 +11,10 @@ class BenchDefinition extends BaseResourceDefinition implements ResourceDefiniti
 
     public function __construct(array $data)
     {
-        $data['tools'] = $data['tools'] ?? [];
+        $data['metadata']['id'] = $data['metadata']['id'] ?? self::getUniqueId();
+
+        $data['tools']   = $data['tools']   ?? [];
+        $data['options'] = $data['options'] ?? [];
 
         parent::__construct($data);
     }
@@ -24,5 +27,11 @@ class BenchDefinition extends BaseResourceDefinition implements ResourceDefiniti
     public function getTools()
     {
         return $this->data['tools'];
+    }
+
+    public static function getUniqueId()
+    {
+        static $count = 0;
+        return '_internal/bench/'.$count++;
     }
 }

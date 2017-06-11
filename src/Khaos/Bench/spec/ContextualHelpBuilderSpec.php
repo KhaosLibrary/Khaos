@@ -2,11 +2,13 @@
 
 namespace spec\Khaos\Bench;
 
+use ArrayIterator;
 use Khaos\Bench\ContextualHelpBuilder;
 use Khaos\Bench\Resource\Definition\CommandDefinition;
 use Khaos\Bench\Resource\Definition\CommandNamespaceDefinition;
 use Khaos\Bench\Resource\ResourceDefinitionRepository;
 use Khaos\Console\Usage\Model\OptionDefinition;
+use Khaos\Console\Usage\Model\OptionDefinitionRepository;
 use PhpSpec\ObjectBehavior;
 
 class ContextualHelpBuilderSpec extends ObjectBehavior
@@ -27,30 +29,6 @@ class ContextualHelpBuilderSpec extends ObjectBehavior
         $commandDefinition->getTitle()->willReturn('Global help message');
 
         $this->getCommandUsage($commandDefinition)->shouldBe(['help', 'Global help message']);
-    }
-
-    function it_provides_command_options(CommandDefinition $commandDefinition, OptionDefinition $option1, OptionDefinition $option2)
-    {
-        $option1->getShortName()->willReturn('h');
-        $option1->getLongName()->willReturn('help');
-        $option1->getType()->willReturn(OptionDefinition::TYPE_BOOL);
-        $option1->getArgument()->willReturn(null);
-        $option1->getDescription()->willReturn('Show command help.');
-        $option1->getDefault()->willReturn(null);
-
-        $option2->getShortName()->willReturn('e');
-        $option2->getLongName()->willReturn('environment');
-        $option2->getType()->willReturn(OptionDefinition::TYPE_VALUE);
-        $option2->getArgument()->willReturn('environment');
-        $option2->getDescription()->willReturn('Environment the command will target.');
-        $option2->getDefault()->willReturn('development');
-
-        $commandDefinition->getOptions()->willReturn([$option1, $option2]);
-
-        $this->getCommandOptions($commandDefinition)->shouldBe([
-            ['-h, --help', 'Show command help.'],
-            ['-e, --environment=<environment>', 'Environment the command will target. [default: development]']
-        ]);
     }
 
     /**
@@ -146,47 +124,6 @@ class ContextualHelpBuilderSpec extends ObjectBehavior
             'push'  => 'push images to registry'
         ]);
     }
-
-/*
-
-    public function it_provides_command_type_of_namespace_when_context_is_a_namespace(
-        ResourceDefinitionRepository $definitions,
-        CommandNamespaceDefinition $namespace1,
-        CommandDefinition $command1,
-        CommandDefinition $command2,
-        CommandDefinition $command3
-    )
-    {
-        $namespace1->getNamespace()->willReturn('docker');
-        $namespace1->getTitle()->willReturn('docker related commands');
-
-        $command1->getNamespace()->willReturn(null);
-        $command1->getCommand()->willReturn('deploy');
-        $command1->getTitle()->willReturn('Deploy related command');
-
-        $command2->getNamespace()->willReturn('docker');
-        $command2->getCommand()->willReturn('push');
-        $command2->getTitle()->willReturn('push images to registry');
-
-        $command3->getNamespace()->willReturn('docker');
-        $command3->getCommand()->willReturn('build');
-        $command3->getTitle()->willReturn('build docker images');
-
-        $definitions->findByType(CommandNamespaceDefinition::TYPE)->willReturn([
-            $namespace1
-        ]);
-
-        $definitions->findByType(CommandDefinition::TYPE)->willReturn([
-            $command1,
-            $command2,
-            $command3
-        ]);
-
-        $this->getHelpContext('docker')->shouldBe($namespace1);
-    }
-
-
- */
 
     public function it_provides_context_type_of_namespace_when_context_is_a_namespace(ResourceDefinitionRepository $definitions, CommandNamespaceDefinition $namespace1)
     {

@@ -26,6 +26,11 @@ class GlobPatternDefinitionLoader implements ResourceDefinitionLoader
      */
     public function load($source)
     {
-        return [];
+        $resources = [];
+
+        foreach (glob($source) as $file)
+            $resources = array_merge($resources, $this->fileDefinitionLoader->load($file));
+
+        return $resources;
     }
 }

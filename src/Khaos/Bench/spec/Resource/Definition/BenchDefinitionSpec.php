@@ -9,7 +9,7 @@ use PhpSpec\ObjectBehavior;
 
 class BenchDefinitionSpec extends ObjectBehavior
 {
-    private $sampleResource = [
+    private $sample = [
         'metadata' => [
             'id'                => 'hello-world',
             'title'             => 'Hello World',
@@ -24,7 +24,7 @@ class BenchDefinitionSpec extends ObjectBehavior
 
     function let()
     {
-        $this->beConstructedWith($this->sampleResource);
+        $this->beConstructedWith($this->sample);
     }
 
     function it_is_a_resource()
@@ -34,17 +34,17 @@ class BenchDefinitionSpec extends ObjectBehavior
 
     function it_provides_metadata_title()
     {
-        $this->getTitle()->shouldBe($this->sampleResource['metadata']['title']);
+        $this->getTitle()->shouldBe($this->sample['metadata']['title']);
     }
 
     function it_provides_metadata_description()
     {
-        $this->getDescription()->shouldBe($this->sampleResource['metadata']['description']);
+        $this->getDescription()->shouldBe($this->sample['metadata']['description']);
     }
 
     function it_provides_metadata_id()
     {
-        $this->getId()->shouldBe($this->sampleResource['metadata']['id']);
+        $this->getId()->shouldBe($this->sample['metadata']['id']);
     }
 
     function it_provides_text_representation_of_resource_type()
@@ -78,7 +78,7 @@ class BenchDefinitionSpec extends ObjectBehavior
 
     function it_provides_the_tools_that_will_be_required_for_the_bench()
     {
-        $this->getTools()->shouldBe($this->sampleResource['tools']);
+        $this->getTools()->shouldBe($this->sample['tools']);
     }
 
     function it_provides_an_empty_array_when_no_tools_are_specified_in_the_definition()
@@ -92,5 +92,18 @@ class BenchDefinitionSpec extends ObjectBehavior
         ]);
 
         $this->getTools()->shouldBe([]);
+    }
+
+    function it_assigns_an_unique_id_when_none_specified()
+    {
+        $sample = $this->sample;
+        unset($sample['metadata']['id']);
+
+        $this->beConstructedWith($sample);
+
+        $this->getId()->shouldBe('_internal/bench/0');
+
+        $this::getUniqueId()->shouldBe('_internal/bench/1');
+        $this::getUniqueId()->shouldBe('_internal/bench/2');
     }
 }

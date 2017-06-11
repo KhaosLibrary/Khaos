@@ -1,0 +1,9 @@
+---
+resource: bench
+metadata:
+  title: Global Bench
+  description: Tools and options available across the entire system regardless of project scope.
+definition:
+  options:
+    - '-h, --help       Show detailed help for a given command.'
+    - '-v, --verbose    Give detailed feedback while running a command.'

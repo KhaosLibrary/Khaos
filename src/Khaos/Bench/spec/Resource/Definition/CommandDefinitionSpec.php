@@ -53,15 +53,6 @@ class CommandDefinitionSpec extends ObjectBehavior
         $this->getNamespace()->shouldBe($this->sample['definition']['namespace']);
     }
 
-    function it_provides_null_when_no_namespace_is_specified(OptionDefinitionParser $optionDefinitionParser)
-    {
-        $sample = $this->sample;
-        unset($sample['definition']['namespace']);
-
-        $this->beConstructedWith($sample, $optionDefinitionParser);
-        $this->getNamespace()->shouldBe(null);
-    }
-
     function it_provides_the_command()
     {
         $this->getCommand()->shouldBe($this->sample['definition']['command']);
@@ -133,5 +124,15 @@ class CommandDefinitionSpec extends ObjectBehavior
     function it_provides_the_tasks_to_perform()
     {
         $this->getRun()->shouldBe($this->sample['definition']['run']);
+    }
+
+    function it_assigns_a_default_namespace_if_none_is_specified(OptionDefinitionParser $optionDefinitionParser)
+    {
+        $sample = $this->sample;
+        unset($sample['definition']['namespace']);
+
+        $this->beConstructedWith($sample, $optionDefinitionParser);
+
+        $this->getNamespace()->shouldBe('bench');
     }
 }

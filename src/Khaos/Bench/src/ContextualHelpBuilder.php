@@ -39,6 +39,7 @@ class ContextualHelpBuilder
         if (is_array($context))
             $context = implode(' ', $context);
 
+        $context = (!$context) ? 'bench' : 'bench '.$context;
         $context = $this->getHelpContext($context);
 
         if ($context instanceof CommandNamespaceDefinition) {
@@ -48,11 +49,6 @@ class ContextualHelpBuilder
 
         if ($context instanceof CommandDefinition) {
             $this->buildCommandHelpSection($context);
-            return;
-        }
-
-        if ($context == null) {
-            $this->buildRootHelpSection();
             return;
         }
     }
@@ -155,44 +151,6 @@ class ContextualHelpBuilder
         return null;
     }
 
-    private function buildRootHelpSection()
-    {
-        // Title
-        $title = 'Bench';
-        if ($title) echo "\n\e[1m".$title."\e[0m\n";
-
-        // Description
-        $description = 'This is an example description of the bench namespace.';
-        if ($description) echo "\e[0m".$description."\e[0m\n";
-
-        // Sub Commands
-
-        $padding = 0;
-
-        $children = [];
-        $children = array_merge($children, $this->getChildNamespaces());
-        $children = array_merge($children, $this->getChildCommands());
-
-        ksort($children);
-
-        foreach ($children as $k => $v)
-            if (strlen($k) > $padding)
-                $padding = strlen($k);
-
-        $padding += 8;
-
-        echo "\n\e[1mCommands:\e[0m\n";
-
-        foreach ($children as $k => $v)
-            echo '    '.str_pad($k, $padding, ' ').$v."\n";
-
-        // Global Options
-
-        $this->buildOptionsSection("Global Options", $this->globalOptions);
-
-        echo "\n";
-    }
-
     private function buildNamespaceHelpSection(CommandNamespaceDefinition $namespaceDefinition)
     {
         // Title
@@ -246,10 +204,12 @@ class ContextualHelpBuilder
         echo "  ".$commandDefinition->getUsage()."\n";
 
         // Command Options
-        $this->buildOptionsSection("Command Options", $commandDefinition->getOptions());
+        if (count($commandDefinition->getOptions()) > 0)
+            $this->buildOptionsSection("Command Options", $commandDefinition->getOptions());
 
         // Global Options
-        $this->buildOptionsSection("Global Options", $this->globalOptions);
+        if (count($this->globalOptions) > 0)
+            $this->buildOptionsSection("Global Options", $this->globalOptions);
 
         echo "\n";
     }
