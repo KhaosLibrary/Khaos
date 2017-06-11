@@ -16,6 +16,7 @@ use Khaos\Bench\Resource\ResourceDefinitionFactory;
 use Khaos\Bench\Resource\ResourceDefinitionFieldParser;
 use Khaos\Bench\Resource\ResourceDefinitionLoader;
 use Khaos\Bench\Resource\ResourceDefinitionRepository;
+use Khaos\Bench\Tool\Bench\BenchTool;
 use Khaos\Bench\Tool\Docker\DockerTool;
 use Khaos\Bench\Tool\ToolFactory;
 use Khaos\Console\Usage\Parser\OptionDefinitionParser;
@@ -45,6 +46,7 @@ $injector->share(ResourceDefinitionFieldParser::class);
 
 /*
  * ToolFactory
+ *  - bench
  *  - docker
  */
 
@@ -54,6 +56,7 @@ $injector->prepare
     ToolFactory::class,
     function(ToolFactory $toolFactory, Injector $injector)
     {
+        $toolFactory->add('bench',  BenchTool::class);
         $toolFactory->add('docker', DockerTool::class);
     }
 );

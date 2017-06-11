@@ -102,24 +102,11 @@ class Bench
 
     private function prepareBenchTools()
     {
-        $this->definitionFieldParser->addValue('bench', $this);
-
         /** @var BenchDefinition[] $benchDefinitions */
         $benchDefinitions = $this->definitions->findByType(BenchDefinition::TYPE);
 
         foreach ($benchDefinitions as $benchDefinition)
             foreach ($benchDefinition->getTools() as $tool)
-                $this->definitionFieldParser->addValue($tool, $this->toolFactory->create($tool));
-    }
-
-    public function version()
-    {
-        return self::VERSION;
-    }
-
-    public function help(Input $input)
-    {
-        $contextualHelpBuilder = new ContextualHelpBuilder($this->definitions);
-        $contextualHelpBuilder->build($input);
+                $this->definitionFieldParser->addValue($tool, $this->toolFactory->create($tool)->getCommandRouter());
     }
 }
