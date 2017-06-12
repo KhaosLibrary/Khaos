@@ -69,8 +69,6 @@ $injector->prepare
 /*
  * CompositeDefinitionLoader
  *  - File
- *  - Array
- *  - YAML
  */
 
 $injector->prepare
@@ -79,8 +77,6 @@ $injector->prepare
     function(CompositeDefinitionLoader $definitionLoader, Injector $injector)
     {
         $definitionLoader->add($injector->make(FileDefinitionLoader::class));
-        $definitionLoader->add($injector->make(ArrayDefinitionLoader::class));
-        $definitionLoader->add($injector->make(YamlDefinitionLoader::class));
     }
 );
 

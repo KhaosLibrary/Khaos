@@ -8,18 +8,16 @@ use Khaos\Bench\Tool\ToolFunctionRouter;
 interface Tool
 {
     /**
-     * Create new instance bench tool
-     *
-     * @param Injector $injector
-     *
-     * @return Tool
-     */
-    public static function create(Injector $injector);
-
-    /**
      * @return ToolFunctionRouter|null
      */
     public function getToolFunctionRouter();
+
+    /**
+     * Import Resources
+     *
+     * @param array $resourceDefinitionData
+     */
+    public function import(array $resourceDefinitionData);
 
     /**
      * @return array

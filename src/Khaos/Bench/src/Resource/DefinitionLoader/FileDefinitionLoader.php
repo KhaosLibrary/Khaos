@@ -31,52 +31,53 @@ class FileDefinitionLoader implements ResourceDefinitionLoader
     /**
      * @param mixed $source
      *
-     * @return ResourceDefinition[]|null
+     * @return array|null
      */
     public function load($source)
     {
         if (!is_string($source) || !file_exists($source))
             return null;
 
-        $fileInfo = new SplFileInfo($source);
+        $fileInfo         = new SplFileInfo($source);
+        $workingDirectory = realpath(dirname($source));
 
         if (!isset($this->definitionLoaders[$fileInfo->getExtension()]))
             return null;
 
-        $resources = $this->definitionLoaders[$fileInfo->getExtension()]->load(file_get_contents($source));
-        $resources = $this->updateResourceWorkingDirectory(realpath(dirname($source)), $resources);
+        $resources = [];
+
+        foreach ($this->definitionLoaders[$fileInfo->getExtension()]->load(file_get_contents($source)) as $resource)
+            $resources[] = $this->updateResourceWorkingDirectory($workingDirectory, $resource);
 
         return $resources;
     }
 
     /**
      * @param string $workingDirectory
-     * @param ResourceDefinition[] $resources
+     * @param array  $resource
      *
-     * @return ResourceDefinition[]
+     * @return array
      */
-    private function updateResourceWorkingDirectory($workingDirectory, $resources)
+    private function updateResourceWorkingDirectory($workingDirectory, $resource)
     {
-        foreach ($resources as $resourceDefinition) {
+        $resourceWorkingDirectory = $resource['metadata']['working-directory'] ?? null;
 
-            $resourceWorkingDirectory = $resourceDefinition->getWorkingDirectory();
+        if ($resourceWorkingDirectory) {
 
-            if ($resourceWorkingDirectory) {
-
-                if ($resourceWorkingDirectory[0] == '/') {
-                    throw new InvalidArgumentException('Only relative working directories can be specified in file based resources.');
-                }
-
-                $resourceWorkingDirectory = $workingDirectory.'/'.$resourceWorkingDirectory;
-            }
-            else
-            {
-                $resourceWorkingDirectory = $workingDirectory;
+            if ($resourceWorkingDirectory[0] == '/') {
+                throw new InvalidArgumentException('Only relative working directories can be specified in file based resources.');
             }
 
-            $resourceDefinition->setMetaData('working-directory', realpath($resourceWorkingDirectory));
+            $resourceWorkingDirectory = $workingDirectory.'/'.$resourceWorkingDirectory;
+        }
+        else
+        {
+            $resourceWorkingDirectory = $workingDirectory;
         }
 
-        return $resources;
+        $resource['metadata']['working-directory'] = realpath($resourceWorkingDirectory);
+
+
+        return $resource;
     }
 }

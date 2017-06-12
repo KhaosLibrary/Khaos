@@ -11,11 +11,6 @@ use Symfony\Component\Yaml\Parser;
 class YamlDefinitionLoader implements ResourceDefinitionLoader
 {
     /**
-     * @var CompositeDefinitionFactory
-     */
-    private $definitionFactory;
-
-    /**
      * @var Parser
      */
     private $parser;
@@ -24,12 +19,10 @@ class YamlDefinitionLoader implements ResourceDefinitionLoader
      * YamlResourceLoader constructor.
      *
      * @param Parser              $parser
-     * @param CompositeDefinitionFactory     $definitionFactory
      */
-    public function __construct(Parser $parser, CompositeDefinitionFactory $definitionFactory)
+    public function __construct(Parser $parser)
     {
-        $this->definitionFactory = $definitionFactory;
-        $this->parser            = $parser;
+        $this->parser = $parser;
     }
 
     /**
@@ -37,14 +30,14 @@ class YamlDefinitionLoader implements ResourceDefinitionLoader
      *
      * @param string $source YAML Documents
      *
-     * @return ResourceDefinition[]
+     * @return array  An array of resource definitions in an array format
      */
     public function load($source)
     {
         $definitions = [];
 
         foreach ($this->getYamlDocuments($source) as $document)
-            $definitions[] = $this->definitionFactory->create($this->parser->parse($document));
+            $definitions[] = $this->parser->parse($document);
 
         return $definitions;
     }

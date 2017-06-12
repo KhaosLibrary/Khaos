@@ -19,7 +19,7 @@ interface ResourceDefinitionLoader
      *
      * @param mixed $source
      *
-     * @return ResourceDefinition[]|null
+     * @return array|null
      */
     public function load($source);
 }

@@ -43,6 +43,8 @@ class DefinitionRepository implements ResourceDefinitionRepository
         }
         else
         {
+            var_dump($source);
+
             $definitions = $this->definitionLoader->load($source);
 
             if ($definitions == null)

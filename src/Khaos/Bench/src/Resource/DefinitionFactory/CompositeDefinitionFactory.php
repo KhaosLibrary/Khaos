@@ -14,11 +14,6 @@ class CompositeDefinitionFactory implements ResourceDefinitionFactory
     private $definitionFactories;
 
     /**
-     * @var string
-     */
-    private $defaultResource = ImportDefinition::TYPE;
-
-    /**
      * @param ResourceDefinitionFactory $definitionFactory
      */
     public function add(ResourceDefinitionFactory $definitionFactory)
@@ -33,8 +28,6 @@ class CompositeDefinitionFactory implements ResourceDefinitionFactory
      */
     public function create(array $definition)
     {
-        $definition['resource'] = $definition['resource'] ?? $this->defaultResource;
-
         if (!isset($this->definitionFactories[$definition['resource']]))
             throw new InvalidArgumentException("Resource of type '{$definition['resource']}' is not supported.");
 

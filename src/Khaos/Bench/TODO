@@ -1,7 +1,8 @@
-TODO: have tools report the resources they are responsible for to allow autoloading
 TODO: have tools available commands loaded based on an event?
 TODO: ensure 'import' of the ImportDefinition is an array of strings when loaded
 TODO: allow multiple bench resources to be handled in a composite way
 TODO: when argv[] is empty display help
 TODO: have ContextualHelpBuilder get global options from a composite of the bench resources
 TODO: improve the usefulness of generated errors
+TODO: add some sort of config/map/attribute resource to be shared
+TODO: enable config values to be encrypted

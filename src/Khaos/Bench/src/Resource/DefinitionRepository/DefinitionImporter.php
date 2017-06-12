@@ -3,31 +3,32 @@
 namespace Khaos\Bench\Resource\DefinitionRepository;
 
 use Exception;
+use InvalidArgumentException;
+use Khaos\Bench\Bench;
 use Khaos\Bench\Resource\Definition\ImportDefinition;
-use Khaos\Bench\Resource\DefinitionLoader\GlobPatternDefinitionLoader;
 use Khaos\Bench\Resource\DefinitionRepository\Event\ResourceDefinitionImported;
-use Khaos\Bench\Resource\ResourceDefinitionRepository;
 
 class DefinitionImporter
 {
     /**
-     * @var ResourceDefinitionRepository
+     * @var Bench
      */
-    private $definitionRepository;
+    private $bench;
 
     /**
-     * @var GlobPatternDefinitionLoader
+     * DefinitionImporter constructor.
+     *
+     * @param Bench  $bench
      */
-    private $globDefinitionLoader;
-
-    public function __construct(
-        ResourceDefinitionRepository $definitionRepository,
-        GlobPatternDefinitionLoader $definitionLoader)
+    public function __construct(Bench $bench)
     {
-        $this->definitionRepository = $definitionRepository;
-        $this->globDefinitionLoader     = $definitionLoader;
+        $this->bench = $bench;
     }
 
+    /**
+     * @param ResourceDefinitionImported $event
+     * @throws Exception
+     */
     public function __invoke(ResourceDefinitionImported $event)
     {
         $importDefinition = $event->getResourceDefinition();
@@ -35,8 +36,15 @@ class DefinitionImporter
         if (!$importDefinition instanceof ImportDefinition)
             throw new Exception("Only ResourceDefinitions of type '".ImportDefinition::TYPE."' accepted, got '".$importDefinition->getType()."'.");
 
-        foreach ($importDefinition->getImportPatterns() as $globPattern)
-            foreach ($this->globDefinitionLoader->load($importDefinition->getWorkingDirectory().'/'.$globPattern) as $resourceDefinition)
-                $this->definitionRepository->import($resourceDefinition);
+        foreach ($importDefinition->getImportPatterns() as $pattern)
+        {
+            $files = glob($pattern = $importDefinition->getWorkingDirectory().'/'.$pattern);
+
+            if ($files === false)
+                throw new InvalidArgumentException("Pattern '{$pattern}' is not valid.");
+
+            foreach ($files as $file)
+                $this->bench->import($file);
+        }
     }
 }

@@ -2,20 +2,17 @@
 
 namespace Khaos\Bench\Tool\Docker;
 
-use Auryn\Injector;
 use Khaos\Bench\Tool\ToolFunctionRouter;
 use Khaos\Bench\Tool\Tool;
 
 class DockerTool implements Tool
 {
+    /**
+     * DockerTool constructor.
+     */
     public function __construct()
     {
 
-    }
-
-    public static function create(Injector $injector)
-    {
-        return new self();
     }
 
     /**
@@ -24,6 +21,16 @@ class DockerTool implements Tool
     public function getToolFunctionRouter()
     {
         return null;
+    }
+
+    /**
+     * Import Resources
+     *
+     * @param array $resourceDefinitionData
+     */
+    public function import(array $resourceDefinitionData)
+    {
+
     }
 
     /**

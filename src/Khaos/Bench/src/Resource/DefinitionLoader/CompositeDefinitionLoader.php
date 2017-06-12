@@ -29,7 +29,7 @@ class CompositeDefinitionLoader implements ResourceDefinitionLoader
     public function load($source)
     {
         foreach ($this->definitionLoaders as $definitionLoader)
-            if ($definitions = $definitionLoader->load($source))
+            if (is_array($definitions = $definitionLoader->load($source)))
                 return $definitions;
 
         return null;

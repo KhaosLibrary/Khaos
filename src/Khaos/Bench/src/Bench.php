@@ -2,30 +2,17 @@
 
 namespace Khaos\Bench;
 
+use Exception;
 use Auryn\Injector;
 use Khaos\Bench\Command\CommandRunner;
 use Khaos\Bench\Resource\ResourceDefinitionLoader;
 use Khaos\Bench\Tool\Bench\BenchTool;
-use Khaos\Bench\Tool\Bench\Resource\Definition\BenchDefinition;
-use Khaos\Bench\Resource\ResourceDefinitionFieldParser;
-use Khaos\Bench\Resource\ResourceDefinitionRepository;
 use Khaos\Bench\Tool\Docker\DockerTool;
 use Khaos\Bench\Tool\Tool;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Bench
 {
-    const VERSION = 'Bench 0.0.2';
-
-    /**
-     * @var EventDispatcher
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var ResourceDefinitionRepository
-     */
-    private $definitions;
+    const VERSION = '0.0.1';
 
     /**
      * @var CommandRunner
@@ -33,23 +20,25 @@ class Bench
     private $commandRunner;
 
     /**
-     * @var ResourceDefinitionFieldParser
-     */
-    private $definitionFieldParser;
-
-    /**
      * @var Tool[]
      */
     private $tools = [];
 
+    /**
+     * @var Tool[]
+     */
     private $toolClassMap = [
         'bench'  => BenchTool::class,
         'docker' => DockerTool::class
     ];
+
+    private $resourceToolMap = [];
+
     /**
      * @var Injector
      */
     private $injector;
+
     /**
      * @var ResourceDefinitionLoader
      */
@@ -58,21 +47,17 @@ class Bench
     /**
      * Bench constructor.
      *
-     * @param EventDispatcher $eventDispatcher
-     * @param ResourceDefinitionRepository $resourceDefinitionRepository
-     * @param CommandRunner $commandRunner
-     * @param ResourceDefinitionFieldParser $definitionFieldParser
-     * @param Injector $injector
-     * @param ResourceDefinitionLoader $definitionLoader
+     * @param CommandRunner             $commandRunner
+     * @param Injector                  $injector
+     * @param ResourceDefinitionLoader  $definitionLoader
      */
-    public function __construct(EventDispatcher $eventDispatcher, ResourceDefinitionRepository $resourceDefinitionRepository, CommandRunner $commandRunner, ResourceDefinitionFieldParser $definitionFieldParser, Injector $injector, ResourceDefinitionLoader $definitionLoader)
+    public function __construct(CommandRunner $commandRunner, Injector $injector, ResourceDefinitionLoader $definitionLoader)
     {
-        $this->eventDispatcher       = $eventDispatcher;
-        $this->definitions           = $resourceDefinitionRepository;
-        $this->commandRunner         = $commandRunner;
-        $this->definitionFieldParser = $definitionFieldParser;
-        $this->injector              = $injector;
-        $this->definitionLoader      = $definitionLoader;
+        $this->injector          = $injector;
+        $this->commandRunner     = $commandRunner;
+        $this->definitionLoader  = $definitionLoader;
+
+        $this->buildResourceToolMap();
     }
 
     /**
@@ -80,21 +65,33 @@ class Bench
      */
     public function import($source)
     {
-
-
-        $this->definitions->import($source);
+        foreach ($this->definitionLoader->load($source) as $resourceDefinitionData)
+            $this->tool($this->resourceToolMap[$resourceDefinitionData['resource'] ?? 'bench'])->import($resourceDefinitionData);
     }
 
-    // bench [options] <command>
     public function run(array $args = [])
     {
-        $this->prepareBenchTools();
         $this->commandRunner->run($args);
     }
 
+    /**
+     * @param string $tool
+     *
+     * @return Tool
+     */
     public function tool($tool)
     {
+        if (!isset($this->tools[$tool]))
+            $this->tools[$tool] = $this->injector->make($this->toolClassMap[$tool]);
+
         return $this->tools[$tool];
+    }
+
+    private function buildResourceToolMap()
+    {
+        foreach ($this->toolClassMap as $tool => $class)
+            foreach ($class::resources() as $resourceType)
+                $this->resourceToolMap[$resourceType] = $tool;
     }
 
     public static function getRootResourceDefinition($search, $file = 'bench.yml')
@@ -109,33 +106,6 @@ class Bench
                 return $candidate;
         }
 
-        return [
-            'resource' => BenchDefinition::TYPE,
-            'metadata' => [
-                'title' => 'Global Bench',
-                'description' => 'Bench is running in the global scope of the system.'
-            ],
-            'tools' => []
-        ];
-    }
-
-    private function prepareBenchTools()
-    {
-        $tools = [];
-
-        /** @var BenchDefinition[] $benchDefinitions */
-        $benchDefinitions = $this->definitions->findByType(BenchDefinition::TYPE);
-
-        foreach ($benchDefinitions as $benchDefinition)
-            foreach ($benchDefinition->getTools() as $tool)
-                $tools[] = $tool;
-
-        $tools = array_unique($tools);
-
-        foreach ($tools as $tool)
-        {
-            $this->tools[$tool] = $this->injector->make($this->toolClassMap[$tool]);
-            $this->definitionFieldParser->addValue($tool, $this->tools[$tool]->getToolFunctionRouter());
-        }
+        throw new Exception('No root bench.yml could be found.');
     }
 }
