@@ -1,16 +1,16 @@
 <?php
 
-namespace Khaos\Bench\Resource\DefinitionFactory;
+namespace Khaos\Bench\Tool\Bench\Resource\DefinitionFactory;
 
-use Khaos\Bench\Resource\Definition\CommandNamespaceDefinition;
+use Khaos\Bench\Tool\Bench\Resource\Definition\NamespaceDefinition;
 use Khaos\Bench\Resource\ResourceDefinition;
 use Khaos\Bench\Resource\ResourceDefinitionFactory;
 
-class CommandNamespaceDefinitionFactory implements ResourceDefinitionFactory
+class NamespaceDefinitionFactory implements ResourceDefinitionFactory
 {
     public function getType()
     {
-        return CommandNamespaceDefinition::TYPE;
+        return NamespaceDefinition::TYPE;
     }
 
     /**
@@ -22,6 +22,6 @@ class CommandNamespaceDefinitionFactory implements ResourceDefinitionFactory
      */
     public function create(array $definition)
     {
-        return new CommandNamespaceDefinition($definition);
+        return new NamespaceDefinition($definition);
     }
 }

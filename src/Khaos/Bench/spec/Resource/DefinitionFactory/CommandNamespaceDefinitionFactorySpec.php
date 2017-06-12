@@ -2,8 +2,8 @@
 
 namespace spec\Khaos\Bench\Resource\DefinitionFactory;
 
-use Khaos\Bench\Resource\Definition\CommandNamespaceDefinition;
-use Khaos\Bench\Resource\DefinitionFactory\CommandNamespaceDefinitionFactory;
+use Khaos\Bench\Tool\Bench\Resource\Definition\NamespaceDefinition;
+use Khaos\Bench\Tool\Bench\Resource\DefinitionFactory\NamespaceDefinitionFactory;
 use Khaos\Bench\Resource\ResourceDefinitionFactory;
 use PhpSpec\ObjectBehavior;
 
@@ -23,7 +23,7 @@ class CommandNamespaceDefinitionFactorySpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType(CommandNamespaceDefinitionFactory::class);
+        $this->shouldHaveType(NamespaceDefinitionFactory::class);
     }
 
     function it_is_a_resource_definition_fcatory()
@@ -33,11 +33,11 @@ class CommandNamespaceDefinitionFactorySpec extends ObjectBehavior
 
     function it_provides_the_type_of_resource_factory()
     {
-        $this->getType()->shouldBe(CommandNamespaceDefinition::TYPE);
+        $this->getType()->shouldBe(NamespaceDefinition::TYPE);
     }
 
     function it_provides_the_command_namespace_definition_wheb_given_valid_data()
     {
-        $this->create($this->sample)->shouldBeAnInstanceOf(CommandNamespaceDefinition::class);
+        $this->create($this->sample)->shouldBeAnInstanceOf(NamespaceDefinition::class);
     }
 }

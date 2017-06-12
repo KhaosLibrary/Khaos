@@ -1,11 +1,11 @@
 <?php
 
-namespace Khaos\Bench\Resource\Definition;
+namespace Khaos\Bench\Tool\Bench\Resource\Definition;
 
-use Khaos\Bench\Resource\Definition\BaseResourceDefinition;
+use Khaos\Bench\Resource\Definition\AbstractResourceDefinition;
 use Khaos\Bench\Resource\ResourceDefinition;
 
-class BenchDefinition extends BaseResourceDefinition implements ResourceDefinition
+class BenchDefinition extends AbstractResourceDefinition implements ResourceDefinition
 {
     const TYPE = 'bench';
 

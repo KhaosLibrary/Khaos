@@ -1,3 +1,5 @@
+TODO: have tools report the resources they are responsible for to allow autoloading
+TODO: have tools available commands loaded based on an event?
 TODO: ensure 'import' of the ImportDefinition is an array of strings when loaded
 TODO: allow multiple bench resources to be handled in a composite way
 TODO: when argv[] is empty display help

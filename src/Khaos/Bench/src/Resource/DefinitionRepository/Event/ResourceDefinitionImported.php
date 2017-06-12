@@ -1,11 +1,11 @@
 <?php
 
-namespace Khaos\Bench\Resource\DefinitionRepository;
+namespace Khaos\Bench\Resource\DefinitionRepository\Event;
 
 use Khaos\Bench\Resource\ResourceDefinition;
 use Symfony\Component\EventDispatcher\Event;
 
-class DefinitionRepositoryImportEvent extends Event
+class ResourceDefinitionImported extends Event
 {
     const NAME = 'resource.definition.repository.import';
 

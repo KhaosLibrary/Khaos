@@ -5,7 +5,7 @@ namespace Khaos\Bench\Resource\Definition;
 use InvalidArgumentException;
 use Khaos\Bench\Resource\ResourceDefinition;
 
-abstract class BaseResourceDefinition implements ResourceDefinition
+abstract class AbstractResourceDefinition implements ResourceDefinition
 {
     protected $data = [];
 

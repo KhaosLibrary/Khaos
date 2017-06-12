@@ -5,6 +5,7 @@ namespace Khaos\Bench\Resource\DefinitionRepository;
 use Exception;
 use Khaos\Bench\Resource\Definition\ImportDefinition;
 use Khaos\Bench\Resource\DefinitionLoader\GlobPatternDefinitionLoader;
+use Khaos\Bench\Resource\DefinitionRepository\Event\ResourceDefinitionImported;
 use Khaos\Bench\Resource\ResourceDefinitionRepository;
 
 class DefinitionImporter
@@ -27,7 +28,7 @@ class DefinitionImporter
         $this->globDefinitionLoader     = $definitionLoader;
     }
 
-    public function __invoke(DefinitionRepositoryImportEvent $event)
+    public function __invoke(ResourceDefinitionImported $event)
     {
         $importDefinition = $event->getResourceDefinition();
 

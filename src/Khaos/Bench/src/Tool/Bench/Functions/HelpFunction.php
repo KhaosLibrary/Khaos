@@ -1,11 +1,12 @@
 <?php
 
-namespace Khaos\Bench;
+namespace Khaos\Bench\Tool\Bench\Functions;
 
-use Khaos\Bench\Command\Command;
+use Khaos\Bench\Tool\ToolFunction;
+use Khaos\Bench\Tool\Bench\Functions\Help\ContextualHelpBuilder;
 use Khaos\Console\Usage\Input;
 
-class HelpCommand implements Command
+class HelpFunction implements ToolFunction
 {
     /**
      * @var ContextualHelpBuilder

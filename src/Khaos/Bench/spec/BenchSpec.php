@@ -4,7 +4,7 @@ namespace spec\Khaos\Bench;
 
 use Khaos\Bench\Bench;
 use Khaos\Bench\Command\CommandRunner;
-use Khaos\Bench\Resource\Definition\BenchDefinition;
+use Khaos\Bench\Tool\Bench\Resource\Definition\BenchDefinition;
 use Khaos\Bench\Resource\ResourceDefinitionFieldParser;
 use Khaos\Bench\Resource\ResourceDefinitionRepository;
 use Khaos\Bench\Tool\Tool;

@@ -3,7 +3,7 @@
 namespace spec\Khaos\Bench\Resource\Definition;
 
 use InvalidArgumentException;
-use Khaos\Bench\Resource\Definition\BenchDefinition;
+use Khaos\Bench\Tool\Bench\Resource\Definition\BenchDefinition;
 use Khaos\Bench\Resource\ResourceDefinition;
 use PhpSpec\ObjectBehavior;
 

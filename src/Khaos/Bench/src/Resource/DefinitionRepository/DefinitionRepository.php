@@ -3,7 +3,7 @@
 namespace Khaos\Bench\Resource\DefinitionRepository;
 
 use InvalidArgumentException;
-use Khaos\Bench\Resource\DefinitionRepository\DefinitionRepositoryImportEvent;
+use Khaos\Bench\Resource\DefinitionRepository\Event\ResourceDefinitionImported;
 use Khaos\Bench\Resource\ResourceDefinition;
 use Khaos\Bench\Resource\ResourceDefinitionLoader;
 use Khaos\Bench\Resource\ResourceDefinitionRepository;
@@ -82,9 +82,9 @@ class DefinitionRepository implements ResourceDefinitionRepository
 
         $this->resourceDefinitions[$definition->getId()] = $definition;
 
-        $event = new DefinitionRepositoryImportEvent($definition);
-        $this->eventDispatcher->dispatch(DefinitionRepositoryImportEvent::NAME, $event);
-        $this->eventDispatcher->dispatch(DefinitionRepositoryImportEvent::NAME.'::'.$definition->getType(), $event);
+        $event = new ResourceDefinitionImported($definition);
+        $this->eventDispatcher->dispatch(ResourceDefinitionImported::NAME, $event);
+        $this->eventDispatcher->dispatch(ResourceDefinitionImported::NAME.'::'.$definition->getType(), $event);
     }
 
     public function query(callable $matcher)

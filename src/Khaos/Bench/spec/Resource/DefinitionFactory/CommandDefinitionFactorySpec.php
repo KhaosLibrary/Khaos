@@ -2,8 +2,8 @@
 
 namespace spec\Khaos\Bench\Resource\DefinitionFactory;
 
-use Khaos\Bench\Resource\Definition\CommandDefinition;
-use Khaos\Bench\Resource\DefinitionFactory\CommandDefinitionFactory;
+use Khaos\Bench\Tool\Bench\Resource\Definition\CommandDefinition;
+use Khaos\Bench\Tool\Bench\Resource\DefinitionFactory\CommandDefinitionFactory;
 use Khaos\Bench\Resource\ResourceDefinitionFactory;
 use Khaos\Console\Usage\Parser\OptionDefinitionParser;
 use PhpSpec\ObjectBehavior;

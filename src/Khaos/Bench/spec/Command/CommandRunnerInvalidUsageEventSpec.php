@@ -2,7 +2,7 @@
 
 namespace spec\Khaos\Bench\Command;
 
-use Khaos\Bench\Command\CommandRunnerInvalidUsageEvent;
+use Khaos\Bench\Command\Event\InvalidUsageEvent;
 use Khaos\Console\Usage\Model\OptionDefinitionRepository;
 use Khaos\Console\Usage\Parser\InputSequence;
 use PhpSpec\ObjectBehavior;
@@ -18,7 +18,7 @@ class CommandRunnerInvalidUsageEventSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType(CommandRunnerInvalidUsageEvent::class);
+        $this->shouldHaveType(InvalidUsageEvent::class);
     }
 
     function it_is_an_event()

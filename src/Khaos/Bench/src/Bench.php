@@ -2,18 +2,15 @@
 
 namespace Khaos\Bench;
 
+use Auryn\Injector;
 use Khaos\Bench\Command\CommandRunner;
-use Khaos\Bench\Resource\Definition\BenchDefinition;
-use Khaos\Bench\Resource\Definition\CommandDefinition;
-use Khaos\Bench\Resource\Definition\CommandNamespaceDefinition;
-use Khaos\Bench\Resource\ResourceDefinition;
+use Khaos\Bench\Resource\ResourceDefinitionLoader;
+use Khaos\Bench\Tool\Bench\BenchTool;
+use Khaos\Bench\Tool\Bench\Resource\Definition\BenchDefinition;
 use Khaos\Bench\Resource\ResourceDefinitionFieldParser;
 use Khaos\Bench\Resource\ResourceDefinitionRepository;
-use Khaos\Bench\Tool\ToolFactory;
-use Khaos\Console\Usage\Input;
-use Khaos\Console\Usage\Model\Option;
-use Khaos\Console\Usage\Model\OptionDefinition;
-use Khaos\Console\Usage\Model\OptionDefinitionRepository;
+use Khaos\Bench\Tool\Docker\DockerTool;
+use Khaos\Bench\Tool\Tool;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Bench
@@ -31,11 +28,6 @@ class Bench
     private $definitions;
 
     /**
-     * @var ToolFactory
-     */
-    private $toolFactory;
-
-    /**
      * @var CommandRunner
      */
     private $commandRunner;
@@ -46,21 +38,41 @@ class Bench
     private $definitionFieldParser;
 
     /**
+     * @var Tool[]
+     */
+    private $tools = [];
+
+    private $toolClassMap = [
+        'bench'  => BenchTool::class,
+        'docker' => DockerTool::class
+    ];
+    /**
+     * @var Injector
+     */
+    private $injector;
+    /**
+     * @var ResourceDefinitionLoader
+     */
+    private $definitionLoader;
+
+    /**
      * Bench constructor.
      *
      * @param EventDispatcher $eventDispatcher
      * @param ResourceDefinitionRepository $resourceDefinitionRepository
-     * @param ToolFactory $toolFactory
      * @param CommandRunner $commandRunner
      * @param ResourceDefinitionFieldParser $definitionFieldParser
+     * @param Injector $injector
+     * @param ResourceDefinitionLoader $definitionLoader
      */
-    public function __construct(EventDispatcher $eventDispatcher, ResourceDefinitionRepository $resourceDefinitionRepository, ToolFactory $toolFactory, CommandRunner $commandRunner, ResourceDefinitionFieldParser $definitionFieldParser)
+    public function __construct(EventDispatcher $eventDispatcher, ResourceDefinitionRepository $resourceDefinitionRepository, CommandRunner $commandRunner, ResourceDefinitionFieldParser $definitionFieldParser, Injector $injector, ResourceDefinitionLoader $definitionLoader)
     {
         $this->eventDispatcher       = $eventDispatcher;
         $this->definitions           = $resourceDefinitionRepository;
-        $this->toolFactory           = $toolFactory;
         $this->commandRunner         = $commandRunner;
         $this->definitionFieldParser = $definitionFieldParser;
+        $this->injector              = $injector;
+        $this->definitionLoader      = $definitionLoader;
     }
 
     /**
@@ -68,6 +80,8 @@ class Bench
      */
     public function import($source)
     {
+
+
         $this->definitions->import($source);
     }
 
@@ -76,6 +90,11 @@ class Bench
     {
         $this->prepareBenchTools();
         $this->commandRunner->run($args);
+    }
+
+    public function tool($tool)
+    {
+        return $this->tools[$tool];
     }
 
     public static function getRootResourceDefinition($search, $file = 'bench.yml')
@@ -102,11 +121,21 @@ class Bench
 
     private function prepareBenchTools()
     {
+        $tools = [];
+
         /** @var BenchDefinition[] $benchDefinitions */
         $benchDefinitions = $this->definitions->findByType(BenchDefinition::TYPE);
 
         foreach ($benchDefinitions as $benchDefinition)
             foreach ($benchDefinition->getTools() as $tool)
-                $this->definitionFieldParser->addValue($tool, $this->toolFactory->create($tool)->getCommandRouter());
+                $tools[] = $tool;
+
+        $tools = array_unique($tools);
+
+        foreach ($tools as $tool)
+        {
+            $this->tools[$tool] = $this->injector->make($this->toolClassMap[$tool]);
+            $this->definitionFieldParser->addValue($tool, $this->tools[$tool]->getToolFunctionRouter());
+        }
     }
 }

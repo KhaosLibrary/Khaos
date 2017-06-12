@@ -1,13 +1,13 @@
 <?php
 
-namespace Khaos\Bench\Command;
+namespace Khaos\Bench\Command\Event;
 
 use Khaos\Console\Usage\Model\OptionDefinitionRepository;
 use Khaos\Console\Usage\Parser\InputSequence;
 use Khaos\Console\Usage\Parser\InputSequenceFactory;
 use Symfony\Component\EventDispatcher\Event;
 
-class CommandRunnerInvalidUsageEvent extends Event
+class InvalidUsageEvent extends Event
 {
     const NAME = 'command.runner.invalidUsage';
 

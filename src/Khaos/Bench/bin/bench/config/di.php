@@ -1,9 +1,10 @@
 <?php
 
 use Auryn\Injector;
-use Khaos\Bench\Resource\DefinitionFactory\BenchDefinitionFactory;
-use Khaos\Bench\Resource\DefinitionFactory\CommandDefinitionFactory;
-use Khaos\Bench\Resource\DefinitionFactory\CommandNamespaceDefinitionFactory;
+use Khaos\Bench\Bench;
+use Khaos\Bench\Tool\Bench\Resource\DefinitionFactory\BenchDefinitionFactory;
+use Khaos\Bench\Tool\Bench\Resource\DefinitionFactory\CommandDefinitionFactory;
+use Khaos\Bench\Tool\Bench\Resource\DefinitionFactory\NamespaceDefinitionFactory;
 use Khaos\Bench\Resource\DefinitionFactory\CompositeDefinitionFactory;
 use Khaos\Bench\Resource\DefinitionFactory\ImportDefinitionFactory;
 use Khaos\Bench\Resource\DefinitionFieldParser\DefinitionFieldParser;
@@ -39,27 +40,12 @@ $injector->alias(ResourceDefinitionFieldParser::class,DefinitionFieldParser::cla
  * Define which classes should use a shared instance.
  */
 
+$injector->share($injector);
+$injector->share(Bench::class);
 $injector->share(EventDispatcher::class);
 $injector->share(ResourceDefinitionRepository::class);
 $injector->share(OptionDefinitionParser::class);
 $injector->share(ResourceDefinitionFieldParser::class);
-
-/*
- * ToolFactory
- *  - bench
- *  - docker
- */
-
-$injector->define(ToolFactory::class, [$injector]);
-$injector->prepare
-(
-    ToolFactory::class,
-    function(ToolFactory $toolFactory, Injector $injector)
-    {
-        $toolFactory->add('bench',  BenchTool::class);
-        $toolFactory->add('docker', DockerTool::class);
-    }
-);
 
 /*
  * CompositeDefinitionFactory
@@ -76,7 +62,7 @@ $injector->prepare
         $definitionFactory->add($injector->make(BenchDefinitionFactory::class));
         $definitionFactory->add($injector->make(ImportDefinitionFactory::class));
         $definitionFactory->add($injector->make(CommandDefinitionFactory::class));
-        $definitionFactory->add($injector->make(CommandNamespaceDefinitionFactory::class));
+        $definitionFactory->add($injector->make(NamespaceDefinitionFactory::class));
     }
 );
 

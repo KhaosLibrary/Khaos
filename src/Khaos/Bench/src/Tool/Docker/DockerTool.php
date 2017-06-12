@@ -3,7 +3,7 @@
 namespace Khaos\Bench\Tool\Docker;
 
 use Auryn\Injector;
-use Khaos\Bench\Command\CommandRouter;
+use Khaos\Bench\Tool\ToolFunctionRouter;
 use Khaos\Bench\Tool\Tool;
 
 class DockerTool implements Tool
@@ -19,10 +19,21 @@ class DockerTool implements Tool
     }
 
     /**
-     * @return CommandRouter|null
+     * @return ToolFunctionRouter|null
      */
-    public function getCommandRouter()
+    public function getToolFunctionRouter()
     {
         return null;
+    }
+
+    /**
+     * @return array
+     */
+    public static function resources()
+    {
+        return [
+            'docker/registry',
+            'docker/image'
+        ];
     }
 }

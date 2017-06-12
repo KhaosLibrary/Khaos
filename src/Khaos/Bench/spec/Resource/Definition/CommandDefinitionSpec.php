@@ -4,7 +4,7 @@ namespace spec\Khaos\Bench\Resource\Definition;
 
 use Exception;
 use InvalidArgumentException;
-use Khaos\Bench\Resource\Definition\CommandDefinition;
+use Khaos\Bench\Tool\Bench\Resource\Definition\CommandDefinition;
 use Khaos\Bench\Resource\ResourceDefinition;
 use Khaos\Console\Usage\Model\Option;
 use Khaos\Console\Usage\Model\OptionDefinition;

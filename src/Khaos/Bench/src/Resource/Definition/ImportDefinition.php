@@ -3,12 +3,12 @@
 namespace Khaos\Bench\Resource\Definition;
 
 use InvalidArgumentException;
-use Khaos\Bench\Resource\Definition\BaseResourceDefinition;
+use Khaos\Bench\Resource\Definition\AbstractResourceDefinition;
 use Khaos\Bench\Resource\ResourceDefinition;
 
-class ImportDefinition extends BaseResourceDefinition implements ResourceDefinition
+class ImportDefinition extends AbstractResourceDefinition implements ResourceDefinition
 {
-    const TYPE = 'bench/import';
+    const TYPE = 'import';
 
     public function __construct(array $data)
     {
@@ -30,6 +30,6 @@ class ImportDefinition extends BaseResourceDefinition implements ResourceDefinit
     public static function getUniqueId()
     {
         static $count = 0;
-        return '_internal/bench/import/'.$count++;
+        return '_internal/import/'.$count++;
     }
 }

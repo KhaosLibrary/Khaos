@@ -1,8 +1,8 @@
 <?php
 
-namespace Khaos\Bench\Resource\DefinitionFactory;
+namespace Khaos\Bench\Tool\Bench\Resource\DefinitionFactory;
 
-use Khaos\Bench\Resource\Definition\CommandDefinition;
+use Khaos\Bench\Tool\Bench\Resource\Definition\CommandDefinition;
 use Khaos\Bench\Resource\ResourceDefinition;
 use Khaos\Bench\Resource\ResourceDefinitionFactory;
 use Khaos\Console\Usage\Parser\OptionDefinitionParser;

@@ -1,13 +1,14 @@
 <?php
 
-namespace Khaos\Bench\Resource\Definition;
+namespace Khaos\Bench\Tool\Bench\Resource\Definition;
 
 use InvalidArgumentException;
+use Khaos\Bench\Resource\Definition\AbstractResourceDefinition;
 use Khaos\Bench\Resource\ResourceDefinition;
 
-class CommandNamespaceDefinition extends BaseResourceDefinition implements ResourceDefinition
+class NamespaceDefinition extends AbstractResourceDefinition implements ResourceDefinition
 {
-    const TYPE = 'bench/command-namespace';
+    const TYPE = 'bench/namespace';
 
     public function __construct(array $data)
     {

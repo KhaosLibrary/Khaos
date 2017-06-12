@@ -2,7 +2,7 @@
 
 namespace spec\Khaos\Bench\Command;
 
-use Khaos\Bench\Command\CommandRunnerParsedEvent;
+use Khaos\Bench\Command\Event\CommandFoundEvent;
 use Khaos\Console\Usage\Input;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -17,7 +17,7 @@ class CommandRunnerParsedEventSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType(CommandRunnerParsedEvent::class);
+        $this->shouldHaveType(CommandFoundEvent::class);
     }
 
     function it_is_an_event()

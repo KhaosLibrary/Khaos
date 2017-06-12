@@ -2,7 +2,7 @@
 
 namespace spec\Khaos\Bench\Resource\DefinitionFactory;
 
-use Khaos\Bench\Resource\Definition\BenchDefinition;
+use Khaos\Bench\Tool\Bench\Resource\Definition\BenchDefinition;
 use Khaos\Bench\Resource\ResourceDefinitionFactory;
 use PhpSpec\ObjectBehavior;
 

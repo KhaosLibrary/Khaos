@@ -1,11 +1,11 @@
 <?php
 
-namespace Khaos\Bench\Command;
+namespace Khaos\Bench\Command\Event;
 
 use Khaos\Console\Usage\Input;
 use Symfony\Component\EventDispatcher\Event;
 
-class CommandRunnerParsedEvent extends Event
+class CommandFoundEvent extends Event
 {
     const NAME = 'command.runner.parsed';
 

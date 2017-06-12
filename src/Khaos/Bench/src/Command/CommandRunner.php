@@ -2,7 +2,9 @@
 
 namespace Khaos\Bench\Command;
 
-use Khaos\Bench\Resource\Definition\CommandDefinition;
+use Khaos\Bench\Command\Event\CommandFoundEvent;
+use Khaos\Bench\Command\Event\InvalidUsageEvent;
+use Khaos\Bench\Tool\Bench\Resource\Definition\CommandDefinition;
 use Khaos\Bench\Resource\ResourceDefinitionFieldParser;
 use Khaos\Bench\Resource\ResourceDefinitionRepository;
 use Khaos\Console\Usage\Parser\OptionDefinitionParser;
@@ -83,7 +85,7 @@ class CommandRunner
             return;
         }
 
-        $this->eventDispatcher->dispatch(CommandRunnerInvalidUsageEvent::NAME,  new CommandRunnerInvalidUsageEvent($args, $this->global->getOptions()));
+        $this->eventDispatcher->dispatch(InvalidUsageEvent::NAME,  new InvalidUsageEvent($args, $this->global->getOptions()));
     }
 
     /**
@@ -97,7 +99,7 @@ class CommandRunner
         if (($input = $this->buildUsageParser($commandDefinition)->parse($args)) === false)
             return false;
 
-        $this->eventDispatcher->dispatch(CommandRunnerParsedEvent::NAME, new CommandRunnerParsedEvent($input));
+        $this->eventDispatcher->dispatch(CommandFoundEvent::NAME, new CommandFoundEvent($input));
 
         return $input;
     }

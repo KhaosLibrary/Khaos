@@ -1,9 +1,11 @@
 <?php
 
-namespace Khaos\Bench;
+namespace Khaos\Bench\Tool\Bench;
 
 use Auryn\Injector;
-use Khaos\Bench\Command\CommandRouter;
+use Khaos\Bench\Tool\ToolFunctionRouter;
+use Khaos\Bench\Tool\Bench\Functions\HelpFunction;
+use Khaos\Bench\Tool\Bench\Functions\VersionFunction;
 use Khaos\Console\Usage\Input;
 
 /**
@@ -14,7 +16,7 @@ use Khaos\Console\Usage\Input;
  * @method void help(Input $input)
  * @method void version()
  */
-class BenchCommandRouter implements CommandRouter
+class BenchFunctionRouter implements ToolFunctionRouter
 {
     /**
      * @var Injector
@@ -26,8 +28,8 @@ class BenchCommandRouter implements CommandRouter
      */
     private $commandMap =
     [
-        'help'    => HelpCommand::class,
-        'version' => VersionCommand::class
+        'help'    => HelpFunction::class,
+        'version' => VersionFunction::class
     ];
 
     /**

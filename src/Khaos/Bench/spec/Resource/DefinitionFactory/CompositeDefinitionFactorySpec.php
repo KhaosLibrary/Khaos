@@ -3,8 +3,8 @@
 namespace spec\Khaos\Bench\Resource\DefinitionFactory;
 
 use InvalidArgumentException;
-use Khaos\Bench\Resource\Definition\BenchDefinition;
-use Khaos\Bench\Resource\DefinitionFactory\BenchDefinitionFactory;
+use Khaos\Bench\Tool\Bench\Resource\Definition\BenchDefinition;
+use Khaos\Bench\Tool\Bench\Resource\DefinitionFactory\BenchDefinitionFactory;
 use Khaos\Bench\Resource\Definition\ImportDefinition;
 use Khaos\Bench\Resource\DefinitionFactory\ImportDefinitionFactory;
 use Khaos\Bench\Resource\ResourceDefinitionFactory;

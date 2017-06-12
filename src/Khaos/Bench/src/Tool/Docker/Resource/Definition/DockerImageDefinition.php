@@ -3,10 +3,10 @@
 namespace Khaos\Bench\Tool\Docker\Resource\Definition;
 
 use InvalidArgumentException;
-use Khaos\Bench\Resource\Definition\BaseResourceDefinition;
+use Khaos\Bench\Resource\Definition\AbstractResourceDefinition;
 use Khaos\Bench\Resource\ResourceDefinition;
 
-class DockerImageDefinition extends BaseResourceDefinition implements ResourceDefinition
+class DockerImageDefinition extends AbstractResourceDefinition implements ResourceDefinition
 {
     const TYPE = 'docker/image';
 

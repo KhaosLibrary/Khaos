@@ -1,9 +1,9 @@
 <?php
 
-namespace Khaos\Bench;
+namespace Khaos\Bench\Tool\Bench\Functions\Help;
 
-use Khaos\Bench\Resource\Definition\CommandDefinition;
-use Khaos\Bench\Resource\Definition\CommandNamespaceDefinition;
+use Khaos\Bench\Tool\Bench\Resource\Definition\CommandDefinition;
+use Khaos\Bench\Tool\Bench\Resource\Definition\NamespaceDefinition;
 use Khaos\Bench\Resource\ResourceDefinitionRepository;
 use Khaos\Console\Usage\Input;
 use Khaos\Console\Usage\Model\OptionDefinition;
@@ -42,7 +42,7 @@ class ContextualHelpBuilder
         $context = (!$context) ? 'bench' : 'bench '.$context;
         $context = $this->getHelpContext($context);
 
-        if ($context instanceof CommandNamespaceDefinition) {
+        if ($context instanceof NamespaceDefinition) {
             $this->buildNamespaceHelpSection($context);
             return;
         }
@@ -93,9 +93,9 @@ class ContextualHelpBuilder
     {
         $namespaces = [];
 
-        foreach ($this->resourceDefinitions->findByType(CommandNamespaceDefinition::TYPE) as $namespaceDefinition)
+        foreach ($this->resourceDefinitions->findByType(NamespaceDefinition::TYPE) as $namespaceDefinition)
         {
-            /** @var CommandNamespaceDefinition $namespaceDefinition */
+            /** @var NamespaceDefinition $namespaceDefinition */
 
             if (!preg_match('/^'.(($parent == null) ? '' : $parent.' ').'[a-zA-Z0-9_-]+$/', $namespaceDefinition->getNamespace()))
                 continue;
@@ -130,9 +130,9 @@ class ContextualHelpBuilder
 
     public function getHelpContext($context)
     {
-        foreach ($this->resourceDefinitions->findByType(CommandNamespaceDefinition::TYPE) as $namespaceDefinition)
+        foreach ($this->resourceDefinitions->findByType(NamespaceDefinition::TYPE) as $namespaceDefinition)
         {
-            /** @var CommandNamespaceDefinition $namespaceDefinition */
+            /** @var NamespaceDefinition $namespaceDefinition */
 
             if ($namespaceDefinition->getNamespace() == $context)
                 return $namespaceDefinition;
@@ -151,7 +151,7 @@ class ContextualHelpBuilder
         return null;
     }
 
-    private function buildNamespaceHelpSection(CommandNamespaceDefinition $namespaceDefinition)
+    private function buildNamespaceHelpSection(NamespaceDefinition $namespaceDefinition)
     {
         // Title
         $title = $namespaceDefinition->getTitle();

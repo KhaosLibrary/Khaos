@@ -3,31 +3,31 @@
 namespace Khaos\Bench\Tool\Bench;
 
 use Auryn\Injector;
-use Khaos\Bench\BenchCommandRouter;
-use Khaos\Bench\Command\CommandRouter;
+use Khaos\Bench\Tool\Bench\BenchFunctionRouter;
+use Khaos\Bench\Tool\ToolFunctionRouter;
 use Khaos\Bench\Tool\Tool;
 
 class BenchTool implements Tool
 {
     /**
-     * @var BenchCommandRouter
+     * @var BenchFunctionRouter
      */
     private $commandRouter;
 
     /**
      * BenchTool constructor.
      *
-     * @param BenchCommandRouter $commandRouter
+     * @param BenchFunctionRouter $commandRouter
      */
-    public function __construct(BenchCommandRouter $commandRouter)
+    public function __construct(BenchFunctionRouter $commandRouter)
     {
         $this->commandRouter = $commandRouter;
     }
 
     /**
-     * @return CommandRouter|null
+     * @return ToolFunctionRouter|null
      */
-    public function getCommandRouter()
+    public function getToolFunctionRouter()
     {
         return $this->commandRouter;
     }
@@ -41,6 +41,19 @@ class BenchTool implements Tool
      */
     public static function create(Injector $injector)
     {
-        return new self(new BenchCommandRouter($injector));
+        return new self(new BenchFunctionRouter($injector));
+    }
+
+    /**
+     * @return array
+     */
+    public static function resources()
+    {
+        return [
+            'bench',
+            'bench/import',
+            'bench/command',
+            'bench/namespace'
+        ];
     }
 }

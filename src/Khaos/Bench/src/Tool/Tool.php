@@ -3,7 +3,7 @@
 namespace Khaos\Bench\Tool;
 
 use Auryn\Injector;
-use Khaos\Bench\Command\CommandRouter;
+use Khaos\Bench\Tool\ToolFunctionRouter;
 
 interface Tool
 {
@@ -17,7 +17,12 @@ interface Tool
     public static function create(Injector $injector);
 
     /**
-     * @return CommandRouter|null
+     * @return ToolFunctionRouter|null
      */
-    public function getCommandRouter();
+    public function getToolFunctionRouter();
+
+    /**
+     * @return array
+     */
+    public static function resources();
 }

@@ -3,7 +3,7 @@
 namespace spec\Khaos\Bench\Resource\Definition;
 
 use InvalidArgumentException;
-use Khaos\Bench\Resource\Definition\CommandNamespaceDefinition;
+use Khaos\Bench\Tool\Bench\Resource\Definition\NamespaceDefinition;
 use Khaos\Bench\Resource\ResourceDefinition;
 use Khaos\Console\Usage\Parser\OptionDefinitionParser;
 use PhpSpec\ObjectBehavior;
@@ -29,7 +29,7 @@ class CommandNamespaceDefinitionSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType(CommandNamespaceDefinition::class);
+        $this->shouldHaveType(NamespaceDefinition::class);
     }
 
     function it_is_a_resource_definition()
