@@ -4,9 +4,9 @@ namespace spec\Khaos\Bench\Resource\DefinitionRepository;
 
 use InvalidArgumentException;
 use Khaos\Bench\Tool\Bench\Resource\Definition\BenchDefinition;
-use Khaos\Bench\Resource\Definition\ImportDefinition;
+use Khaos\Bench\Tool\Bench\Resource\Definition\ImportDefinition;
 use Khaos\Bench\Resource\ResourceDefinition;
-use Khaos\Bench\Resource\DefinitionRepository\Event\ResourceDefinitionImported;
+use Khaos\Bench\Resource\DefinitionRepository\Event\ResourceDefinitionImportedEvent;
 use Khaos\Bench\Resource\ResourceDefinitionLoader;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -73,8 +73,8 @@ class DefinitionRepositorySpec extends ObjectBehavior
         $this->import($importResource);
 
         $eventDispatcher->dispatch(
-            Argument::is(ResourceDefinitionImported::NAME),
-            Argument::type(ResourceDefinitionImported::class)
+            Argument::is(ResourceDefinitionImportedEvent::NAME),
+            Argument::type(ResourceDefinitionImportedEvent::class)
         )->shouldBeCalled();
     }
 
@@ -86,8 +86,8 @@ class DefinitionRepositorySpec extends ObjectBehavior
         $this->import($importResource);
 
         $eventDispatcher->dispatch(
-            Argument::is(ResourceDefinitionImported::NAME.'::'.ImportDefinition::TYPE),
-            Argument::type(ResourceDefinitionImported::class)
+            Argument::is(ResourceDefinitionImportedEvent::NAME.'::'.ImportDefinition::TYPE),
+            Argument::type(ResourceDefinitionImportedEvent::class)
         )->shouldBeCalled();
     }
 

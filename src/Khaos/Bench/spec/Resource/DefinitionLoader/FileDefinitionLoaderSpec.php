@@ -10,7 +10,16 @@ use PhpSpec\ObjectBehavior;
 class FileDefinitionLoaderSpec extends ObjectBehavior
 {
     private $sample = __DIR__.'/../_sample/bench.yml';
+
     private $sampleRelativeWorkingDirectory = __DIR__.'/../_sample/relative-working-directory.yml';
+
+    private $sampleResourceData = [
+        'resource' => 'bench',
+        'metadata' => [
+            'title'       => 'An Example Title',
+            'description' => 'An Example Description'
+        ]
+    ];
 
     function it_is_a_resource_loader()
     {
@@ -33,44 +42,50 @@ class FileDefinitionLoaderSpec extends ObjectBehavior
     function it_delegates_loading_of_resource_definitions_based_on_file_extension(
         ResourceDefinitionLoader $loader1,
         ResourceDefinitionLoader $loader2,
-        ResourceDefinitionLoader $loader3,
-        ResourceDefinition $resourceDefinition)
+        ResourceDefinitionLoader $loader3)
     {
         $this->add($loader1, ['json']);
         $this->add($loader2, ['xml']);
         $this->add($loader3, ['yml', 'yaml']);
 
-        $loader3->load(file_get_contents($this->sample))->willReturn([$resourceDefinition]);
+        $loader3->load(file_get_contents($this->sample))->willReturn([$this->sampleResourceData]);
 
-        $this->load($this->sample)->shouldBe([$resourceDefinition]);
-    }
-
-    function it_sets_the_working_directory_of_loaded_resources_to_the_location_of_the_file(ResourceDefinitionLoader $yamlDefinitionLoader, ResourceDefinition $resourceDefinition)
-    {
-        $yamlDefinitionLoader->load(file_get_contents($this->sample))->willReturn([$resourceDefinition]);
-
-        $this->add($yamlDefinitionLoader, ['yml']);
         $this->load($this->sample);
-
-        $resourceDefinition->setMetaData('working-directory', realpath(dirname($this->sample)))->shouldHaveBeenCalled();
     }
 
-    function it_respects_relative_working_directories_specified_in_the_metadata(ResourceDefinitionLoader $yamlDefinitionLoader, ResourceDefinition $resourceDefinition)
+    function it_sets_the_working_directory_of_loaded_resources_to_the_location_of_the_file(ResourceDefinitionLoader $yamlDefinitionLoader)
     {
-        $yamlDefinitionLoader->load(file_get_contents($this->sampleRelativeWorkingDirectory))->willReturn([$resourceDefinition]);
+        $sampleResourceData = $this->sampleResourceData;
+        $sampleResourceData['metadata']['working-directory'] = realpath(dirname($this->sample));
 
-        $resourceDefinition->getWorkingDirectory()->willReturn('../');
-        $resourceDefinition->setMetaData('working-directory', realpath(dirname($this->sampleRelativeWorkingDirectory).'/../'))->shouldBeCalled();
+        $yamlDefinitionLoader->load(file_get_contents($this->sample))->willReturn([$this->sampleResourceData]);
 
         $this->add($yamlDefinitionLoader, ['yml']);
-        $this->load($this->sampleRelativeWorkingDirectory);
+        $this->load($this->sample)->shouldBe([$sampleResourceData]);
+
     }
 
-    function it_throws_an_exception_when_an_absolute_working_directory_is_specified_in_the_metadata(ResourceDefinitionLoader $yamlDefinitionLoader, ResourceDefinition $resourceDefinition)
+    function it_respects_relative_working_directories_specified_in_the_metadata(ResourceDefinitionLoader $yamlDefinitionLoader)
     {
-        $yamlDefinitionLoader->load(file_get_contents($this->sample))->willReturn([$resourceDefinition]);
+        $sampleResourceData = $this->sampleResourceData;
+        $sampleResourceData['metadata']['working-directory'] = '../../';
 
-        $resourceDefinition->getWorkingDirectory()->willReturn('/');
+        $yamlDefinitionLoader->load(file_get_contents($this->sample))->willReturn([$sampleResourceData]);
+
+        $expectResourceData = $sampleResourceData;
+        $expectResourceData['metadata']['working-directory'] = realpath(dirname($this->sample).'/../../');
+
+        $this->add($yamlDefinitionLoader, ['yml']);
+        $this->load($this->sample)->shouldBe([$expectResourceData]);
+    }
+
+    function it_throws_an_exception_when_an_absolute_working_directory_is_specified_in_the_metadata(ResourceDefinitionLoader $yamlDefinitionLoader)
+    {
+        $sampleResourceData = $this->sampleResourceData;
+        $sampleResourceData['metadata']['working-directory'] = '/';
+
+        $yamlDefinitionLoader->load(file_get_contents($this->sample))->willReturn([$sampleResourceData]);
+
         $this->add($yamlDefinitionLoader, ['yml']);
 
         $this->shouldThrow(InvalidArgumentException::class)->duringLoad($this->sample);

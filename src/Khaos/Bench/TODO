@@ -1,3 +1,6 @@
+TODO: fix test suite
+TODO: increase test coverage to account for refactoring changes
+TODO: add very basic docker build command
 TODO: have tools available commands loaded based on an event?
 TODO: ensure 'import' of the ImportDefinition is an array of strings when loaded
 TODO: allow multiple bench resources to be handled in a composite way
@@ -6,3 +9,5 @@ TODO: have ContextualHelpBuilder get global options from a composite of the benc
 TODO: improve the usefulness of generated errors
 TODO: add some sort of config/map/attribute resource to be shared
 TODO: enable config values to be encrypted
+TODO: improve how tools initialise there dependencies/events etc...
+TODO: improve how bench finds tools so it is not dependent on a static list in the class, perhaps a 'ToolResourceDefinition' which the bench tool can use to add in the class?

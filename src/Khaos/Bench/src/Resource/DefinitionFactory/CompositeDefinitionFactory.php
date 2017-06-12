@@ -3,7 +3,7 @@
 namespace Khaos\Bench\Resource\DefinitionFactory;
 
 use InvalidArgumentException;
-use Khaos\Bench\Resource\Definition\ImportDefinition;
+use Khaos\Bench\Tool\Bench\Resource\Definition\ImportDefinition;
 use Khaos\Bench\Resource\ResourceDefinitionFactory;
 
 class CompositeDefinitionFactory implements ResourceDefinitionFactory

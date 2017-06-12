@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Khaos\Bench\Resource\DefinitionFactory;
+namespace spec\Khaos\Bench\Tool\Bench\Resource\DefinitionFactory;
 
 use Khaos\Bench\Tool\Bench\Resource\Definition\BenchDefinition;
 use Khaos\Bench\Resource\ResourceDefinitionFactory;

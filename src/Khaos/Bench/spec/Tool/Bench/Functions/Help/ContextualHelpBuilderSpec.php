@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Khaos\Bench;
+namespace spec\Khaos\Bench\Tool\Bench\Functions\Help;
 
 use ArrayIterator;
 use Khaos\Bench\Tool\Bench\Functions\Help\ContextualHelpBuilder;

@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Khaos\Bench\Resource\Definition;
+namespace spec\Khaos\Bench\Tool\Bench\Resource\Definition;
 
 use InvalidArgumentException;
 use Khaos\Bench\Tool\Bench\Resource\Definition\NamespaceDefinition;
@@ -8,10 +8,10 @@ use Khaos\Bench\Resource\ResourceDefinition;
 use Khaos\Console\Usage\Parser\OptionDefinitionParser;
 use PhpSpec\ObjectBehavior;
 
-class CommandNamespaceDefinitionSpec extends ObjectBehavior
+class NamespaceDefinitionSpec extends ObjectBehavior
 {
     private $sample = [
-        'resource' => 'bench/command-namespace',
+        'resource' => NamespaceDefinition::TYPE,
         'metadata' => [
             'id'          => 'sample-command-namespace',
             'title'       => 'Some example title',

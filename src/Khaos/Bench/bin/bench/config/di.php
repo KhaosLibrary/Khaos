@@ -6,7 +6,7 @@ use Khaos\Bench\Tool\Bench\Resource\DefinitionFactory\BenchDefinitionFactory;
 use Khaos\Bench\Tool\Bench\Resource\DefinitionFactory\CommandDefinitionFactory;
 use Khaos\Bench\Tool\Bench\Resource\DefinitionFactory\NamespaceDefinitionFactory;
 use Khaos\Bench\Resource\DefinitionFactory\CompositeDefinitionFactory;
-use Khaos\Bench\Resource\DefinitionFactory\ImportDefinitionFactory;
+use Khaos\Bench\Tool\Bench\Resource\DefinitionFactory\ImportDefinitionFactory;
 use Khaos\Bench\Resource\DefinitionFieldParser\DefinitionFieldParser;
 use Khaos\Bench\Resource\DefinitionLoader\ArrayDefinitionLoader;
 use Khaos\Bench\Resource\DefinitionLoader\CompositeDefinitionLoader;

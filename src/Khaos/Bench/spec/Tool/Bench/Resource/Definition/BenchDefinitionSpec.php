@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Khaos\Bench\Resource\Definition;
+namespace spec\Khaos\Bench\Tool\Bench\Resource\Definition;
 
 use InvalidArgumentException;
 use Khaos\Bench\Tool\Bench\Resource\Definition\BenchDefinition;
@@ -16,9 +16,11 @@ class BenchDefinitionSpec extends ObjectBehavior
             'description'       => 'An example bench definition.',
             'working-directory' => 'sample/location'
         ],
-        'tools' => [
-            'docker',
-            'kubernetes'
+        'definition' => [
+            'tools' => [
+                'docker',
+                'kubernetes'
+            ]
         ]
     ];
 
@@ -52,18 +54,6 @@ class BenchDefinitionSpec extends ObjectBehavior
         $this->getType()->shouldBe(BenchDefinition::TYPE);
     }
 
-    function it_throws_invalid_argument_exception_if_no_id_specified()
-    {
-        $this->beConstructedWith([
-            'metadata' => [
-                'title'       => 'Application Title',
-                'description' => 'Application Description'
-            ]
-        ]);
-
-        $this->shouldThrow(InvalidArgumentException::class)->duringInstantiation();
-    }
-
     function it_provides_metadata_working_directory()
     {
         $this->getWorkingDirectory()->shouldBe('sample/location');
@@ -78,7 +68,7 @@ class BenchDefinitionSpec extends ObjectBehavior
 
     function it_provides_the_tools_that_will_be_required_for_the_bench()
     {
-        $this->getTools()->shouldBe($this->sample['tools']);
+        $this->getTools()->shouldBe($this->sample['definition']['tools']);
     }
 
     function it_provides_an_empty_array_when_no_tools_are_specified_in_the_definition()

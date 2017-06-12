@@ -24,8 +24,4 @@ class DockerToolSpec extends ObjectBehavior
         $this->shouldHaveType(Tool::class);
     }
 
-    function it_provides_instance_of_tool(Injector $injector)
-    {
-        $this::create($injector)->shouldBeAnInstanceOf(DockerTool::class);
-    }
 }

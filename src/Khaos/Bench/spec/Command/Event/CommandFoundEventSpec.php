@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Khaos\Bench\Command;
+namespace spec\Khaos\Bench\Command\Event;
 
 use Khaos\Bench\Command\Event\CommandFoundEvent;
 use Khaos\Console\Usage\Input;
@@ -8,7 +8,7 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Symfony\Component\EventDispatcher\Event;
 
-class CommandRunnerParsedEventSpec extends ObjectBehavior
+class CommandFoundEventSpec extends ObjectBehavior
 {
     function let(Input $input)
     {

@@ -5,8 +5,8 @@ namespace Khaos\Bench\Resource\DefinitionRepository;
 use Exception;
 use InvalidArgumentException;
 use Khaos\Bench\Bench;
-use Khaos\Bench\Resource\Definition\ImportDefinition;
-use Khaos\Bench\Resource\DefinitionRepository\Event\ResourceDefinitionImported;
+use Khaos\Bench\Tool\Bench\Resource\Definition\ImportDefinition;
+use Khaos\Bench\Resource\DefinitionRepository\Event\ResourceDefinitionImportedEvent;
 
 class DefinitionImporter
 {
@@ -26,10 +26,10 @@ class DefinitionImporter
     }
 
     /**
-     * @param ResourceDefinitionImported $event
+     * @param ResourceDefinitionImportedEvent $event
      * @throws Exception
      */
-    public function __invoke(ResourceDefinitionImported $event)
+    public function __invoke(ResourceDefinitionImportedEvent $event)
     {
         $importDefinition = $event->getResourceDefinition();
 

@@ -5,8 +5,8 @@ namespace spec\Khaos\Bench\Resource\DefinitionFactory;
 use InvalidArgumentException;
 use Khaos\Bench\Tool\Bench\Resource\Definition\BenchDefinition;
 use Khaos\Bench\Tool\Bench\Resource\DefinitionFactory\BenchDefinitionFactory;
-use Khaos\Bench\Resource\Definition\ImportDefinition;
-use Khaos\Bench\Resource\DefinitionFactory\ImportDefinitionFactory;
+use Khaos\Bench\Tool\Bench\Resource\Definition\ImportDefinition;
+use Khaos\Bench\Tool\Bench\Resource\DefinitionFactory\ImportDefinitionFactory;
 use Khaos\Bench\Resource\ResourceDefinitionFactory;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -25,30 +25,6 @@ class CompositeDefinitionFactorySpec extends ObjectBehavior
     function it_is_a_resource_definition_factory()
     {
         $this->shouldHaveType(ResourceDefinitionFactory::class);
-    }
-
-    function it_uses_the_import_resource_when_no_resource_type_specified(ImportDefinitionFactory $importDefinitionFactory, ImportDefinition $importDefinition)
-    {
-        $importDefinitionFactory->create(Argument::type('array'))->willReturn($importDefinition);
-
-        $this->create([
-            'metadata' => [
-                'id' => 'test',
-                'title' => 'Test Title',
-                'description' => 'Test Description'
-            ],
-            'import' => []
-        ]);
-
-        $importDefinitionFactory->create([
-            'resource' => ImportDefinition::TYPE,
-            'metadata' => [
-                'id' => 'test',
-                'title' => 'Test Title',
-                'description' => 'Test Description'
-            ],
-            'import' => []
-        ])->shouldBeCalled();
     }
 
     function it_uses_a_resource_factory_appropriate_to_the_resource_specified(BenchDefinitionFactory $benchDefinitionFactory, BenchDefinition $benchDefinition)

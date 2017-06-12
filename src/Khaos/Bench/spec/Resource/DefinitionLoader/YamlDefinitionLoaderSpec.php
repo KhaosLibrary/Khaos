@@ -26,7 +26,7 @@ class YamlDefinitionLoaderSpec extends ObjectBehavior
         $this->shouldHaveType(ResourceDefinitionLoader::class);
     }
 
-    function it_provides_a_resource_definition_based_on_the_given_yaml(Parser $parser, ResourceDefinition $resourceDefinition, CompositeDefinitionFactory $definitionFactory)
+    function it_provides_resource_definition_data_based_on_the_given_yaml(Parser $parser, CompositeDefinitionFactory $definitionFactory)
     {
         $yamlDefinition  = file_get_contents($this->sample);
         $arrayDefinition = [
@@ -38,22 +38,16 @@ class YamlDefinitionLoaderSpec extends ObjectBehavior
         ];
 
         $parser->parse($yamlDefinition)->willReturn($arrayDefinition);
-        $definitionFactory->create($arrayDefinition)->willReturn($resourceDefinition);
 
-        $this->load($yamlDefinition)->shouldReturn([$resourceDefinition]);
+        $this->load($yamlDefinition)->shouldReturn([$arrayDefinition]);
     }
 
-    function it_supports_yaml_with_multiple_documents(
-        Parser $parser,
-        ResourceDefinition $resourceDefinition1,
-        ResourceDefinition $resourceDefinition2,
-        CompositeDefinitionFactory $definitionFactory)
+    function it_supports_yaml_with_multiple_documents(Parser $parser)
     {
         $yamlDefinition = file_get_contents($this->sampleMultipleDocuments);
 
-        $parser->parse(Argument::type('string'))->willReturn([]);
-        $definitionFactory->create(Argument::type('array'))->willReturn($resourceDefinition1, $resourceDefinition2);
+        $parser->parse(Argument::type('string'))->willReturn(['resource' => 'bench']);
 
-        $this->load($yamlDefinition)->shouldReturn([$resourceDefinition1, $resourceDefinition2]);
+        $this->load($yamlDefinition)->shouldReturn([['resource' => 'bench'],['resource' => 'bench']]);
     }
 }

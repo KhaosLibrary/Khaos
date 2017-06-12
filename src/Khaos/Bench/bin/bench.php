@@ -23,3 +23,7 @@ $bench->run(array_merge(['bench'], array_slice($argv, 1)));
 
 // Benchmark :: END
 echo "\nTime: ".(microtime(true) - $start)."\n";
+
+print_r(get_included_files());
+
+echo "\n";

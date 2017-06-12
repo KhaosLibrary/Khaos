@@ -3,7 +3,7 @@
 namespace Khaos\Bench\Resource\DefinitionRepository;
 
 use InvalidArgumentException;
-use Khaos\Bench\Resource\DefinitionRepository\Event\ResourceDefinitionImported;
+use Khaos\Bench\Resource\DefinitionRepository\Event\ResourceDefinitionImportedEvent;
 use Khaos\Bench\Resource\ResourceDefinition;
 use Khaos\Bench\Resource\ResourceDefinitionLoader;
 use Khaos\Bench\Resource\ResourceDefinitionRepository;
@@ -35,6 +35,11 @@ class DefinitionRepository implements ResourceDefinitionRepository
         $this->definitionLoader = $definitionLoader;
     }
 
+    /**
+     * @param mixed $source
+     *
+     * TODO: remove definition loader behaviour
+     */
     public function import($source)
     {
         if ($source instanceof ResourceDefinition)
@@ -43,8 +48,6 @@ class DefinitionRepository implements ResourceDefinitionRepository
         }
         else
         {
-            var_dump($source);
-
             $definitions = $this->definitionLoader->load($source);
 
             if ($definitions == null)
@@ -84,9 +87,9 @@ class DefinitionRepository implements ResourceDefinitionRepository
 
         $this->resourceDefinitions[$definition->getId()] = $definition;
 
-        $event = new ResourceDefinitionImported($definition);
-        $this->eventDispatcher->dispatch(ResourceDefinitionImported::NAME, $event);
-        $this->eventDispatcher->dispatch(ResourceDefinitionImported::NAME.'::'.$definition->getType(), $event);
+        $event = new ResourceDefinitionImportedEvent($definition);
+        $this->eventDispatcher->dispatch(ResourceDefinitionImportedEvent::NAME, $event);
+        $this->eventDispatcher->dispatch(ResourceDefinitionImportedEvent::NAME.'::'.$definition->getType(), $event);
     }
 
     public function query(callable $matcher)

@@ -1,8 +1,8 @@
 <?php
 
-namespace Khaos\Bench\Resource\DefinitionFactory;
+namespace Khaos\Bench\Tool\Bench\Resource\DefinitionFactory;
 
-use Khaos\Bench\Resource\Definition\ImportDefinition;
+use Khaos\Bench\Tool\Bench\Resource\Definition\ImportDefinition;
 use Khaos\Bench\Resource\ResourceDefinitionFactory;
 
 class ImportDefinitionFactory implements ResourceDefinitionFactory

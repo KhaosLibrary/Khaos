@@ -1,12 +1,12 @@
 <?php
 
-namespace spec\Khaos\Bench\Resource\DefinitionRepository;
+namespace spec\Khaos\Bench\Resource\Event\DefinitionRepository;
 
 use Khaos\Bench\Resource\ResourceDefinition;
 use PhpSpec\ObjectBehavior;
 use Symfony\Component\EventDispatcher\Event;
 
-class DefinitionRepositoryImportEventSpec extends ObjectBehavior
+class ResourceDefinitionImportedEventSpec extends ObjectBehavior
 {
     function let(ResourceDefinition $resourceDefinition)
     {

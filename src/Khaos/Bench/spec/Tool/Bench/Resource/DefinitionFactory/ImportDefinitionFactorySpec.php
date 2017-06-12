@@ -1,8 +1,8 @@
 <?php
 
-namespace spec\Khaos\Bench\Resource\DefinitionFactory;
+namespace spec\Khaos\Bench\Tool\Bench\Resource\DefinitionFactory;
 
-use Khaos\Bench\Resource\Definition\ImportDefinition;
+use Khaos\Bench\Tool\Bench\Resource\Definition\ImportDefinition;
 use Khaos\Bench\Resource\ResourceDefinitionFactory;
 use PhpSpec\ObjectBehavior;
 

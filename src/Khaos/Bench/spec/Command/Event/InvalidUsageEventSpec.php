@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Khaos\Bench\Command;
+namespace spec\Khaos\Bench\Command\Event;
 
 use Khaos\Bench\Command\Event\InvalidUsageEvent;
 use Khaos\Console\Usage\Model\OptionDefinitionRepository;
@@ -9,7 +9,7 @@ use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Symfony\Component\EventDispatcher\Event;
 
-class CommandRunnerInvalidUsageEventSpec extends ObjectBehavior
+class InvalidUsageEventSpec extends ObjectBehavior
 {
     function let(OptionDefinitionRepository $options)
     {

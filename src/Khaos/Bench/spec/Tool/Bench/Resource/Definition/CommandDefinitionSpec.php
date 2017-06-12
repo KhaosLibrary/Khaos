@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Khaos\Bench\Resource\Definition;
+namespace spec\Khaos\Bench\Tool\Bench\Resource\Definition;
 
 use Exception;
 use InvalidArgumentException;
@@ -21,7 +21,7 @@ class CommandDefinitionSpec extends ObjectBehavior
             'description' => 'Some example command description'
         ],
         'definition' => [
-            'namespace' => 'docker',
+            'namespace' => 'bench docker',
             'command'   => 'build',
             'usage'     => 'bench docker build <image>',
             'options'   => [

@@ -3,7 +3,7 @@
 namespace Khaos\Bench\Tool\Bench;
 
 use Auryn\Injector;
-use Khaos\Bench\Resource\Definition\ImportDefinition;
+use Khaos\Bench\Tool\Bench\Resource\Definition\ImportDefinition;
 use Khaos\Bench\Resource\DefinitionFactory\CompositeDefinitionFactory;
 use Khaos\Bench\Resource\ResourceDefinitionFieldParser;
 use Khaos\Bench\Resource\ResourceDefinitionRepository;

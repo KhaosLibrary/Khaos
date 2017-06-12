@@ -1,9 +1,9 @@
 <?php
 
-namespace spec\Khaos\Bench\Resource\Definition;
+namespace spec\Khaos\Bench\Tool\Bench\Resource\Definition;
 
 use InvalidArgumentException;
-use Khaos\Bench\Resource\Definition\ImportDefinition;
+use Khaos\Bench\Tool\Bench\Resource\Definition\ImportDefinition;
 use Khaos\Bench\Resource\ResourceDefinition;
 use PhpSpec\ObjectBehavior;
 
