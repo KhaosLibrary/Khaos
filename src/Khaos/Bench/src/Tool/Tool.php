@@ -20,6 +20,11 @@ interface Tool
     public function import(array $resourceDefinitionData);
 
     /**
+     * @return string|null
+     */
+    public function getManifest();
+
+    /**
      * @return array
      */
     public static function resources();

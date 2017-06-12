@@ -40,4 +40,10 @@ class BenchSpec extends ObjectBehavior
     {
         $this::getRootResourceDefinition($this->sampleBenchCallLocation, 'bench.yml')->shouldBe(__DIR__.'/_sample/bench.yml');
     }
+
+    function it_default_to_help_when_no_command_specified(CommandRunner $commandRunner)
+    {
+        $this->run(['bench']);
+        $commandRunner->run(['bench', '--help'])->shouldHaveBeenCalled();
+    }
 }

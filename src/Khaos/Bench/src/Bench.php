@@ -71,20 +71,32 @@ class Bench
 
     public function run(array $args = [])
     {
+        if (count($args) == 1)
+            $args[] = '--help';
+
         $this->commandRunner->run($args);
     }
 
     /**
-     * @param string $tool
+     * @param string $toolName
      *
      * @return Tool
      */
-    public function tool($tool)
+    public function tool($toolName)
     {
-        if (!isset($this->tools[$tool]))
-            $this->tools[$tool] = $this->injector->make($this->toolClassMap[$tool]);
+        if (!isset($this->tools[$toolName])) {
 
-        return $this->tools[$tool];
+            $tool = $this->tools[$toolName] = $this->injector->make($this->toolClassMap[$toolName]);
+
+            /** @var Tool $tool */
+
+            if (($manifest = $tool->getManifest()) !== null)
+                $this->import($manifest);
+
+            return $tool;
+        }
+
+        return $this->tools[$toolName];
     }
 
     private function buildResourceToolMap()
@@ -96,13 +108,13 @@ class Bench
 
     public static function getRootResourceDefinition($search, $file = 'bench.yml')
     {
-        $search = explode('/', substr($search, 1));
+        $search = $search.DIRECTORY_SEPARATOR;
+        $length = strlen($search) + 1;
+        $offset = $length;
 
-        for ($i = count($search); $i > 0; --$i)
+        while (($offset = strrpos($search, DIRECTORY_SEPARATOR, $offset - $length)) !== false)
         {
-            $candidate = '/' . implode('/', array_slice($search, 0, $i)) . '/' . $file;
-
-            if (file_exists($candidate))
+            if (file_exists($candidate = substr($search, 0, $offset).DIRECTORY_SEPARATOR.$file))
                 return $candidate;
         }
 

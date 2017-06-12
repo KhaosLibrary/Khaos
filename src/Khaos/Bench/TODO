@@ -1,10 +1,11 @@
-TODO: fix test suite
-TODO: increase test coverage to account for refactoring changes
+TODO: on invalid usage call the help command
 TODO: add very basic docker build command
+TODO: improve error handling when a file specified to a DefinitionLoader does not exist (eg. manifest from a tool)
+TODO: handle terminal code usage is windows
+TODO: increase test coverage to account for refactoring changes
 TODO: have tools available commands loaded based on an event?
 TODO: ensure 'import' of the ImportDefinition is an array of strings when loaded
 TODO: allow multiple bench resources to be handled in a composite way
-TODO: when argv[] is empty display help
 TODO: have ContextualHelpBuilder get global options from a composite of the bench resources
 TODO: improve the usefulness of generated errors
 TODO: add some sort of config/map/attribute resource to be shared

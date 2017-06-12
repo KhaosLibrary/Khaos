@@ -43,4 +43,12 @@ class DockerTool implements Tool
             'docker/image'
         ];
     }
+
+    /**
+     * @return string|null
+     */
+    public function getManifest()
+    {
+        return null;
+    }
 }

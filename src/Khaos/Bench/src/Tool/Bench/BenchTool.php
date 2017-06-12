@@ -3,6 +3,7 @@
 namespace Khaos\Bench\Tool\Bench;
 
 use Auryn\Injector;
+use Khaos\Bench\Bench;
 use Khaos\Bench\Tool\Bench\Resource\Definition\ImportDefinition;
 use Khaos\Bench\Resource\DefinitionFactory\CompositeDefinitionFactory;
 use Khaos\Bench\Resource\ResourceDefinitionFieldParser;
@@ -32,23 +33,34 @@ class BenchTool implements Tool
      * @var ResourceDefinitionFieldParser
      */
     private $fieldParser;
+    /**
+     * @var Bench
+     */
+    private $bench;
 
     /**
      * BenchTool constructor.
      *
-     * @param BenchFunctionRouter           $functionRouter
-     * @param CompositeDefinitionFactory    $definitionFactory
-     * @param ResourceDefinitionRepository  $definitionRepository
-     * @param ResourceDefinitionFieldParser $fieldParser
+     * @param BenchFunctionRouter            $functionRouter
+     * @param CompositeDefinitionFactory     $definitionFactory
+     * @param ResourceDefinitionRepository   $definitionRepository
+     * @param ResourceDefinitionFieldParser  $fieldParser
+     * @param Bench                          $bench
      */
-    public function __construct(BenchFunctionRouter $functionRouter, CompositeDefinitionFactory $definitionFactory, ResourceDefinitionRepository $definitionRepository, ResourceDefinitionFieldParser $fieldParser)
+    public function __construct(BenchFunctionRouter $functionRouter, CompositeDefinitionFactory $definitionFactory, ResourceDefinitionRepository $definitionRepository, ResourceDefinitionFieldParser $fieldParser, Bench $bench)
     {
         $this->functionRouter       = $functionRouter;
         $this->definitionFactory    = $definitionFactory;
         $this->definitionRepository = $definitionRepository;
         $this->fieldParser          = $fieldParser;
+        $this->bench                = $bench;
 
         $this->fieldParser->addValue('bench', $functionRouter);
+    }
+
+    public function getManifest()
+    {
+        return __DIR__.'/.bench/resources/manifest.yml';
     }
 
     /**
