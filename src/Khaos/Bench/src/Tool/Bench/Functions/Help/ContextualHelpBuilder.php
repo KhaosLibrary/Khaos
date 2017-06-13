@@ -8,6 +8,7 @@ use Khaos\Bench\Resource\ResourceDefinitionRepository;
 use Khaos\Console\Usage\Input;
 use Khaos\Console\Usage\Model\OptionDefinition;
 use Khaos\Console\Usage\Model\OptionDefinitionRepository;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
 class ContextualHelpBuilder
 {
@@ -20,10 +21,15 @@ class ContextualHelpBuilder
      * @var OptionDefinitionRepository
      */
     private $globalOptions;
+    /**
+     * @var ConsoleOutputInterface
+     */
+    private $output;
 
-    public function __construct(ResourceDefinitionRepository $resourceDefinitions)
+    public function __construct(ResourceDefinitionRepository $resourceDefinitions, ConsoleOutputInterface $output)
     {
         $this->resourceDefinitions = $resourceDefinitions;
+        $this->output              = $output;
     }
 
     public function build(Input $input)
@@ -153,13 +159,15 @@ class ContextualHelpBuilder
 
     private function buildNamespaceHelpSection(NamespaceDefinition $namespaceDefinition)
     {
+        $this->output->writeln("");
+
         // Title
         $title = $namespaceDefinition->getTitle();
-        if ($title) echo "\n\e[1m".$title."\e[0m\n";
+        if ($title) $this->output->writeln( "<heading>{$title}</heading>");
 
         // Description
         $description = $namespaceDefinition->getDescription();
-        if ($description) echo "\e[0m".$description."\e[0m\n";
+        if ($description) $this->output->writeln($description);
 
         // Sub Commands
 
@@ -177,41 +185,47 @@ class ContextualHelpBuilder
 
         $padding += 8;
 
-        echo "\n\e[1mCommands:\e[0m\n";
+        $this->output->writeln("");
+        $this->output->writeln("<heading>Commands</heading>");
 
         foreach ($children as $k => $v)
-            echo '    '.str_pad($k, $padding, ' ').$v."\n";
+            $this->output->writeln('    <green>'.str_pad($k, $padding, ' ').'</green>'.$v);
 
         // Global Options
 
+        $this->output->writeln("");
         $this->buildOptionsSection("Global Options", $this->globalOptions);
-
-        echo "\n";
+        $this->output->writeln("");
     }
 
     private function buildCommandHelpSection(CommandDefinition $commandDefinition)
     {
+        $this->output->writeln("");
+
         // Title
         $title = $commandDefinition->getTitle();
-        if ($title) echo "\n\e[1m".$title."\e[0m\n";
+        if ($title) $this->output->writeln("<heading>{$title}</heading>");
 
         // Description
         $description = $commandDefinition->getDescription();
-        if ($description) echo "\e[0m".$description."\e[0m\n";
+        if ($description) $this->output->writeln($description);
 
         // Usage
-        echo "\n\e[1mUsage:\e[0m\n";
-        echo "  ".$commandDefinition->getUsage()."\n";
+        $this->output->writeln("");
+        $this->output->writeln("<heading>Usage</heading>");
+        $this->output->writeln("  ".$commandDefinition->getUsage());
 
         // Command Options
         if (count($commandDefinition->getOptions()) > 0)
             $this->buildOptionsSection("Command Options", $commandDefinition->getOptions());
 
         // Global Options
-        if (count($this->globalOptions) > 0)
+        if (count($this->globalOptions) > 0) {
+            $this->output->writeln("");
             $this->buildOptionsSection("Global Options", $this->globalOptions);
+        }
 
-        echo "\n";
+        $this->output->writeln("");
     }
 
     private function buildOptionsSection($title, OptionDefinitionRepository $optionDefinitionRepository)
@@ -226,11 +240,11 @@ class ContextualHelpBuilder
 
         $padding += 8;
 
-        echo "\n\e[1m".$title.":\e[0m\n";
+        $this->output->writeln("<heading>{$title}</heading>");
 
         foreach ($options as $option)
         {
-            echo '    '.str_pad($option[0], $padding, ' ').$option[1]."\n";
+            $this->output->writeln('    <green>'.str_pad($option[0], $padding, ' ').'</green>'.$option[1]);
         }
     }
 }

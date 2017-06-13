@@ -21,6 +21,12 @@ use Khaos\Bench\Tool\Bench\BenchTool;
 use Khaos\Bench\Tool\Docker\DockerTool;
 use Khaos\Bench\Tool\ToolFactory;
 use Khaos\Console\Usage\Parser\OptionDefinitionParser;
+use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\Console\Formatter\OutputFormatterInterface;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 $injector = new Injector;
@@ -34,6 +40,8 @@ $injector->alias(ResourceDefinitionRepository::class, DefinitionRepository::clas
 $injector->alias(ResourceDefinitionLoader::class,     CompositeDefinitionLoader::class);
 $injector->alias(ResourceDefinitionFactory::class,    CompositeDefinitionFactory::class);
 $injector->alias(ResourceDefinitionFieldParser::class,DefinitionFieldParser::class);
+$injector->alias(ConsoleOutputInterface::class,       ConsoleOutput::class);
+$injector->alias(OutputFormatterInterface::class,     OutputFormatter::class);
 
 /*
  * Shared Classes
@@ -44,41 +52,31 @@ $injector->share($injector);
 $injector->share(Bench::class);
 $injector->share(EventDispatcher::class);
 $injector->share(ResourceDefinitionRepository::class);
-$injector->share(OptionDefinitionParser::class);
+$injector->share(ResourceDefinitionFactory::class);
 $injector->share(ResourceDefinitionFieldParser::class);
+$injector->share(OptionDefinitionParser::class);
+$injector->share(ConsoleOutputInterface::class);
 
 /*
- * CompositeDefinitionFactory
- *  - bench
- *  - bench/import
- *  - bench/command
+ * OutputFormatter
  */
 
-$injector->prepare
-(
-    CompositeDefinitionFactory::class,
-    function(CompositeDefinitionFactory $definitionFactory, Injector $injector)
-    {
-        $definitionFactory->add($injector->make(BenchDefinitionFactory::class));
-        $definitionFactory->add($injector->make(ImportDefinitionFactory::class));
-        $definitionFactory->add($injector->make(CommandDefinitionFactory::class));
-        $definitionFactory->add($injector->make(NamespaceDefinitionFactory::class));
-    }
-);
+$injector->prepare(OutputFormatterInterface::class, function(OutputFormatterInterface $outputFormatter, Injector $injector)
+{
+    $outputFormatter->setStyle('heading', new OutputFormatterStyle('yellow', 'default'));
+    $outputFormatter->setStyle('green', new OutputFormatterStyle('green', 'default'));
+    $outputFormatter->setStyle('yellow', new OutputFormatterStyle('yellow', 'default'));
+});
 
 /*
  * CompositeDefinitionLoader
  *  - File
  */
 
-$injector->prepare
-(
-    CompositeDefinitionLoader::class,
-    function(CompositeDefinitionLoader $definitionLoader, Injector $injector)
-    {
-        $definitionLoader->add($injector->make(FileDefinitionLoader::class));
-    }
-);
+$injector->prepare(CompositeDefinitionLoader::class, function(CompositeDefinitionLoader $definitionLoader, Injector $injector)
+{
+    $definitionLoader->add($injector->make(FileDefinitionLoader::class));
+});
 
 /*
  * FileDefinitionLoader

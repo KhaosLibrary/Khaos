@@ -4,10 +4,12 @@ namespace Khaos\Bench;
 
 use Exception;
 use Auryn\Injector;
+use InvalidArgumentException;
 use Khaos\Bench\Command\CommandRunner;
 use Khaos\Bench\Resource\ResourceDefinitionLoader;
 use Khaos\Bench\Tool\Bench\BenchTool;
 use Khaos\Bench\Tool\Docker\DockerTool;
+use Khaos\Bench\Tool\Shell\ShellTool;
 use Khaos\Bench\Tool\Tool;
 
 class Bench
@@ -29,7 +31,8 @@ class Bench
      */
     private $toolClassMap = [
         'bench'  => BenchTool::class,
-        'docker' => DockerTool::class
+        'docker' => DockerTool::class,
+        'shell'  => ShellTool::class
     ];
 
     private $resourceToolMap = [];
@@ -65,14 +68,23 @@ class Bench
      */
     public function import($source)
     {
-        foreach ($this->definitionLoader->load($source) as $resourceDefinitionData)
-            $this->tool($this->resourceToolMap[$resourceDefinitionData['resource'] ?? 'bench'])->import($resourceDefinitionData);
+        if (($resourceDefinitions = $this->definitionLoader->load($source)) !== null)
+        {
+            foreach ($resourceDefinitions as $resourceDefinitionData)
+                $this->tool($this->resourceToolMap[$resourceDefinitionData['resource'] ?? 'bench'])->import($resourceDefinitionData);
+
+            return;
+        }
+
+        throw new InvalidArgumentException("Unable to import resource definitions from '{$source}';");
     }
 
     public function run(array $args = [])
     {
         if (count($args) == 1)
             $args[] = '--help';
+
+        $shell = $this->tool('shell');
 
         $this->commandRunner->run($args);
     }

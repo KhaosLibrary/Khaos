@@ -35,14 +35,16 @@ class FileDefinitionLoader implements ResourceDefinitionLoader
      */
     public function load($source)
     {
-        if (!is_string($source) || !file_exists($source))
-            return null;
+        if (!is_string($source) || !file_exists($source)) {
+            throw new InvalidArgumentException("File '{$source}' does not exist.");
+        }
 
         $fileInfo         = new SplFileInfo($source);
-        $workingDirectory = realpath(dirname($source));
+        $workingDirectory = dirname($source);
 
-        if (!isset($this->definitionLoaders[$fileInfo->getExtension()]))
-            return null;
+        if (!isset($this->definitionLoaders[$fileInfo->getExtension()])) {
+            throw new InvalidArgumentException("No loader available to handle files with the extension '{$fileInfo->getExtension()}', source '{$source}'.");
+        }
 
         $resources = [];
 
@@ -75,7 +77,7 @@ class FileDefinitionLoader implements ResourceDefinitionLoader
             $resourceWorkingDirectory = $workingDirectory;
         }
 
-        $resource['metadata']['working-directory'] = realpath($resourceWorkingDirectory);
+        $resource['metadata']['working-directory'] = $resourceWorkingDirectory;
 
 
         return $resource;

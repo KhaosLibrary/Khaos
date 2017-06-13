@@ -1,6 +1,6 @@
 <?php
 
-namespace Khaos\Bench\Resource\DefinitionRepository;
+namespace Khaos\Bench\Tool\Bench\Resource\DefinitionRepository;
 
 use Exception;
 use InvalidArgumentException;
@@ -38,13 +38,20 @@ class DefinitionImporter
 
         foreach ($importDefinition->getImportPatterns() as $pattern)
         {
-            $files = glob($pattern = $importDefinition->getWorkingDirectory().'/'.$pattern);
-
-            if ($files === false)
-                throw new InvalidArgumentException("Pattern '{$pattern}' is not valid.");
-
-            foreach ($files as $file)
+            if (is_file($file = $importDefinition->getWorkingDirectory().'/'.$pattern))
+            {
                 $this->bench->import($file);
+            }
+            else
+            {
+                $files = glob($pattern = $importDefinition->getWorkingDirectory().'/'.$pattern);
+
+                if ($files === false)
+                    throw new InvalidArgumentException("Pattern '{$pattern}' is not valid.");
+
+                foreach ($files as $file)
+                    $this->bench->import($file);
+            }
         }
     }
 }

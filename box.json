@@ -1,0 +1,21 @@
+{
+  "chmod": "0755",
+  "directories": [
+    "src"
+  ],
+  "finder-bin": [{
+    "name": "*.yml",
+    "in": "src/Khaos/Bench/src/Tool/Bench/_assets"
+  }]
+  ,
+  "finder": [
+    {
+      "name": "*.php",
+      "exclude": ["Tests"],
+      "in": "vendor"
+    }
+  ],
+  "main": "src/Khaos/Bench/bin/bench.php",
+  "output": "bench.phar",
+  "stub": true
+}

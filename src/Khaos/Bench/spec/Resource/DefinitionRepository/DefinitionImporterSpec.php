@@ -6,7 +6,7 @@ use Exception;
 use Khaos\Bench\Bench;
 use Khaos\Bench\Tool\Bench\Resource\Definition\ImportDefinition;
 use Khaos\Bench\Resource\DefinitionLoader\GlobPatternDefinitionLoader;
-use Khaos\Bench\Resource\DefinitionRepository\DefinitionImporter;
+use Khaos\Bench\Tool\Bench\Resource\DefinitionRepository\DefinitionImporter;
 use Khaos\Bench\Resource\DefinitionRepository\Event\ResourceDefinitionImportedEvent;
 use Khaos\Bench\Resource\ResourceDefinition;
 use Khaos\Bench\Resource\ResourceDefinitionRepository;

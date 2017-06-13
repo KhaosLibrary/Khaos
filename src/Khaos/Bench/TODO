@@ -1,14 +1,23 @@
-TODO: on invalid usage call the help command
-TODO: add very basic docker build command
+General Improvements :-
 TODO: improve error handling when a file specified to a DefinitionLoader does not exist (eg. manifest from a tool)
-TODO: handle terminal code usage is windows
-TODO: increase test coverage to account for refactoring changes
-TODO: have tools available commands loaded based on an event?
-TODO: ensure 'import' of the ImportDefinition is an array of strings when loaded
-TODO: allow multiple bench resources to be handled in a composite way
-TODO: have ContextualHelpBuilder get global options from a composite of the bench resources
 TODO: improve the usefulness of generated errors
+TODO: incorporate with symfony/console for verbosity of command output
+TODO: improve how tools initialise there dependencies/events etc...
+TODO: have tools available commands loaded based on an event?
+
+Tests :-
+TODO: increase test coverage to account for refactoring changes
+TODO: improve how bench finds tools so it is not dependent on a static list in the class, perhaps a 'ToolResourceDefinition' which the bench tool can use to add in the class?
+
+Docker Tool :-
+TODO: add docker/image resource
+TODO: add docker build command
+
+Bench Tool :-
+TODO: ensure 'import' of the ImportDefinition is an array of strings when loaded
 TODO: add some sort of config/map/attribute resource to be shared
 TODO: enable config values to be encrypted
-TODO: improve how tools initialise there dependencies/events etc...
-TODO: improve how bench finds tools so it is not dependent on a static list in the class, perhaps a 'ToolResourceDefinition' which the bench tool can use to add in the class?
+
+Misc :-
+TODO: allow multiple bench resources to be handled in a composite way
+TODO: have ContextualHelpBuilder get global options from a composite of the bench resources

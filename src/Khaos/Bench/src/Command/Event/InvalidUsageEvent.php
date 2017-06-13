@@ -16,6 +16,8 @@ class InvalidUsageEvent extends Event
      */
     private $input;
 
+    private $args;
+
     /**
      * CommandRunnerInvalidUsageEvent constructor.
      *
@@ -24,6 +26,7 @@ class InvalidUsageEvent extends Event
      */
     public function __construct($args, OptionDefinitionRepository $definitionRepository)
     {
+        $this->args  = $args;
         $this->input = (new InputSequenceFactory())->createFrom($args, $definitionRepository);
     }
 
@@ -33,5 +36,10 @@ class InvalidUsageEvent extends Event
     public function getInputSequence()
     {
         return clone $this->input;
+    }
+
+    public function getArgs()
+    {
+        return $this->args;
     }
 }

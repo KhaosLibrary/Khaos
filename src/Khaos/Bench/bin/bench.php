@@ -7,17 +7,13 @@ use Khaos\Bench\Bench;
 $start = microtime(true);
 
 
-
 require_once __DIR__.'/../../../../vendor/autoload.php';
-
-$injector   = require_once __DIR__.'/bench/config/di.php';
-$dispatcher = require_once __DIR__.'/bench/config/events.php';
+$injector = require_once __DIR__.'/bench/config/di.php';
 
 /** @var Bench $bench */
 $bench = $injector->make(Bench::class);
 $bench->import(Bench::getRootResourceDefinition(getcwd()));
 $bench->run(array_merge(['bench'], array_slice($argv, 1)));
-
 
 
 // Benchmark :: END

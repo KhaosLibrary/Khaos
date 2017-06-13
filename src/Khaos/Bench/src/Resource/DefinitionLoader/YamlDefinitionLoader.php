@@ -36,8 +36,9 @@ class YamlDefinitionLoader implements ResourceDefinitionLoader
     {
         $definitions = [];
 
-        foreach ($this->getYamlDocuments($source) as $document)
+        foreach ($this->getYamlDocuments($source) as $document) {
             $definitions[] = $this->parser->parse($document);
+        }
 
         return $definitions;
     }

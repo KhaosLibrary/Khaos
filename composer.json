@@ -9,7 +9,9 @@
         "rdlowrey/auryn": "^1.4",
         "symfony/event-dispatcher": "^3.2",
         "aura/di": "^2.2",
-        "symfony/expression-language": "^3.3"
+        "symfony/expression-language": "^3.3",
+        "symfony/finder": "^3.3",
+        "symfony/console": "^3.3"
     },
     "replace": {
         "khaos/console": "self.version",
