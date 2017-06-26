@@ -1,0 +1,8 @@
+---
+schema: bench/command-namespace
+metadata:
+  id: bench.docker
+  title: Docker Commands
+  description: Commands specific to the docker tool
+definition:
+  namespace: bench docker

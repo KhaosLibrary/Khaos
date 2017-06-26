@@ -1,7 +1,0 @@
----
-resource: bench/namespace
-metadata:
-  title: Bench Workspace
-  description: Commands specific to your project are shown below.
-definition:
-  namespace: bench

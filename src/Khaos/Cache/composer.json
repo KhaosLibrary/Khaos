@@ -1,6 +1,6 @@
 {
-    "name": "khaos/bench",
-    "type": "project",
+    "name": "khaos/cache",
+    "type": "library",
     "authors": [
         {
             "name": "David Cole",
@@ -8,11 +8,6 @@
         }
     ],
     "require": {
-        "symfony/expression-language": "^3.3",
-        "symfony/yaml": "^3.3",
-        "symfony/event-dispatcher": "^3.3",
-        "symfony/console": "^3.3",
-        "twig/twig": "^2.4"
     },
     "require-dev": {
         "phpspec/phpspec": "^3.0",
@@ -20,7 +15,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Khaos\\Bench\\": "src/"
+            "Khaos\\Cache\\": "src/"
         }
     }
 }

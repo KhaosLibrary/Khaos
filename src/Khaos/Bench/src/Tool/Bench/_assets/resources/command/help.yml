@@ -1,8 +1,0 @@
----
-resource: bench/command
-metadata:
-  title: Show help
-definition:
-  command: help
-  usage: bench [<command>...] --help
-  run: bench.help(input)

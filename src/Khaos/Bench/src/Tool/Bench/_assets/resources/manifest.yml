@@ -1,6 +1,0 @@
----
-import:
-  - 'bench/global.yml'
-  - 'namespace/bench.yml'
-  - 'command/help.yml'
-  - 'command/version.yml'

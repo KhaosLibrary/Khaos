@@ -1,0 +1,15 @@
+---
+schema: bench/command
+metadata:
+  id: version
+  title: Get contextual help of a command
+  description: Get detailed help of the specified command.
+definition:
+  namespace: bench
+  command: version
+  usage: bench version [options]
+  options:
+      - '-h, --help  Show help'
+  tasks:
+    - title: Show Help
+      run: bench.version()

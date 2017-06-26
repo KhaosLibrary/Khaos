@@ -1,0 +1,17 @@
+---
+schema: bench/command
+metadata:
+  id: docker.build
+  title: Some Title
+  description: Some Description
+definition:
+  namespace: bench docker
+  command: build
+  options:
+    - '-e, --environment=<environment>  Environment [default: development] to target.'
+  usage: bench docker build <image> [options]
+  tasks:
+    - title: Build Docker Image
+      run: console.write('Hello World 1')
+    - title: Doing something else
+      run: console.write(input.getArgument('image'))

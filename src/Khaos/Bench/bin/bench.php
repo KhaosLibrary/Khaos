@@ -2,19 +2,13 @@
 <?php
 
 use Khaos\Bench\Bench;
+use Khaos\Bench\Tool\Docker\DockerTool;
 
-// benchmark :: START
 $start = microtime(true);
 
-
-require_once __DIR__.'/../../../../vendor/autoload.php';
-$injector = require_once __DIR__.'/bench/config/di.php';
-
 /** @var Bench $bench */
-$bench = $injector->make(Bench::class);
-$bench->import(Bench::getRootResourceDefinition(getcwd()));
-$bench->run(array_merge(['bench'], array_slice($argv, 1)));
+$bench = include __DIR__.'/bootstrap.inc.php';
+$bench->import('bench.yml');
+$bench->run($argv);
 
-
-// Benchmark :: END
-echo "\nTime: ".(microtime(true) - $start)."\n";
+echo "\n".number_format((microtime(true) - $start), 3)."s\n";

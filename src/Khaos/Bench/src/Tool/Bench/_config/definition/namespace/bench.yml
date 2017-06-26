@@ -1,0 +1,8 @@
+---
+schema: bench/command-namespace
+metadata:
+  id: bench
+  title: Bench Commands
+  description: All commands available on the bench
+definition:
+  namespace: bench

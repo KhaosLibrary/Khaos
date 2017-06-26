@@ -5,15 +5,16 @@
     "license": "MIT",
     "require": {
         "php": ">=7.0",
-        "symfony/yaml": "^3.2",
         "rdlowrey/auryn": "^1.4",
-        "symfony/event-dispatcher": "^3.2",
         "aura/di": "^2.2",
         "symfony/expression-language": "^3.3",
-        "symfony/finder": "^3.3",
-        "symfony/console": "^3.3"
+        "symfony/yaml": "^3.3",
+        "symfony/event-dispatcher": "^3.3",
+        "symfony/console": "^3.3",
+        "twig/twig": "^2.4"
     },
     "replace": {
+        "khaos/cache": "self.version",
         "khaos/console": "self.version",
         "khaos/fsm": "self.version",
         "khaos/bench": "self.version"
@@ -33,6 +34,7 @@
     ],
     "autoload": {
         "psr-4": {
+          "Khaos\\Cache\\":   "src/Khaos/Cache/src/",
           "Khaos\\Console\\": "src/Khaos/Console/src/",
           "Khaos\\FSM\\":     "src/Khaos/FSM/src/",
           "Khaos\\Bench\\":   "src/Khaos/Bench/src/"

@@ -1,0 +1,8 @@
+---
+schema: docker/image
+metadata:
+  id: some-id-1
+  title: Some Title
+  description: Some example description here.
+definition:
+  name: 1 + 1

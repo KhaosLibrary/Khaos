@@ -2,30 +2,29 @@
 
 namespace Khaos\Bench\Tool;
 
-use Auryn\Injector;
-use Khaos\Bench\Tool\ToolFunctionRouter;
+use Khaos\Bench\Bench;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-interface Tool
+interface Tool extends EventSubscriberInterface
 {
     /**
-     * @return ToolFunctionRouter|null
-     */
-    public function getToolFunctionRouter();
-
-    /**
-     * Import Resources
+     * Get Tool Name
      *
-     * @param array $resourceDefinitionData
+     * @return string
      */
-    public function import(array $resourceDefinitionData);
+    public function getName();
 
     /**
-     * @return string|null
+     * @return mixed
      */
-    public function getManifest();
+    public function getOperationProxy();
 
     /**
-     * @return array
+     * Create Instance of Tool
+     *
+     * @param Bench $bench
+     *
+     * @return Tool
      */
-    public static function resources();
+    public static function create(Bench $bench);
 }

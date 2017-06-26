@@ -2,119 +2,170 @@
 
 namespace Khaos\Bench\Tool\Bench;
 
-use Auryn\Injector;
 use Khaos\Bench\Bench;
-use Khaos\Bench\Tool\Bench\Resource\Definition\ImportDefinition;
-use Khaos\Bench\Resource\DefinitionFactory\CompositeDefinitionFactory;
-use Khaos\Bench\Resource\ResourceDefinitionFieldParser;
-use Khaos\Bench\Resource\ResourceDefinitionRepository;
-use Khaos\Bench\Tool\Bench\BenchFunctionRouter;
-use Khaos\Bench\Tool\Bench\Resource\DefinitionFactory\BenchDefinitionFactory;
-use Khaos\Bench\Tool\Bench\Resource\DefinitionFactory\CommandDefinitionFactory;
-use Khaos\Bench\Tool\Bench\Resource\DefinitionFactory\ImportDefinitionFactory;
-use Khaos\Bench\Tool\Bench\Resource\DefinitionFactory\NamespaceDefinitionFactory;
-use Khaos\Bench\Tool\ToolFunctionRouter;
+use Khaos\Bench\BenchRunEvent;
+use Khaos\Bench\CacheDefinitionsEvent;
+use Khaos\Bench\PrepareExpressionHandlerEvent;
 use Khaos\Bench\Tool\Tool;
+use Khaos\Console\Usage\Parser\UsageParserBuilder;
 
 class BenchTool implements Tool
 {
-    /**
-     * @var BenchFunctionRouter
-     */
-    private $functionRouter;
+    const NAME = 'bench';
 
-    /**
-     * @var CompositeDefinitionFactory
-     */
-    private $definitionFactory;
-
-    /**
-     * @var ResourceDefinitionRepository
-     */
-    private $definitionRepository;
-
-    /**
-     * @var ResourceDefinitionFieldParser
-     */
-    private $fieldParser;
     /**
      * @var Bench
      */
     private $bench;
 
     /**
+     * @var BenchToolOperationProxy
+     */
+    private $operationProxy;
+
+    /**
      * BenchTool constructor.
      *
-     * @param BenchFunctionRouter $functionRouter
-     * @param CompositeDefinitionFactory $definitionFactory
-     * @param ResourceDefinitionRepository $definitionRepository
-     * @param ResourceDefinitionFieldParser $fieldParser
      * @param Bench $bench
-     * @param Injector $injector
      */
-    public function __construct(BenchFunctionRouter $functionRouter, CompositeDefinitionFactory $definitionFactory, ResourceDefinitionRepository $definitionRepository, ResourceDefinitionFieldParser $fieldParser, Bench $bench, Injector $injector)
+    public function __construct(Bench $bench)
     {
-        $this->functionRouter       = $functionRouter;
-        $this->definitionFactory    = $definitionFactory;
-        $this->definitionRepository = $definitionRepository;
-        $this->fieldParser          = $fieldParser;
-        $this->bench                = $bench;
-
-        $this->bootstrap($functionRouter, $definitionFactory, $injector);
-    }
-
-    public function getManifest()
-    {
-        return __DIR__.'/_assets/resources/manifest.yml';
+        $this->bench = $bench;
+        $this->operationProxy = new BenchToolOperationProxy($bench);
     }
 
     /**
-     * @return ToolFunctionRouter|null
+     * @inheritdoc
      */
-    public function getToolFunctionRouter()
+    public function getName()
     {
-        return $this->functionRouter;
+        return self::NAME;
     }
 
     /**
-     * Import Resources
+     * onBenchRun
      *
-     * @param array $resourceDefinitionData
+     * @param BenchRunEvent $event
      */
-    public function import(array $resourceDefinitionData)
+    public function onBenchRun(BenchRunEvent $event)
     {
-        $resourceDefinitionData['resource'] = $resourceDefinitionData['resource'] ?? ImportDefinition::TYPE;
-        $this->definitionRepository->import($this->definitionFactory->create($resourceDefinitionData));
+        $input                = false;
+        $args                 = $event->getArgs();
+        $commandCache         = $event->getBench()->getCachePool()->get('usage-'.md5(implode(' ', $args)));
+        $definitionRepository = $event->getBench()->getDefinitionRepository();
+        $usageParserBuilder   = new UsageParserBuilder();
+
+        if ($commandCache->isHit())
+        {
+            $commandDefinition = $definitionRepository->{$commandCache->value()};
+            $parser            = $usageParserBuilder->createUsageParser($commandDefinition->getUsage(), $commandDefinition->getOptions());
+            $input             = $parser->parse($args);
+
+            $commandDefinition->run($this->bench, $input);
+        }
+        else
+        {
+            foreach ($definitionRepository->query(['schema' => 'bench/command']) as $definitionKey => $commandDefinition)
+            {
+                $parser = $usageParserBuilder->createUsageParser($commandDefinition->getUsage(), $commandDefinition->getOptions());
+
+                if (($input = $parser->parse($args)) !== false)
+                {
+                    $commandCache->set(var_export($definitionKey, true));
+                    $commandDefinition->run($this->bench, $input);
+                    break;
+                }
+            }
+        }
+
+        if (!$input) {
+            echo 'Command Not Found';
+        }
+    }
+
+    public function onPrepareExpressionHandler(PrepareExpressionHandlerEvent $event)
+    {
+        $expressionHandler = $event->getExpressionHandler();
+        $expressionHandler->addGlobalValue('bench', $this->getOperationProxy());
+
+        $expressionHandler->register(
+            'tool',
+            function($tool)
+            {
+                return '$bench->tool('.$tool.')';
+            },
+            function($arguments, $tool)
+            {
+                return $this->tool($tool);
+            }
+        );
+
+        $expressionHandler->register(
+            'get',
+            function($id)
+            {
+                return '$bench->getDefinitionRepository()->{'.$id.'}';
+            },
+            function($arguments, $id)
+            {
+                return $this->bench->getDefinitionRepository()->{$id};
+            }
+        );
+
+        $expressionHandler->register(
+            'query',
+            function($match)
+            {
+                return '$bench->getDefinitionRepository()->query('.var_export($match, true).')';
+            },
+            function($arguments, $match)
+            {
+                return $this->bench->getDefinitionRepository()->query($match);
+            }
+        );
     }
 
     /**
-     * @return array
+     * @param CacheDefinitionsEvent $event
      */
-    public static function resources()
+    public function onCacheDefinitions(CacheDefinitionsEvent $event)
+    {
+        $bench = $event->getBench();
+
+        $bench->import(__DIR__.'/_config/definition/namespace/bench.yml');
+        $bench->import(__DIR__.'/_config/definition/command/help.yml');
+        $bench->import(__DIR__.'/_config/definition/command/version.yml');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getSubscribedEvents()
     {
         return [
-            'bench',
-            'bench/import',
-            'bench/command',
-            'bench/namespace'
+            BenchRunEvent::NAME                  => 'onBenchRun',
+            PrepareExpressionHandlerEvent::NAME  => 'onPrepareExpressionHandler',
+            CacheDefinitionsEvent::NAME          => 'onCacheDefinitions',
         ];
     }
 
     /**
-     * @param BenchFunctionRouter         $functionRouter
-     * @param CompositeDefinitionFactory  $definitionFactory
-     * @param Injector                    $injector
+     * Create Instance of Tool
+     *
+     * @param Bench $bench
+     *
+     * @return Tool
      */
-    private function bootstrap(BenchFunctionRouter $functionRouter, CompositeDefinitionFactory $definitionFactory, Injector $injector)
+    public static function create(Bench $bench)
     {
-        require __DIR__ . '/_assets/config/events.php';
-        require __DIR__ . '/_assets/config/di.php';
+        return new self($bench);
+    }
 
-        $this->fieldParser->addValue('bench', $functionRouter);
-
-        $definitionFactory->add($injector->make(BenchDefinitionFactory::class));
-        $definitionFactory->add($injector->make(ImportDefinitionFactory::class));
-        $definitionFactory->add($injector->make(CommandDefinitionFactory::class));
-        $definitionFactory->add($injector->make(NamespaceDefinitionFactory::class));
+    /**
+     * @return mixed
+     */
+    public function getOperationProxy()
+    {
+        return $this->operationProxy;
     }
 }

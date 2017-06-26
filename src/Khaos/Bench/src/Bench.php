@@ -3,122 +3,169 @@
 namespace Khaos\Bench;
 
 use Exception;
-use Auryn\Injector;
-use InvalidArgumentException;
-use Khaos\Bench\Command\CommandRunner;
-use Khaos\Bench\Resource\ResourceDefinitionLoader;
-use Khaos\Bench\Tool\Bench\BenchTool;
-use Khaos\Bench\Tool\Docker\DockerTool;
-use Khaos\Bench\Tool\Shell\ShellTool;
-use Khaos\Bench\Tool\Tool;
+use Khaos\Bench\Resource\Definition\Definition;
+use Khaos\Bench\Resource\Definition\DefinitionRepository;
+use Khaos\Bench\Resource\Definition\DefinitionRepositoryFactory;
+use Khaos\Bench\Resource\Loader\Loader;
+use Khaos\Bench\Resource\Type\Expression\ExpressionHandler;
+use Khaos\Bench\Tool\ToolRepository;
+use Khaos\Cache\CacheItem;
+use Khaos\Cache\CacheItemPool;
+use Khaos\Cache\FileCacheItemPool;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Bench
 {
-    const VERSION = '0.0.1';
 
     /**
-     * @var CommandRunner
+     * Working directory of the bench.
+     *
+     * @var string
      */
-    private $commandRunner;
+    private $workingDirectory;
 
     /**
-     * @var Tool[]
+     * @var FileCacheItemPool
      */
-    private $tools = [];
+    private $cachePool;
 
     /**
-     * @var Tool[]
+     * Repository holding all definitions after file load.
+     *
+     * @var DefinitionRepository
      */
-    private $toolClassMap = [
-        'bench'  => BenchTool::class,
-        'docker' => DockerTool::class,
-        'shell'  => ShellTool::class
-    ];
-
-    private $resourceToolMap = [];
+    private $definitionRepository;
 
     /**
-     * @var Injector
-     */
-    private $injector;
-
-    /**
-     * @var ResourceDefinitionLoader
+     * @var Loader
      */
     private $definitionLoader;
 
     /**
+     * @var DefinitionRepositoryFactory
+     */
+    private $definitionRepositoryFactory;
+
+    /**
+     * Definition Cache
+     *
+     * @var CacheItem
+     */
+    private $definitionCache;
+
+    /**
+     * @var EventDispatcher
+     */
+    private $eventDispatcher;
+
+    /**
+     * @var ToolRepository
+     */
+    private $toolRepository;
+    /**
+     * @var Registry
+     */
+    private $registry;
+
+    /**
+     * @var ExpressionHandler
+     */
+    private $expressionHandler;
+
+    /**
      * Bench constructor.
      *
-     * @param CommandRunner             $commandRunner
-     * @param Injector                  $injector
-     * @param ResourceDefinitionLoader  $definitionLoader
+     * @param string $workingDirectory
+     * @param CacheItemPool $cachePool
+     * @param Loader $definitionLoader
+     * @param DefinitionRepositoryFactory $definitionRepositoryFactory
+     * @param EventDispatcher $eventDispatcher
+     * @param ToolRepository $toolRepository
+     * @param Registry $registry
+     * @param ExpressionHandler $expressionHandler
      */
-    public function __construct(CommandRunner $commandRunner, Injector $injector, ResourceDefinitionLoader $definitionLoader)
+    public function __construct($workingDirectory, CacheItemPool $cachePool, Loader $definitionLoader, DefinitionRepositoryFactory $definitionRepositoryFactory, EventDispatcher $eventDispatcher, ToolRepository $toolRepository, Registry $registry, ExpressionHandler $expressionHandler)
     {
-        $this->injector          = $injector;
-        $this->commandRunner     = $commandRunner;
-        $this->definitionLoader  = $definitionLoader;
-
-        $this->buildResourceToolMap();
+        $this->workingDirectory            = $workingDirectory;
+        $this->definitionLoader            = $definitionLoader;
+        $this->definitionRepositoryFactory = $definitionRepositoryFactory;
+        $this->cachePool                   = $cachePool;
+        $this->definitionCache             = $this->cachePool->get('definitions', []);
+        $this->definitionRepository        = $this->definitionRepositoryFactory->create($this->definitionCache->value());
+        $this->eventDispatcher             = $eventDispatcher;
+        $this->toolRepository              = $toolRepository;
+        $this->registry                    = $registry;
+        $this->expressionHandler           = $expressionHandler;
     }
 
     /**
-     * @param $source
-     */
-    public function import($source)
-    {
-        if (($resourceDefinitions = $this->definitionLoader->load($source)) !== null)
-        {
-            foreach ($resourceDefinitions as $resourceDefinitionData)
-                $this->tool($this->resourceToolMap[$resourceDefinitionData['resource'] ?? 'bench'])->import($resourceDefinitionData);
-
-            return;
-        }
-
-        throw new InvalidArgumentException("Unable to import resource definitions from '{$source}';");
-    }
-
-    public function run(array $args = [])
-    {
-        if (count($args) == 1)
-            $args[] = '--help';
-
-        $shell = $this->tool('shell');
-
-        $this->commandRunner->run($args);
-    }
-
-    /**
-     * @param string $toolName
+     * Import definitions from file
      *
-     * @return Tool
+     * @param string $file
      */
-    public function tool($toolName)
+    public function import($file)
     {
-        if (!isset($this->tools[$toolName])) {
+        if ($this->definitionCache->isHit())
+            return;
 
-            $tool = $this->tools[$toolName] = $this->injector->make($this->toolClassMap[$toolName]);
+        if (!file_exists($file))
+            $file = $this->workingDirectory.'/'.$file;
 
-            /** @var Tool $tool */
+        foreach ($this->definitionLoader->load($file) as $definitionData)
+            $this->definitionRepository->add($definitionData);
+    }
 
-            if (($manifest = $tool->getManifest()) !== null)
-                $this->import($manifest);
+    public function tool($tool)
+    {
+        return $this->toolRepository->{$tool}->getOperationProxy();
+    }
 
-            return $tool;
+    public function run($args)
+    {
+        // Prepare Bench Tools
+
+        $this->eventDispatcher->dispatch(PrepareToolsEvent::NAME, new PrepareToolsEvent($this, $this->definitionRepository));
+
+        // If required add command definitions
+
+        if ($this->definitionCache->isHit() === false)
+        {
+            $this->eventDispatcher->dispatch(
+                CacheDefinitionsEvent::NAME,
+                new CacheDefinitionsEvent($this, $this->definitionRepository)
+            );
+
+            $this->definitionCache->set($this->definitionRepository->export());
         }
 
-        return $this->tools[$toolName];
+        // Run Command
+
+        $this->eventDispatcher->dispatch(BenchRunEvent::NAME, new BenchRunEvent($this, $this->prepareArguments($args)));
     }
 
-    private function buildResourceToolMap()
+    /**
+     * @return DefinitionRepository
+     */
+    public function getDefinitionRepository(): DefinitionRepository
     {
-        foreach ($this->toolClassMap as $tool => $class)
-            foreach ($class::resources() as $resourceType)
-                $this->resourceToolMap[$resourceType] = $tool;
+        return $this->definitionRepository;
     }
 
-    public static function getRootResourceDefinition($search, $file = 'bench.yml')
+    /**
+     * @return CacheItemPool
+     */
+    public function getCachePool(): CacheItemPool
+    {
+        return $this->cachePool;
+    }
+
+    private function prepareArguments($args)
+    {
+        $args[0] = 'bench';
+        return $args;
+    }
+
+    public static function getWorkingDirectory($search, $file = 'bench.yml')
     {
         $search = $search.DIRECTORY_SEPARATOR;
         $length = strlen($search) + 1;
@@ -127,9 +174,33 @@ class Bench
         while (($offset = strrpos($search, DIRECTORY_SEPARATOR, $offset - $length)) !== false)
         {
             if (file_exists($candidate = substr($search, 0, $offset).DIRECTORY_SEPARATOR.$file))
-                return $candidate;
+                return dirname($candidate);
         }
 
-        throw new Exception('No root bench.yml could be found.');
+        throw new Exception('bench.yml could be found.');
+    }
+
+    /**
+     * @return Definition
+     */
+    public function getContext(): Definition
+    {
+        return $this->registry->get('context');
+    }
+
+    /**
+     * @param Definition $context
+     */
+    public function setContext(Definition $context)
+    {
+        $this->registry->set('context', $context);
+    }
+
+    /**
+     * @return ExpressionHandler
+     */
+    public function getExpressionHandler(): ExpressionHandler
+    {
+        return $this->expressionHandler;
     }
 }

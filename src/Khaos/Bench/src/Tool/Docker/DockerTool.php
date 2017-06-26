@@ -2,53 +2,103 @@
 
 namespace Khaos\Bench\Tool\Docker;
 
-use Khaos\Bench\Tool\ToolFunctionRouter;
+use Exception;
+use Khaos\Bench\Bench;
+use Khaos\Bench\CacheDefinitionsEvent;
+use Khaos\Bench\PrepareExpressionHandlerEvent;
+use Khaos\Bench\PrepareToolsEvent;
+use Khaos\Bench\Tool\Docker\Resource\Image\DockerImageSchema;
+use Khaos\Bench\Tool\Docker\Operation\Build;
 use Khaos\Bench\Tool\Tool;
+use Khaos\Bench\Tool\Operation;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * Class DockerTool
+ *
+ * @package Khaos\Bench\Tool\Docker
+ */
 class DockerTool implements Tool
 {
-    /**
-     * DockerTool constructor.
-     */
-    public function __construct()
-    {
+    const NAME = 'docker';
 
+    /**
+     * @inheritdoc
+     */
+    public function getName()
+    {
+        return self::NAME;
     }
 
     /**
-     * @return ToolFunctionRouter|null
+     * @param CacheDefinitionsEvent $event
      */
-    public function getToolFunctionRouter()
+    public function onCacheDefinitions(CacheDefinitionsEvent $event)
     {
-        return null;
+        $bench       = $event->getBench();
+        $definitions = $event->getDefinitionRepository();
+
+        if ($definitions->count('docker/image') == 0)
+            return;
+
+        $bench->import(__DIR__.'/_config/definition/namespace/docker.yml');
+        $bench->import(__DIR__.'/_config/definition/command/build.yml');
+        $bench->import(__DIR__.'/_config/definition/command/push.yml');
     }
 
     /**
-     * Import Resources
-     *
-     * @param array $resourceDefinitionData
+     * @param PrepareToolsEvent $event
      */
-    public function import(array $resourceDefinitionData)
+    public function onPrepareTools(PrepareToolsEvent $event)
     {
+        $definitions = $event->getDefinitionRepository();
 
+        if ($definitions->count('docker/image') == 0)
+            return;
+
+        $schemas = $definitions->getSchemaRepository();
+        $types   = $definitions->getTypeRepository();
+
+        $schemas->add(new DockerImageSchema($types));
     }
 
     /**
-     * @return array
+     * @param PrepareExpressionHandlerEvent $event
      */
-    public static function resources()
+    public function onPrepareExpressionHandler(PrepareExpressionHandlerEvent $event)
+    {
+        $event->getExpressionHandler()->addGlobalValue('docker', new DockerToolOperationProxy());
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getSubscribedEvents()
     {
         return [
-            'docker/registry',
-            'docker/image'
+            CacheDefinitionsEvent::NAME          => 'onCacheDefinitions',
+            PrepareToolsEvent::NAME              => 'onPrepareTools',
+            PrepareExpressionHandlerEvent::NAME  => 'onPrepareExpressionHandler'
         ];
     }
 
     /**
-     * @return string|null
+     * Create Instance of Tool
+     *
+     * @param Bench $bench
+     *
+     * @return Tool
      */
-    public function getManifest()
+    public static function create(Bench $bench)
     {
-        return null;
+        return new self();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOperationProxy()
+    {
+        // TODO: Implement getOperationProxy() method.
     }
 }
