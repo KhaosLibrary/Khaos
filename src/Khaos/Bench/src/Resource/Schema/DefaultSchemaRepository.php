@@ -43,7 +43,7 @@ class DefaultSchemaRepository implements SchemaRepository
     public function __get($key)
     {
         if (!isset($this->schemas[$key]))
-            throw new Exception();
+            throw new Exception("Schema '{$key}' could not be found.");
 
         return $this->{$key} = $this->schemas[$key];
     }

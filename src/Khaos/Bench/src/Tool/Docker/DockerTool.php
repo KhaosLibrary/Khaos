@@ -21,6 +21,26 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class DockerTool implements Tool
 {
     const NAME = 'docker';
+    /**
+     * @var Bench
+     */
+    private $bench;
+
+    /**
+     * @var DockerToolOperationProxy
+     */
+    private $operationProxy;
+
+    /**
+     * DockerTool constructor.
+     *
+     * @param Bench $bench
+     */
+    public function __construct(Bench $bench)
+    {
+        $this->bench          = $bench;
+        $this->operationProxy = new DockerToolOperationProxy($bench);
+    }
 
     /**
      * @inheritdoc
@@ -67,7 +87,7 @@ class DockerTool implements Tool
      */
     public function onPrepareExpressionHandler(PrepareExpressionHandlerEvent $event)
     {
-        $event->getExpressionHandler()->addGlobalValue('docker', new DockerToolOperationProxy());
+        $event->getExpressionHandler()->addGlobalValue('docker', $this->operationProxy);
     }
 
     /**
@@ -91,7 +111,7 @@ class DockerTool implements Tool
      */
     public static function create(Bench $bench)
     {
-        return new self();
+        return new self($bench);
     }
 
     /**
@@ -99,6 +119,6 @@ class DockerTool implements Tool
      */
     public function getOperationProxy()
     {
-        // TODO: Implement getOperationProxy() method.
+        return $this->operationProxy;
     }
 }

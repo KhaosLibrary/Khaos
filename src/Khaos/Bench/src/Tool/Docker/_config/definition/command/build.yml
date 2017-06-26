@@ -12,6 +12,4 @@ definition:
   usage: bench docker build <image> [options]
   tasks:
     - title: Build Docker Image
-      run: console.write('Hello World 1')
-    - title: Doing something else
-      run: console.write(input.getArgument('image'))
+      run: 'docker.build(input)'

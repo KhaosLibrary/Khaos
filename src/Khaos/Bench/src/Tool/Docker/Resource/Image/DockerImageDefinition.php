@@ -36,6 +36,31 @@ class DockerImageDefinition implements Definition
         $this->_type = $typeRepository;
     }
 
+    public function getName()
+    {
+        return $this->{'definition'}->{'name'};
+    }
+
+    public function getVersion()
+    {
+        return $this->{'definition'}->{'version'};
+    }
+
+    public function getContext()
+    {
+        $context = $this->{'definition'}->{'context'};
+        $context = ($context[0] == '/') ? BENCH_WORKING_DIRECTORY.$context : $this->getWorkingDirectory().'/'.$context;
+
+        return $context;
+    }
+
+    public function getDockerfile()
+    {
+        $dockerfile = $this->{'definition'}->{'dockerfile'};
+        $dockerfile = ($dockerfile[0] == '/') ? BENCH_WORKING_DIRECTORY.$dockerfile : $this->getWorkingDirectory().'/'.$dockerfile;
+
+        return $dockerfile;
+    }
 
     public function getWorkingDirectory()
     {

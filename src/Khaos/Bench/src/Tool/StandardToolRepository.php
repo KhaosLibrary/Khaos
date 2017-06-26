@@ -33,8 +33,9 @@ class StandardToolRepository implements ToolRepository
      */
     public function __get($tool)
     {
-        if (!isset($this->tools[$tool]))
-            throw new Exception();
+        if (!isset($this->tools[$tool])) {
+            throw new Exception("Tool '{$tool}' is not loaded.");
+        }
 
         return $this->{$tool} = $this->tools[$tool];
     }

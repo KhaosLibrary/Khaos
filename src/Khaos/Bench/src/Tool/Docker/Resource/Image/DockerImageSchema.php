@@ -37,7 +37,10 @@ class DockerImageSchema implements Schema
             'definition' => [
                 'type' => 'map',
                 'map'  => [
-                    'name' => ['type' => 'expression']
+                    'name'       => ['type' => 'string'],
+                    'version'    => ['type' => 'string'],
+                    'context'    => ['type' => 'string'],
+                    'dockerfile' => ['type' => 'string']
                 ]
             ]
         ]
