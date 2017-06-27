@@ -1,0 +1,15 @@
+---
+schema: bench/command
+metadata:
+  id: docker.stop
+  title: Stop Docker Project
+  description: Stop the docker project using the docker-compose configuratrion.
+definition:
+  namespace: bench docker
+  command: stop
+  options:
+    - '-e, --environment=<environment>  Environment [default: development] to target.'
+  usage: bench docker stop [options]
+  tasks:
+    - title: Stop Docker
+      run: 'docker.stop()'

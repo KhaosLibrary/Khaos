@@ -66,6 +66,12 @@ class DockerTool implements Tool
             $enabled = true;
         }
 
+        if (file_exists(BENCH_WORKING_DIRECTORY.'/docker-compose.yml')) {
+            $bench->import(__DIR__ . '/_config/definition/command/stop.yml');
+            $bench->import(__DIR__ . '/_config/definition/command/start.yml');
+            $bench->import(__DIR__ . '/_config/definition/command/destroy.yml');
+        }
+
         if ($enabled) {
             $bench->import(__DIR__ . '/_config/definition/namespace/docker.yml');
         }

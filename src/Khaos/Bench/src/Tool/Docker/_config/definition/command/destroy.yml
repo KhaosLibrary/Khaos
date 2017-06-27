@@ -1,0 +1,15 @@
+---
+schema: bench/command
+metadata:
+  id: docker.destroy
+  title: Destroy Docker Project
+  description: Stops any running containers and removes images, networks, volumes etc...
+definition:
+  namespace: bench docker
+  command: destroy
+  options:
+    - '-e, --environment=<environment>  Environment [default: development] to target.'
+  usage: bench docker destroy [options]
+  tasks:
+    - title: Destroy Docker Environment
+      run: 'docker.destroy()'
