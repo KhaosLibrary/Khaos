@@ -86,29 +86,18 @@ class BenchTool implements Tool
     public function onPrepareExpressionHandler(PrepareExpressionHandlerEvent $event)
     {
         $expressionHandler = $event->getExpressionHandler();
-        $expressionHandler->addGlobalValue('bench', $this->getOperationProxy());
 
-        $expressionHandler->register(
-            'tool',
-            function($tool)
-            {
-                return '$bench->tool('.$tool.')';
-            },
-            function($arguments, $tool)
-            {
-                return $this->tool($tool);
-            }
-        );
+        $expressionHandler->addGlobalValue('bench', $this->getOperationProxy());
 
         $expressionHandler->register(
             'get',
             function($id)
             {
-                return '$bench->getDefinitionRepository()->{'.$id.'}';
+                return '$bench->get('.$id.')';
             },
             function($arguments, $id)
             {
-                return $this->bench->getDefinitionRepository()->{$id};
+                return $this->operationProxy->get($id);
             }
         );
 
@@ -116,11 +105,23 @@ class BenchTool implements Tool
             'query',
             function($match)
             {
-                return '$bench->getDefinitionRepository()->query('.var_export($match, true).')';
+                return '$bench->query('.var_export($match, true).')';
             },
             function($arguments, $match)
             {
-                return $this->bench->getDefinitionRepository()->query($match);
+                return $this->operationProxy->query($match);
+            }
+        );
+
+        $expressionHandler->register(
+            'file',
+            function($file)
+            {
+                return '$bench->file('.$file.')';
+            },
+            function($arguments, $file)
+            {
+                return $this->operationProxy->file($file);
             }
         );
     }

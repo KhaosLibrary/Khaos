@@ -2,16 +2,13 @@
 
 namespace Khaos\Bench\Tool\Docker;
 
-use Exception;
 use Khaos\Bench\Bench;
 use Khaos\Bench\CacheDefinitionsEvent;
 use Khaos\Bench\PrepareExpressionHandlerEvent;
 use Khaos\Bench\PrepareToolsEvent;
 use Khaos\Bench\Tool\Docker\Resource\Image\DockerImageSchema;
-use Khaos\Bench\Tool\Docker\Operation\Build;
+use Khaos\Bench\Tool\Docker\Resource\Registry\DockerRegistrySchema;
 use Khaos\Bench\Tool\Tool;
-use Khaos\Bench\Tool\Operation;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Class DockerTool
@@ -57,13 +54,21 @@ class DockerTool implements Tool
     {
         $bench       = $event->getBench();
         $definitions = $event->getDefinitionRepository();
+        $enabled     = false;
 
-        if ($definitions->count('docker/image') == 0)
-            return;
+        if ($definitions->count('docker/image') > 0) {
+            $bench->import(__DIR__.'/_config/definition/command/build.yml');
+            $enabled = true;
+        }
 
-        $bench->import(__DIR__.'/_config/definition/namespace/docker.yml');
-        $bench->import(__DIR__.'/_config/definition/command/build.yml');
-        $bench->import(__DIR__.'/_config/definition/command/push.yml');
+        if ($definitions->count('docker/registry') > 0) {
+            $bench->import(__DIR__ . '/_config/definition/command/push.yml');
+            $enabled = true;
+        }
+
+        if ($enabled) {
+            $bench->import(__DIR__ . '/_config/definition/namespace/docker.yml');
+        }
     }
 
     /**
@@ -72,14 +77,16 @@ class DockerTool implements Tool
     public function onPrepareTools(PrepareToolsEvent $event)
     {
         $definitions = $event->getDefinitionRepository();
+        $schemas     = $definitions->getSchemaRepository();
+        $types       = $definitions->getTypeRepository();
 
-        if ($definitions->count('docker/image') == 0)
-            return;
+        if ($definitions->count('docker/image') > 0) {
+            $schemas->add(new DockerImageSchema($types));
+        }
 
-        $schemas = $definitions->getSchemaRepository();
-        $types   = $definitions->getTypeRepository();
-
-        $schemas->add(new DockerImageSchema($types));
+        if ($definitions->count('docker/registry') > 0) {
+            $schemas->add(new DockerRegistrySchema($types));
+        }
     }
 
     /**

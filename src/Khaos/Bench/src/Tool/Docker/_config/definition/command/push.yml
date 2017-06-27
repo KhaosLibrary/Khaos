@@ -9,7 +9,7 @@ definition:
   command: push
   options:
     - '-e, --environment=<environment>  Environment [default: development] to target.'
-  usage: bench docker push <image> [options]
+  usage: bench docker push <image> [<registry>] [options]
   tasks:
     - title: Push Docker Image
-      run: console.write('Push Docker Image')
+      run: docker.push(input)

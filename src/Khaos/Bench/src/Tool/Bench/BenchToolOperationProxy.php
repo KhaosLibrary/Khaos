@@ -31,6 +31,27 @@ class BenchToolOperationProxy
         (new ContextualHelpBuilder($this->bench))->build($input);
     }
 
+    public function file($file)
+    {
+        if ($file[0] == '/') {
+            $file = BENCH_WORKING_DIRECTORY . substr($file, 1);
+        } else {
+            $file = $this->bench->getContext()->getWorkingDirectory().'/'.$file;
+        }
+
+        return file_get_contents($file);
+    }
+
+    public function get($id)
+    {
+        return $this->bench->getDefinitionRepository()->{$id};
+    }
+
+    public function query($match)
+    {
+        return $this->bench->getDefinitionRepository()->query($match);
+    }
+
     /**
      *
      */
