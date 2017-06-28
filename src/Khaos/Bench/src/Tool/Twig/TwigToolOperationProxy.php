@@ -3,6 +3,7 @@
 namespace Khaos\Bench\Tool\Twig;
 
 use Khaos\Bench\Bench;
+use SplFileInfo;
 use Twig_Environment;
 use Twig_Loader_Filesystem;
 
@@ -46,12 +47,17 @@ class TwigToolOperationProxy
     public function render($template, $values = [])
     {
         if ($template[0] == '/') {
-            $this->loader->setPaths(BENCH_WORKING_DIRECTORY);
-            $template = substr($template, 1);
-        } else {
+
+            $file = new SplFileInfo(BENCH_WORKING_DIRECTORY.$template);
+
+            $this->loader->setPaths($file->getPath());
+            $template = $file->getFilename();
+
+        }
+        else
+        {
             $this->loader->setPaths($this->bench->getContext()->getWorkingDirectory());
         }
-
 
         $test = $this->twig->render($template, $values);
 
