@@ -78,4 +78,47 @@ class DockerToolOperationProxy
 
         system(implode(' && ', $cmd));
     }
+
+    public function start()
+    {
+        $cmd   = [];
+        $cmd[] = 'cd '.BENCH_WORKING_DIRECTORY;
+        $cmd[] = 'docker-compose up -d';
+
+        $this->console->write('<heading>Starting...</heading>');
+        $this->console->write('');
+        $this->console->write(implode("\n", $cmd));
+        $this->console->write('');
+
+        system(implode(' && ', $cmd));
+    }
+
+    public function stop()
+    {
+        $cmd   = [];
+        $cmd[] = 'cd '.BENCH_WORKING_DIRECTORY;
+        $cmd[] = 'docker-compose stop';
+
+        $this->console->write('<heading>Stopping...</heading>');
+        $this->console->write('');
+        $this->console->write(implode("\n", $cmd));
+        $this->console->write('');
+
+        system(implode(' && ', $cmd));
+    }
+
+    public function destroy()
+    {
+        $cmd   = [];
+        $cmd[] = 'cd '.BENCH_WORKING_DIRECTORY;
+        $cmd[] = 'docker-compose stop';
+        $cmd[] = 'docker-compose rm -f';
+
+        $this->console->write('<heading>Destroying...</heading>');
+        $this->console->write('');
+        $this->console->write(implode("\n", $cmd));
+        $this->console->write('');
+
+        system(implode(' && ', $cmd));
+    }
 }

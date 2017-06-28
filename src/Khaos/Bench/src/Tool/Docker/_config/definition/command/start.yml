@@ -1,0 +1,15 @@
+---
+schema: bench/command
+metadata:
+  id: docker.start
+  title: Start Docker Project
+  description: Starts the docker project using the docker-compose configuration.
+definition:
+  namespace: bench docker
+  command: start
+  options:
+    - '-e, --environment=<environment>  Environment [default: development] to target.'
+  usage: bench docker start [options]
+  tasks:
+    - title: Start Docker
+      run: 'docker.start()'
