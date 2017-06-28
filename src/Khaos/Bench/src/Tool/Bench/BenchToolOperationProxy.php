@@ -4,6 +4,7 @@ namespace Khaos\Bench\Tool\Bench;
 
 use Khaos\Bench\Bench;
 use Khaos\Bench\Tool\Bench\Operation\Help\ContextualHelpBuilder;
+use Khaos\Bench\Tool\Bench\Resource\SecretKey\SecretKeyDefinition;
 use Khaos\Console\Usage\Input;
 
 class BenchToolOperationProxy
@@ -52,11 +53,31 @@ class BenchToolOperationProxy
         return $this->bench->getDefinitionRepository()->query($match);
     }
 
-    /**
-     *
-     */
     public function version()
     {
         echo '1.0';
+    }
+
+    public function encrypt($data, $key = 'default')
+    {
+        /**
+         * @var SecretKeyDefinition $key
+         */
+
+        $secretKeyDefinition = $this->bench->getDefinitionRepository()->{'secret/key:'.$key};
+        return Cryptor::Encrypt($data, $secretKeyDefinition->getKey());
+    }
+
+    public function decrypt($data, $key = 'default')
+    {
+        /**
+         * @var SecretKeyDefinition $secretKeyDefinition
+         */
+
+        $secretKeyDefinition = $this->bench->getDefinitionRepository()->{'secret/key:'.$key};
+        $key                 = $secretKeyDefinition->getKey();
+        $decryptedValue      = Cryptor::Decrypt($data, $key);
+
+        return $decryptedValue;
     }
 }

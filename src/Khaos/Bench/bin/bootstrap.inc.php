@@ -19,6 +19,7 @@ use Khaos\Bench\Resource\Type\Map\MapType;
 use Khaos\Bench\Resource\Type\Sequence\SequenceType;
 use Khaos\Bench\Resource\Type\String\StringType;
 use Khaos\Bench\Tool\Bench\Resource\CommandNamespace\BenchCommandNamespaceSchema;
+use Khaos\Bench\Tool\Bench\Resource\SecretKey\SecretKeySchema;
 use Khaos\Bench\Tool\Console\ConsoleTool;
 use Khaos\Bench\Tool\Docker\DockerTool;
 use Khaos\Bench\Tool\StandardToolRepository;
@@ -164,13 +165,12 @@ $typeRepository->add(new ExpressionType($typeRepository, $lazyLoadedExpressionHa
 
 /*
  * Khaos\Bench\Resource\Schema\DefaultSchemaRepository
- *
- *  - command
  */
 
 $schemaRepository = new DefaultSchemaRepository();
 $schemaRepository->add(new BenchCommandSchema($typeRepository));
 $schemaRepository->add(new BenchCommandNamespaceSchema($typeRepository));
+$schemaRepository->add(new SecretKeySchema($typeRepository));
 
 /*
  * Khaos\Bench\Resource\Definition\DefaultDefinitionRepositoryFactory

@@ -124,6 +124,30 @@ class BenchTool implements Tool
                 return $this->operationProxy->file($file);
             }
         );
+
+        $expressionHandler->register(
+            'decrypt',
+            function($data)
+            {
+                return '$bench->decrypt('.$data.')';
+            },
+            function($arguments, $data)
+            {
+                return $this->operationProxy->decrypt($data);
+            }
+        );
+
+        $expressionHandler->register(
+            'encrypt',
+            function($data)
+            {
+                return '$bench->encrypt('.$data.')';
+            },
+            function($arguments, $data)
+            {
+                return $this->operationProxy->encrypt($data);
+            }
+        );
     }
 
     /**
@@ -136,6 +160,10 @@ class BenchTool implements Tool
         $bench->import(__DIR__.'/_config/definition/namespace/bench.yml');
         $bench->import(__DIR__.'/_config/definition/command/help.yml');
         $bench->import(__DIR__.'/_config/definition/command/version.yml');
+
+        $bench->import(__DIR__.'/_config/definition/namespace/secret.yml');
+        $bench->import(__DIR__.'/_config/definition/command/decrypt.yml');
+        $bench->import(__DIR__.'/_config/definition/command/encrypt.yml');
     }
 
     /**

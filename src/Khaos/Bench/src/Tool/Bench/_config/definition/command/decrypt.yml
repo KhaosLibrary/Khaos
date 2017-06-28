@@ -1,0 +1,15 @@
+---
+schema: bench/command
+metadata:
+  id: secret.decrypt
+  title: Decrypt Secret
+  description: Decrypt the given data.
+definition:
+  namespace: bench secret
+  command: decrypt
+  usage: bench secret decrypt <value> [<key>] [options]
+  options:
+    - '-h, --help  Show help'
+  tasks:
+    - title: Decrypt Secret
+      run: console.write(bench.decrypt(input.getArgument('value')))
