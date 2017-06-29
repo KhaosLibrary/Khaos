@@ -3,11 +3,13 @@
 
 namespace Khaos\Bench\Resource\Type\Map;
 
+use ArrayAccess;
+use Aura\Di\Exception;
 use Khaos\Bench\Resource\Definition\Definition;
 use Khaos\Bench\Resource\Type\TypeRepository;
 use Khaos\Bench\Resource\Type\TypeValue;
 
-class MapTypeValue implements TypeValue
+class MapTypeValue implements ArrayAccess, TypeValue
 {
     /**
      * @var
@@ -58,5 +60,37 @@ class MapTypeValue implements TypeValue
                 $this->_data[$key],
                 $this->_definition
             );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function offsetExists($offset)
+    {
+        return isset($this->_data[$offset]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function offsetGet($offset)
+    {
+        return $this->{$offset};
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function offsetSet($offset, $value)
+    {
+        throw new Exception("Not Implemented");
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function offsetUnset($offset)
+    {
+        throw new Exception("Not Implemented");
     }
 }

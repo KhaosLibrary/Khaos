@@ -42,6 +42,11 @@ class BenchAttributesDefinition implements Definition
             );
     }
 
+    public function getDefinition()
+    {
+        return $this->{'definition'};
+    }
+
     public function getWorkingDirectory()
     {
         return $this->{'metadata'}->{'working-directory'};
