@@ -1,5 +1,6 @@
 <?php
 
+
 $data = 'hello <% hello %> some other data <% lol %> hmm.';
 
 function getTokens($data)

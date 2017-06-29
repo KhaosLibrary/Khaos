@@ -8,7 +8,10 @@ use Khaos\Bench\Resource\Loader\FileLoader;
 use Khaos\Bench\Resource\Loader\Loader;
 use Khaos\Bench\Resource\Loader\Yaml\Parser;
 use Khaos\Bench\Resource\Loader\YamlLoader;
+use Khaos\Bench\Resource\Type\Dynamic\DynamicType;
+use Khaos\Bench\Resource\Type\InlineExpression\InlineExpressionType;
 use Khaos\Bench\Tool\Bench\BenchTool;
+use Khaos\Bench\Tool\Bench\Resource\Attributes\BenchAttributesSchema;
 use Khaos\Bench\Tool\Bench\Resource\Command\BenchCommandSchema;
 use Khaos\Bench\Resource\Schema\DefaultSchemaRepository;
 use Khaos\Bench\Resource\Type\DefaultTypeRepository;
@@ -162,6 +165,8 @@ $typeRepository->add(new MapType($typeRepository));
 $typeRepository->add(new StringType($typeRepository));
 $typeRepository->add(new SequenceType($typeRepository));
 $typeRepository->add(new ExpressionType($typeRepository, $lazyLoadedExpressionHandler, $registry));
+$typeRepository->add(new InlineExpressionType($typeRepository, $lazyLoadedExpressionHandler, $registry));
+$typeRepository->add(new DynamicType($typeRepository));
 
 /*
  * Khaos\Bench\Resource\Schema\DefaultSchemaRepository
@@ -171,6 +176,7 @@ $schemaRepository = new DefaultSchemaRepository();
 $schemaRepository->add(new BenchCommandSchema($typeRepository));
 $schemaRepository->add(new BenchCommandNamespaceSchema($typeRepository));
 $schemaRepository->add(new SecretKeySchema($typeRepository));
+$schemaRepository->add(new BenchAttributesSchema($typeRepository));
 
 /*
  * Khaos\Bench\Resource\Definition\DefaultDefinitionRepositoryFactory

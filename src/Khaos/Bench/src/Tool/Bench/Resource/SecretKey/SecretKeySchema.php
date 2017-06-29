@@ -33,7 +33,7 @@ class SecretKeySchema implements Schema
                 'definition' => [
                     'type' => 'map',
                     'map'  => [
-                        'key' => ['type' => 'expression']
+                        'key' => ['type' => 'inline-expression']
                     ]
                 ]
             ]

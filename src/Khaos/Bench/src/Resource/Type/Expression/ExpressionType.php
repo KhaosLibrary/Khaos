@@ -29,7 +29,7 @@ class ExpressionType implements Type
     private $registry;
 
     /**
-     * MapType constructor.
+     * ExpressionType constructor.
      *
      * @param TypeRepository $typeResolver
      * @param ExpressionHandler $expressionHandler
