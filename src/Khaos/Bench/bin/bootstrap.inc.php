@@ -220,16 +220,16 @@ $bench = new Bench(
     $lazyLoadedExpressionHandler
 );
 
-$consoleTool = ConsoleTool::create($bench);
+$consoleTool = new ConsoleTool();
 $toolRepository->add($consoleTool);
 
-$benchTool = BenchTool::create($bench);
+$benchTool = new BenchTool($bench, $lazyLoadedExpressionHandler);
 $toolRepository->add($benchTool);
 
-$twigTool = TwigTool::create($bench);
+$twigTool = new TwigTool($bench);
 $toolRepository->add($twigTool);
 
-$dockerTool = DockerTool::create($bench);
+$dockerTool = new DockerTool($bench);
 $toolRepository->add($dockerTool);
 
 $eventDispatcher->addSubscriber($benchTool);

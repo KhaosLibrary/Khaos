@@ -91,6 +91,7 @@ class ExpressionType implements Type
     {
         $names   = array_keys($this->expressionHandler->getGlobalValues());
         $names[] = 'self';
+        $names[] = 'input';
 
         return 'function($values){extract($values); return '.$this->expressionHandler->compile($data, $names).';}';
     }

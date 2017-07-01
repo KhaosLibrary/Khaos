@@ -49,7 +49,7 @@ class BenchCommandSchema implements Schema
                             'type' => 'map',
                             'map'  => [
                                 'title' => ['type' => 'string'],
-                                'run'   => ['type' => 'string']
+                                'run'   => ['type' => 'expression']
                             ]
                         ]
                     ]

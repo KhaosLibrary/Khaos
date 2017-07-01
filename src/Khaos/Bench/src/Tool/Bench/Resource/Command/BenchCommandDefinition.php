@@ -97,13 +97,8 @@ class BenchCommandDefinition implements Definition
 
     public function run(Bench $bench, Input $input)
     {
-        $expressionHandler = $bench->getExpressionHandler();
-
-        $values          = $expressionHandler->getGlobalValues();
-        $values['input'] = $input;
-
         foreach ($this->definition->tasks as $task) {
-            $expressionHandler->evaluate($task->run, $values);
+            $task->run;
         }
     }
 

@@ -6,6 +6,7 @@ use Khaos\Bench\Bench;
 use Khaos\Bench\BenchRunEvent;
 use Khaos\Bench\CacheDefinitionsEvent;
 use Khaos\Bench\PrepareExpressionHandlerEvent;
+use Khaos\Bench\Resource\Type\Expression\ExpressionHandler;
 use Khaos\Bench\Tool\Tool;
 use Khaos\Console\Usage\Parser\UsageParserBuilder;
 
@@ -24,14 +25,21 @@ class BenchTool implements Tool
     private $operationProxy;
 
     /**
+     * @var ExpressionHandler
+     */
+    private $expressionHandler;
+
+    /**
      * BenchTool constructor.
      *
-     * @param Bench $bench
+     * @param Bench              $bench
+     * @param ExpressionHandler  $expressionHandler
      */
-    public function __construct(Bench $bench)
+    public function __construct(Bench $bench, ExpressionHandler $expressionHandler)
     {
-        $this->bench = $bench;
-        $this->operationProxy = new BenchToolOperationProxy($bench);
+        $this->bench             = $bench;
+        $this->operationProxy    = new BenchToolOperationProxy($bench);
+        $this->expressionHandler = $expressionHandler;
     }
 
     /**
@@ -61,6 +69,8 @@ class BenchTool implements Tool
             $parser            = $usageParserBuilder->createUsageParser($commandDefinition->getUsage(), $commandDefinition->getOptions());
             $input             = $parser->parse($args);
 
+            $this->expressionHandler->addGlobalValue('input', $input);
+
             $commandDefinition->run($this->bench, $input);
         }
         else
@@ -71,6 +81,8 @@ class BenchTool implements Tool
 
                 if (($input = $parser->parse($args)) !== false)
                 {
+                    $this->expressionHandler->addGlobalValue('input', $input);
+
                     $commandCache->set(var_export($definitionKey, true));
                     $commandDefinition->run($this->bench, $input);
                     break;
