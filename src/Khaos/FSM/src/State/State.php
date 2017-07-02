@@ -31,7 +31,7 @@ interface State extends StateVisitorClient
     public function addTransition($transition, State $to = null, $guard = null, $action = null);
 
     /**
-     * Set Type
+     * Set ValidatorType
      *
      * @param string $type
      *

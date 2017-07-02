@@ -191,7 +191,7 @@ class BenchTool implements Tool
     }
 
     /**
-     * Create Instance of Tool
+     * Create Command of Tool
      *
      * @param Bench $bench
      *

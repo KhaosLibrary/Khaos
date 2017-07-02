@@ -37,7 +37,8 @@
           "Khaos\\Cache\\":   "src/Khaos/Cache/src/",
           "Khaos\\Console\\": "src/Khaos/Console/src/",
           "Khaos\\FSM\\":     "src/Khaos/FSM/src/",
-          "Khaos\\Bench\\":   "src/Khaos/Bench/src/"
+          "Khaos\\Bench\\":   "src/Khaos/Bench/src/",
+          "Khaos\\Schema\\": "src/Khaos/Schema/src/"
         }
     },
     "scripts": {

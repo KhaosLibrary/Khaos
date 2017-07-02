@@ -45,7 +45,7 @@ class Token
     ];
 
     /**
-     * Token Type
+     * Token ValidatorType
      *
      * @var int
      */
@@ -72,7 +72,7 @@ class Token
     }
 
     /**
-     * Token Type
+     * Token ValidatorType
      *
      * @return int
      */

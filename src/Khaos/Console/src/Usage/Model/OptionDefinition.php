@@ -150,7 +150,7 @@ class OptionDefinition
     }
 
     /**
-     * Get Type
+     * Get ValidatorType
      *
      * @return string
      */
@@ -160,7 +160,7 @@ class OptionDefinition
     }
 
     /**
-     * Set Type
+     * Set ValidatorType
      *
      * @param string $type
      *

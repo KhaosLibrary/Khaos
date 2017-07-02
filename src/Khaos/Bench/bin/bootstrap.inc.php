@@ -51,7 +51,7 @@ $eventDispatcher = new EventDispatcher();
 $registry = new Registry();
 
 /*
- * Khaos\Bench\Resource\Type\Expression\ExpressionHandler
+ * Khaos\Bench\Resource\ValidatorType\Expression\ExpressionHandler
  *
  * Not always needed and quite heavy to initialise so lets lazy load it when
  * needed.
@@ -151,7 +151,7 @@ $lazyLoadedDefinitionLoader = new class($lazyLoadedYamlParser) implements Loader
 };
 
 /*
- * Khaos\Bench\Resource\Type\DefaultTypeRepository
+ * Khaos\Bench\Resource\ValidatorType\DefaultTypeRepository
  *
  *  - map
  *  - string

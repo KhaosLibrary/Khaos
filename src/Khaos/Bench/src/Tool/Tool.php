@@ -20,7 +20,7 @@ interface Tool extends EventSubscriberInterface
     public function getOperationProxy();
 
     /**
-     * Create Instance of Tool
+     * Create Command of Tool
      *
      * @param Bench $bench
      *

@@ -7,7 +7,7 @@ use SplFileInfo;
 class FileLoader implements Loader
 {
     /**
-     * File Type Loaders
+     * File ValidatorType Loaders
      *
      * @var Loader[]
      */

@@ -5,7 +5,7 @@ namespace Khaos\Bench\Resource\Type;
 interface TypeRepository
 {
     /**
-     * Add Type
+     * Add ValidatorType
      *
      * @param Type $type
      *
@@ -14,7 +14,7 @@ interface TypeRepository
     public function add(Type $type);
 
     /**
-     * Get Type
+     * Get ValidatorType
      *
      * @param $key
      *

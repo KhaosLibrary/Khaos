@@ -63,7 +63,7 @@ class DefaultState implements State
     }
 
     /**
-     * Set Type
+     * Set ValidatorType
      *
      * @param string $type
      *
