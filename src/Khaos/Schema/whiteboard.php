@@ -1,31 +1,104 @@
 <?php
 
-use Khaos\Schema\Instance\Validator\RecursiveValidator;
-use Khaos\Schema\Instance\Validator\TypeValidator\ObjectTypeValidator;
-use Khaos\Schema\Instance\Validator\TypeValidator\StringTypeValidator;
-use Khaos\Schema\Instance\Validator\TypeValidator\TypeValidatorCollection;
-use Khaos\Schema\SchemaInstanceValidator;
+interface Validator
+{
+    public function validate();
+}
 
-require_once __DIR__.'/../../../vendor/autoload.php';
+class TypeKeyword implements KeywordValidator
+{
+    const KEYWORD = 'type';
 
+    public function validate()
+    {
 
+    }
 
-$instance = new stdClass();
-$instance->id          = '10';
-$instance->title       = 'Example Title';
-$instance->description = 'Example Description';
+    public function getKeyword()
+    {
+        return self::KEYWORD;
+    }
+}
 
+class PropertyPatternKeyword implements InformativeKeyword
+{
+    const KEYWORD = 'propertyPattern';
 
+    public function getKeyword()
+    {
+        return self::KEYWORD;
+    }
+}
 
+class Keywords
+{
+    private $keywords = [];
 
-$type = new TypeValidatorCollection();
-$type->add(new ObjectTypeValidator());
-$type->add(new StringTypeValidator());
+    public function add(Keyword $keyword)
+    {
+        $this->keywords[$keyword->getKeyword()] = $keyword;
+    }
 
-$recursiveValidator = new RecursiveValidator($type);
+    /**
+     * @param string $keyword
+     *
+     * @return Validator
+     *
+     * @throws Exception
+     */
+    public function __get($keyword)
+    {
+        if (!isset($this->keywords[$keyword]))
+            throw new Exception();
 
-$validator = new SchemaInstanceValidator($recursiveValidator);
+        $keyword = $this->keywords[$keyword];
 
+        if ($keyword instanceof KeywordValidator)
+            return $this->{$keyword} = $keyword;
 
-$result = $validator->validate($schema, $instance);
+        if ($keyword instanceof InformativeKeyword)
+            return new class implements Validator
+            {
+                public function validate()
+                {
+                    return;
+                }
+            };
 
+        throw new Exception();
+    }
+}
+
+interface KeywordValidator extends Keyword, Validator {}
+interface InformativeKeyword extends Keyword {}
+
+interface Keyword
+{
+    public function getKeyword();
+}
+
+class MyValidator
+{
+    public $keywords;
+
+    public function __construct($keywords)
+    {
+        $this->keywords = $keywords;
+    }
+
+    public function validate($schema, $instance)
+    {
+        foreach (array_keys($schema) as $keyword)
+            $this->keywords->{$keyword}->validate();
+    }
+}
+
+$typeKeyword            = new TypeKeyword();
+$propertyPatternKeyword = new PropertyPatternKeyword();
+
+$keywords = new Keywords();
+$keywords->add($typeKeyword);
+$keywords->add($propertyPatternKeyword);
+
+$myValidator = new MyValidator($keywords);
+$myValidator->validate([], []);
