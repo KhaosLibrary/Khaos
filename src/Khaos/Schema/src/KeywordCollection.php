@@ -41,7 +41,7 @@ class KeywordCollection
 
                     public function validate(&$schema, &$instance)
                     {
-                        return;
+                        return true;
                     }
 
                     public function getKeyword()
