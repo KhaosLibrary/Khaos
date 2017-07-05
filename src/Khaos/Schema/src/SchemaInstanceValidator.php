@@ -31,7 +31,12 @@ class SchemaInstanceValidator
      */
     public function validate($schema, &$instance)
     {
-        $schema['type'] = $schema['type'] ?? '_dynamic';
+        // Coerce Types
+
+        if (is_array($instance) && !isset($instance[0]))
+            $instance = (object)$instance;
+
+        // Validate Keywords
 
         foreach (array_keys($schema) as $keyword)
             if (!$this->keywords->{$keyword}->validate($schema, $instance))

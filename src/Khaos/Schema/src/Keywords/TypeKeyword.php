@@ -3,9 +3,9 @@
 namespace Khaos\Schema\Keywords;
 
 use Exception;
-use Khaos\Schema\ValidativeKeyword;
+use Khaos\Schema\Keyword;
 
-class TypeKeyword implements ValidativeKeyword
+class TypeKeyword implements Keyword
 {
     const KEYWORD = 'type';
 
@@ -16,7 +16,13 @@ class TypeKeyword implements ValidativeKeyword
 
     private function validate_string(&$schema, &$instance)
     {
-        return is_string($instance);
+        if (is_string($instance))
+            return true;
+
+        if (is_object($instance) && method_exists($instance, '__toString'))
+            return true;
+
+        return false;
     }
 
     private function validate_number(&$schema, &$instance)
@@ -45,16 +51,6 @@ class TypeKeyword implements ValidativeKeyword
     private function validate_null(&$schema, &$instance)
     {
         return is_null($instance);
-    }
-
-    private function validate__dynamic(&$schema, &$instance)
-    {
-        if (is_array($instance) && !isset($instance[0]))
-            $instance = (object)$instance;
-
-        unset($schema['type']);
-
-        return true;
     }
 
     public function __call($type, $args)
