@@ -2,9 +2,13 @@
 
 namespace Khaos\Schema;
 
-use Traversable;
+use IteratorAggregate;
 
-interface DataProvider extends Traversable
+interface DataProvider extends IteratorAggregate
 {
-    public function get($id);
+
+
+    public function getName();
+
+    public function getLastModified();
 }
