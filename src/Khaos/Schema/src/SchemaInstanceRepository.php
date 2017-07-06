@@ -6,7 +6,8 @@ use Khaos\Cache\CacheItemPool;
 
 class SchemaInstanceRepository
 {
-    const INSTANCE_SCHEMA = [
+    const INSTANCE_SCHEMA =
+    [
         'description' => 'Top-level schema for the validation process',
         'self' => [
             'name' => 'instance'

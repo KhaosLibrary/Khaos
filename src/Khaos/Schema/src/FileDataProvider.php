@@ -12,25 +12,19 @@ class FileDataProvider implements DataProvider
      */
     private $file;
 
-    /**
-     * @var SchemaInstanceValidator
-     */
-    private $validator;
 
     /**
      * FileDataProvider constructor.
      *
      * @param string $file
-     * @param SchemaInstanceValidator $validator
      *
      * @throws Exception
      */
-    public function __construct($file, SchemaInstanceValidator $validator)
+    public function __construct($file)
     {
         if (!file_exists($file))
             throw new Exception();
 
-        $this->validator = $validator;
         $this->file      = $file;
     }
 
@@ -52,5 +46,15 @@ class FileDataProvider implements DataProvider
     private function getYamlDocuments($yaml)
     {
 
+    }
+
+    public function getName()
+    {
+        // TODO: Implement getName() method.
+    }
+
+    public function getLastModified()
+    {
+        // TODO: Implement getLastModified() method.
     }
 }

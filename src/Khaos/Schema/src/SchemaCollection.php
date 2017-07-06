@@ -17,4 +17,6 @@ class SchemaCollection
      * @return array
      */
     public function get($schema) {}
+
+    public function add(Schema $schema) {}
 }
