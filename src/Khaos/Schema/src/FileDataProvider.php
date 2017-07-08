@@ -2,16 +2,17 @@
 
 namespace Khaos\Schema;
 
+use ArrayIterator;
 use Exception;
+use SplFileInfo;
 use Symfony\Component\Yaml\Yaml;
 
 class FileDataProvider implements DataProvider
 {
     /**
-     * @var string
+     * @var SplFileInfo
      */
     private $file;
-
 
     /**
      * FileDataProvider constructor.
@@ -25,7 +26,7 @@ class FileDataProvider implements DataProvider
         if (!file_exists($file))
             throw new Exception();
 
-        $this->file      = $file;
+        $this->file = new SplFileInfo($file);
     }
 
 
@@ -34,27 +35,44 @@ class FileDataProvider implements DataProvider
      */
     public function getIterator()
     {
-        foreach ($this->getYamlDocuments(file_get_contents($this->file)) as $document)
-        {
-            $instance = Yaml::parse($document);
-        }
+        $instances = null;
+
+        if ($this->file->getExtension() == 'json')
+            $instances = json_decode(file_get_contents($this->file->getPathname()));
+
+        if ($this->file->getExtension() == 'yaml')
+            foreach ($this->getYamlDocuments(file_get_contents($this->file)) as $document)
+                $instances[] = Yaml::parse($document);
+
+        if ($instances !== null)
+            return new ArrayIterator($instances);
+
+        throw new Exception();
     }
 
     /**
+     * @param string $yaml
+     *
      * @return array
      */
     private function getYamlDocuments($yaml)
     {
-
+        return preg_split('/\R---\R/', $yaml);
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
-        // TODO: Implement getName() method.
+        return 'file:'.$this->file->getPathname();
     }
 
+    /**
+     * @return int
+     */
     public function getLastModified()
     {
-        // TODO: Implement getLastModified() method.
+        return $this->file->getMTime();
     }
 }

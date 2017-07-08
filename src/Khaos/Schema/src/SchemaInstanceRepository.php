@@ -2,6 +2,7 @@
 
 namespace Khaos\Schema;
 
+use Khaos\Cache\CacheItem;
 use Khaos\Cache\CacheItemPool;
 
 class SchemaInstanceRepository
@@ -45,7 +46,7 @@ class SchemaInstanceRepository
     {
         $this->validator = $validator;
         $this->cachePool = $cachePool;
-        $this->schemas = $schemas;
+        $this->schemas   = $schemas;
     }
 
     /**
@@ -59,10 +60,9 @@ class SchemaInstanceRepository
         {
             $cachedInstanceData = $cacheItem->value();
 
-            if ($cachedInstanceData['last_modified'] == $dataProvider->getLastModified())
+            if ($cachedInstanceData['last-modified'] == $dataProvider->getLastModified())
             {
                 $this->importValidatedInstances($cachedInstanceData['instances']);
-
                 return;
             }
         }
@@ -71,7 +71,7 @@ class SchemaInstanceRepository
     }
 
     /**
-     * @param $id
+     * @param string $id
      */
     public function get($id)
     {
@@ -79,7 +79,7 @@ class SchemaInstanceRepository
     }
 
     /**
-     * @param $query
+     * @param array $query
      */
     public function query($query)
     {
@@ -87,10 +87,10 @@ class SchemaInstanceRepository
     }
 
     /**
-     * @param $dataProvider
-     * @param $cacheItem
+     * @param DataProvider $dataProvider
+     * @param CacheItem $cacheItem
      */
-    private function importFromDataProvider($dataProvider, $cacheItem)
+    private function importFromDataProvider(DataProvider $dataProvider, CacheItem $cacheItem)
     {
         $data = [];
 
@@ -109,16 +109,17 @@ class SchemaInstanceRepository
             $data[] = $instance;
         }
 
-        $cacheItem->set([
-            'last_modified' => $dataProvider->getLastModifer(),
-            'instances'     => $data
-        ]);
+//        $cacheItem->set([
+//            'last-modified' => $dataProvider->getLastModified(),
+//            'instances'     => $data
+//        ]);
 
         $this->importValidatedInstances($data);
     }
 
-    private function importValidatedInstances($instance)
+    private function importValidatedInstances($instances)
     {
-
+        foreach ($instances as $instance)
+            var_dump($instance);
     }
 }

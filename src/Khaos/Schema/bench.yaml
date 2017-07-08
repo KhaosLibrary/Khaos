@@ -1,0 +1,6 @@
+---
+schema: command
+data:
+  namespace: bench
+  command: help
+  usage: bench help
