@@ -1,6 +1,9 @@
 ---
 schema: docker/image
+custom:
+ metadata:
 metadata:
+
   id: some-id-1
   title: Some Title
   description: Some example description here.

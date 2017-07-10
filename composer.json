@@ -38,6 +38,7 @@
           "Khaos\\Console\\": "src/Khaos/Console/src/",
           "Khaos\\FSM\\":     "src/Khaos/FSM/src/",
           "Khaos\\Bench\\":   "src/Khaos/Bench/src/",
+          "Khaos\\Bench2\\":   "src/Khaos/Bench2/src/",
           "Khaos\\Schema\\": "src/Khaos/Schema/src/"
         }
     },

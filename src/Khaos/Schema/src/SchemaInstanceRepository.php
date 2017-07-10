@@ -4,6 +4,7 @@ namespace Khaos\Schema;
 
 use Khaos\Cache\CacheItem;
 use Khaos\Cache\CacheItemPool;
+use Khaos\Schema\Keywords\SelfKeyword;
 
 class SchemaInstanceRepository
 {
@@ -11,12 +12,12 @@ class SchemaInstanceRepository
     [
         'description' => 'Top-level schema for the validation process',
         'self' => [
-            'name' => 'instance'
+          'name' => 'instance'
         ],
         'type' => 'object',
         'properties' => [
-            'schema' => ['type' => 'string'],
-            'data'   => []
+          'schema' => ['type' => 'string'],
+          'data'   => []
         ]
     ];
     
@@ -31,66 +32,145 @@ class SchemaInstanceRepository
     private $cachePool;
 
     /**
-     * @var SchemaCollection
+     * @var SchemaRepository
      */
     private $schemas;
+
+    /**
+     * @var mixed[]
+     */
+    private $instances;
+
+    /**
+     * @var InstanceFactory
+     */
+    private $factory;
 
     /**
      * SchemaInstanceRepository constructor.
      *
      * @param SchemaInstanceValidator $validator
-     * @param SchemaCollection $schemas
+     * @param SchemaRepository $schemas
+     * @param InstanceFactoryCollection $instanceFactoryCollection
      * @param CacheItemPool|null $cachePool
      */
-    public function __construct(SchemaInstanceValidator $validator, SchemaCollection $schemas, CacheItemPool $cachePool = null)
+    public function __construct(SchemaInstanceValidator $validator, SchemaRepository $schemas, InstanceFactoryCollection $instanceFactoryCollection, CacheItemPool $cachePool = null)
     {
-        $this->validator = $validator;
-        $this->cachePool = $cachePool;
-        $this->schemas   = $schemas;
+        $this->validator  = $validator;
+        $this->cachePool  = $cachePool;
+        $this->schemas    = $schemas;
+        $this->factory    = $instanceFactoryCollection;
+
+        if (!$validator->hasKeyword('self'))
+            $validator->addKeyword(new SelfKeyword());
+    }
+
+
+    /**
+     * @param $schema
+     * @return int
+     */
+    public function count($schema)
+    {
+        return count($this->instances[$schema]);
     }
 
     /**
      * @param DataProvider $dataProvider
      */
-    public function add(DataProvider $dataProvider)
+    public function addDataProvider(DataProvider $dataProvider)
     {
-        $cacheItem = $this->cachePool->get($dataProvider->getName());
+        $this->importFromDataProvider($dataProvider);
+    }
 
-        if ($cacheItem->isHit())
+    /**
+     * @param SchemaProvider $schemaProvider
+     */
+    public function addSchemaProvider(SchemaProvider $schemaProvider)
+    {
+        $this->schemas->addSchemaProvider($schemaProvider);
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function get($key)
+    {
+        return $this->{$key};
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        list ($schema, $id) = explode(':', $key);
+
+        if (isset($this->instances[$schema][$id]))
+            return $this->{$key} = $this->schemas->createInstance($schema, $this->instances[$schema][$id]);
+
+        return null;
+    }
+
+    /**
+     * @param string $schema
+     * @param array $where
+     *
+     * @return array
+     */
+    public function findBySchema($schema, $where = [])
+    {
+        $results = [];
+
+        if (!isset($this->instances[$schema]))
+            return $results;
+
+        foreach ($this->instances[$schema] as $id => $data)
         {
-            $cachedInstanceData = $cacheItem->value();
+            if (!$this->match($where, $data))
+                continue;
 
-            if ($cachedInstanceData['last-modified'] == $dataProvider->getLastModified())
-            {
-                $this->importValidatedInstances($cachedInstanceData['instances']);
-                return;
-            }
+            $results[] = $this->{$schema.':'.$id};
         }
 
-        $this->importFromDataProvider($dataProvider, $cacheItem);
+        return $results;
     }
 
     /**
-     * @param string $id
+     * @param mixed $match
+     * @param mixed $data
+     *
+     * @return bool
      */
-    public function get($id)
+    private function match($match, $data)
     {
+        if (is_array($match))
+        {
+            foreach ($match as $field => $value)
+            {
+                if (!is_object($data))
+                    return false;
 
-    }
+                if (!isset($data->{$field}) || !$this->match($value, $data->{$field}))
+                    return false;
+            }
 
-    /**
-     * @param array $query
-     */
-    public function query($query)
-    {
-
+            return true;
+        }
+        else
+        {
+            return is_scalar($data) ? $match == $data : $match == (string) $data;
+        }
     }
 
     /**
      * @param DataProvider $dataProvider
-     * @param CacheItem $cacheItem
      */
-    private function importFromDataProvider(DataProvider $dataProvider, CacheItem $cacheItem)
+    private function importFromDataProvider(DataProvider $dataProvider)
     {
         $data = [];
 
@@ -109,17 +189,12 @@ class SchemaInstanceRepository
             $data[] = $instance;
         }
 
-//        $cacheItem->set([
-//            'last-modified' => $dataProvider->getLastModified(),
-//            'instances'     => $data
-//        ]);
-
         $this->importValidatedInstances($data);
     }
 
     private function importValidatedInstances($instances)
     {
         foreach ($instances as $instance)
-            var_dump($instance);
+            $this->instances[$instance->schema][$instance->data->id] = $instance->data;
     }
 }

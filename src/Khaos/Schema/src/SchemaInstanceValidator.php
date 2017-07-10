@@ -3,6 +3,9 @@
 namespace Khaos\Schema;
 
 use Exception;
+use Khaos\Schema\Keywords\DescriptionKeyword;
+use Khaos\Schema\Keywords\PropertiesKeyword;
+use Khaos\Schema\Keywords\TypeKeyword;
 
 class SchemaInstanceValidator
 {
@@ -16,9 +19,27 @@ class SchemaInstanceValidator
      *
      * @param KeywordCollection $keywords
      */
-    public function __construct(KeywordCollection $keywords)
+    public function __construct(KeywordCollection $keywords = null)
     {
+        if ($keywords == null)
+        {
+            $keywords = new KeywordCollection();
+            $keywords->add(new TypeKeyword());
+            $keywords->add(new PropertiesKeyword());
+            $keywords->add(new DescriptionKeyword());
+        }
+
         $this->keywords = $keywords;
+    }
+
+    public function addKeyword(Keyword $keyword)
+    {
+        $this->keywords->add($keyword);
+    }
+
+    public function hasKeyword($keyword)
+    {
+        return $this->keywords->has($keyword);
     }
 
     /**

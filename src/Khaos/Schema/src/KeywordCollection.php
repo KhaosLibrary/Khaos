@@ -13,6 +13,11 @@ class KeywordCollection
         $this->keywords[$keyword->getKeyword()] = $keyword;
     }
 
+    public function has($keyword)
+    {
+        return isset($this->keywords[$keyword]);
+    }
+
     /**
      * @param string $keyword
      *
