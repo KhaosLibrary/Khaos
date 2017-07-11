@@ -4,6 +4,7 @@ namespace Khaos\Schema;
 
 use Exception;
 use Khaos\Schema\Keywords\DescriptionKeyword;
+use Khaos\Schema\Keywords\ItemsKeyword;
 use Khaos\Schema\Keywords\PropertiesKeyword;
 use Khaos\Schema\Keywords\TypeKeyword;
 
@@ -26,6 +27,7 @@ class SchemaInstanceValidator
             $keywords = new KeywordCollection();
             $keywords->add(new TypeKeyword());
             $keywords->add(new PropertiesKeyword());
+            $keywords->add(new ItemsKeyword());
             $keywords->add(new DescriptionKeyword());
         }
 
@@ -80,7 +82,7 @@ class SchemaInstanceValidator
         {
             foreach ($instance as &$value)
             {
-                if (!$this->validate([], $value))
+                if (!$this->validate($schema['items'] ?? [], $value))
                     return false;
             }
         }

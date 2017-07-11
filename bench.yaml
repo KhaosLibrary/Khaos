@@ -2,13 +2,11 @@
 schema: command
 data:
   id: help
-  namespace: bench
   command: help
-  usage: bench help
+  test: 2 + 2
 ---
 schema: command
 data:
   id: version
-  namespace: bench
   command: version
-  usage: bench version
+  test: self.namespace

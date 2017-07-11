@@ -43,18 +43,19 @@ class SchemaRepository
      *
      * @return array
      */
-    public function get($schema)
+    public function getSchema($schema)
     {
         return $this->{$schema}->getSchema();
     }
 
     /**
-     * @param string $schema
-     * @param mixed $data
+     * @param object $data
+     *
+     * @return mixed
      */
-    public function createInstance($schema, $data)
+    public function getInstance($data)
     {
-        return $this->{$schema}->getInstanceFactory()->create($data);
+        return $this->{$data->schema}->getInstance($data->data);
     }
 
     /**

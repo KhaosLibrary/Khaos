@@ -41,25 +41,19 @@ class SchemaInstanceRepository
      */
     private $instances;
 
-    /**
-     * @var InstanceFactory
-     */
-    private $factory;
 
     /**
      * SchemaInstanceRepository constructor.
      *
      * @param SchemaInstanceValidator $validator
      * @param SchemaRepository $schemas
-     * @param InstanceFactoryCollection $instanceFactoryCollection
-     * @param CacheItemPool|null $cachePool
+     * @param CacheItemPool $cachePool
      */
-    public function __construct(SchemaInstanceValidator $validator, SchemaRepository $schemas, InstanceFactoryCollection $instanceFactoryCollection, CacheItemPool $cachePool = null)
+    public function __construct(SchemaInstanceValidator $validator, SchemaRepository $schemas, CacheItemPool $cachePool = null)
     {
         $this->validator  = $validator;
-        $this->cachePool  = $cachePool;
         $this->schemas    = $schemas;
-        $this->factory    = $instanceFactoryCollection;
+        $this->cachePool  = $cachePool;
 
         if (!$validator->hasKeyword('self'))
             $validator->addKeyword(new SelfKeyword());
@@ -111,7 +105,7 @@ class SchemaInstanceRepository
         list ($schema, $id) = explode(':', $key);
 
         if (isset($this->instances[$schema][$id]))
-            return $this->{$key} = $this->schemas->createInstance($schema, $this->instances[$schema][$id]);
+            return $this->{$key} = $this->schemas->getInstance($this->instances[$schema][$id]);
 
         return null;
     }
@@ -129,12 +123,12 @@ class SchemaInstanceRepository
         if (!isset($this->instances[$schema]))
             return $results;
 
-        foreach ($this->instances[$schema] as $id => $data)
+        foreach (array_keys($this->instances[$schema]) as $id)
         {
-            if (!$this->match($where, $data))
+            if (!$this->match($where, $instance = $this->{$schema.':'.$id}))
                 continue;
 
-            $results[] = $this->{$schema.':'.$id};
+            $results[] = $instance;
         }
 
         return $results;
@@ -182,7 +176,7 @@ class SchemaInstanceRepository
 
             // Pass 2: Validate Self Describing Schema
 
-            $this->validator->validate($this->schemas->get($instance->schema), $instance->data);
+            $this->validator->validate($this->schemas->getSchema($instance->schema), $instance->data);
 
             // Build Validated Array
 
@@ -195,6 +189,6 @@ class SchemaInstanceRepository
     private function importValidatedInstances($instances)
     {
         foreach ($instances as $instance)
-            $this->instances[$instance->schema][$instance->data->id] = $instance->data;
+            $this->instances[$instance->schema][$instance->data->id] = $instance;
     }
 }

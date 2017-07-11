@@ -15,7 +15,9 @@ interface Schema
     public function getSchema();
 
     /**
-     * @return InstanceFactory
+     * @param mixed $data
+     *
+     * @return mixed
      */
-    public function getInstanceFactory();
+    public function getInstance($data);
 }

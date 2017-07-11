@@ -3,6 +3,7 @@
 namespace Khaos\Bench2;
 
 use Exception;
+use Khaos\Bench2\Schema\Keyword\ExpressionKeyword;
 use Khaos\Bench2\Tool\Bench\Resource\Command\Command;
 use Khaos\Bench2\Tool\Bench\Resource\Command\CommandSchema;
 use Khaos\Bench2\Tool\ToolPackageRepository;
@@ -150,12 +151,13 @@ class Bench implements EventSubscriberInterface
     {
         $schemaInstanceValidator = new SchemaInstanceValidator();
         $schemaCollection        = new SchemaRepository();
-        $abstractInstanceFactory = new InstanceFactoryCollection();
+
+        $schemaInstanceValidator
+            ->addKeyword(new ExpressionKeyword());
 
         return new SchemaInstanceRepository(
             $schemaInstanceValidator,
-            $schemaCollection,
-            $abstractInstanceFactory
+            $schemaCollection
         );
     }
 

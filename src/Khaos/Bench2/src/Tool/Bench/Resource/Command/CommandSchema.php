@@ -19,15 +19,16 @@ class CommandSchema implements Schema
             'id'        => ['type' => 'string'],
             'namespace' => ['type' => 'string'],
             'command'   => ['type' => 'string'],
-            'usage'     => ['type' => 'string']
+            'usage'     => ['type' => 'string'],
+            'test'      => ['type' => 'string', 'expression' => true]
         ]
     ];
 
-    private $instanceFactory;
+    private $expression;
 
-    public function __construct(Expression $expressionHandler)
+    public function __construct(Expression $expression)
     {
-        $this->instanceFactory = new CommandFactory($expressionHandler);
+        $this->expression = $expression;
     }
 
     public function getName()
@@ -40,8 +41,8 @@ class CommandSchema implements Schema
         return self::SCHEMA;
     }
 
-    public function getInstanceFactory()
+    public function getInstance($data)
     {
-        return $this->instanceFactory;
+        return new Command($this->expression, $data);
     }
 }
