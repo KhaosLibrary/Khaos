@@ -2,11 +2,13 @@
 schema: command
 data:
   id: help
+  options:
+    - '-h, --help  Get help for command'
   command: help
-  test: 2 + 2
+  action: 2 + 2
 ---
 schema: command
 data:
   id: version
   command: version
-  test: self.namespace
+  action: self.namespace

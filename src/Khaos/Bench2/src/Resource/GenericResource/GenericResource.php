@@ -1,11 +1,13 @@
 <?php
 
-namespace Khaos\Bench2\Resource;
+namespace Khaos\Bench2\Resource\GenericResource;
 
 use Exception;
 use Khaos\Bench2\Expression;
+use Khaos\Bench2\Resource\GenericResource\Field\ObjectField;
+use Khaos\Bench2\Resource\Resource;
 
-class GenericResource
+class GenericResource implements Resource
 {
     private $root;
 
@@ -13,7 +15,7 @@ class GenericResource
 
     public function __construct(Expression $expression, $schema, $data)
     {
-        $this->root = new Field($expression, $this, $schema, $data);
+        $this->root = new ObjectField($expression, $this, $schema, $data);
         $this->data = $data;
     }
 

@@ -1,11 +1,13 @@
 <?php
 
-namespace Khaos\Bench2\Resource;
+namespace Khaos\Bench2\Resource\GenericResource\Field;
 
 use Exception;
 use Khaos\Bench2\Expression;
+use Khaos\Bench2\Resource\GenericResource\Field\ArrayField;
+use Khaos\Bench2\Resource\GenericResource\Field\Field;
 
-class Field
+class ObjectField
 {
     private $resource;
     private $schema;
@@ -46,7 +48,10 @@ class Field
         if (is_object($data))
             return $this->{$field} = new self($this->expression, $this->resource, $schema, $data);
 
-        if (is_string($data) && !isset($schema['expression']))
+        if (is_array($data))
+            return $this->{$field} = new ArrayField($this->expression, $this->resource, $schema, $data);
+
+        if (is_scalar($data) && !isset($schema['expression']))
             return $this->{$field} = $data;
 
         return $this->expression->evaluate($data, ['self' => $this->resource]);

@@ -16,11 +16,28 @@ class CommandSchema implements Schema
         ],
         'type' => 'object',
         'properties' => [
-            'id'        => ['type' => 'string'],
-            'namespace' => ['type' => 'string'],
-            'command'   => ['type' => 'string'],
-            'usage'     => ['type' => 'string'],
-            'test'      => ['type' => 'string', 'expression' => true]
+            'id' => [
+                'type' => 'string'
+            ],
+            'namespace' => [
+                'type' => 'string'
+            ],
+            'command' => [
+                'type' => 'string'
+            ],
+            'usage' => [
+                'type' => 'string'
+            ],
+            'options' => [
+                'type'  => 'array',
+                'items' => [
+                    'type' => 'string'
+                ]
+            ],
+            'action' => [
+                'type'       => 'string',
+                'expression' => true
+            ]
         ]
     ];
 

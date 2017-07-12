@@ -3,10 +3,11 @@
 namespace Khaos\Bench2\Tool\Bench\Resource\Command;
 
 use Khaos\Bench2\Expression;
-use Khaos\Bench2\Resource\GenericResource;
+use Khaos\Bench2\Resource\GenericResource\GenericResource;
 use Khaos\Bench2\Resource\Resource;
 use Khaos\Console\Usage\Input;
 use Khaos\Console\Usage\Model\OptionDefinitionRepository;
+use Khaos\Console\Usage\Parser\OptionDefinitionParser;
 
 class Command extends GenericResource implements Resource
 {
@@ -38,16 +39,25 @@ class Command extends GenericResource implements Resource
 
     public function getUsage()
     {
-        return $this->usage ?? $this->getNamespace().' '.$this->getCommand();
+        return $this->usage ?? $this->getNamespace().' '.$this->getCommand().' [options]';
     }
 
     public function getOptions()
     {
-        return new OptionDefinitionRepository();
+        $parser  = new OptionDefinitionParser();
+        $options = new OptionDefinitionRepository();
+
+        if (!isset($this->options))
+            return $options;
+
+        foreach ($this->options as $option)
+            $options->add($parser->parse($option));
+
+        return $options;
     }
 
     public function run(Input $input)
     {
-        echo $this->test;
+        echo $this->action;
     }
 }
