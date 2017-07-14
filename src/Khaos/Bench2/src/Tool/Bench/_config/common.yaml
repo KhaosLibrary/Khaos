@@ -1,0 +1,14 @@
+---
+schema: command
+data:
+  id: help
+  options:
+    - '-h, --help  Get help for command'
+  command: help
+  action: bench.help()
+---
+schema: command
+data:
+  id: version
+  command: version
+  action: bench.version()

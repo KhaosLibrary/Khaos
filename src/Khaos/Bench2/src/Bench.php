@@ -3,6 +3,7 @@
 namespace Khaos\Bench2;
 
 use Exception;
+use Khaos\Bench2\Events\WorkspaceResourcesLoadedEvent;
 use Khaos\Bench2\Schema\Keyword\ExpressionKeyword;
 use Khaos\Bench2\Tool\Bench\Resource\Command\Command;
 use Khaos\Bench2\Tool\Bench\Resource\Command\CommandSchema;
@@ -122,6 +123,8 @@ class Bench implements EventSubscriberInterface
      */
     public function run($args)
     {
+        $this->dispatcher->dispatch(WorkspaceResourcesLoadedEvent::NAME, new WorkspaceResourcesLoadedEvent($this->resources));
+
         $args[0] = 'bench';
 
         $usage = new UsageParserBuilder();

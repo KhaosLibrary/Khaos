@@ -4,12 +4,15 @@ namespace Khaos\Bench2\Tool\Bench;
 
 use Exception;
 use Khaos\Bench2\Bench;
+use Khaos\Bench2\Events\WorkspaceResourcesLoadedEvent;
 use Khaos\Bench2\Expression;
 use Khaos\Bench2\Tool\Bench\Resource\Command\CommandSchema;
 use Khaos\Bench2\Tool\Bench\Resource\CommandNamespace\CommandNamespaceSchema;
 use Khaos\Bench2\Tool\ToolPackage;
+use Khaos\Schema\FileDataProvider;
 use Khaos\Schema\SchemaProvider;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Khaos\Bench2\Tool\Bench\Bench as BenchCommandProxy;
 
 class BenchPackage implements ToolPackage
 {
@@ -75,9 +78,17 @@ class BenchPackage implements ToolPackage
     {
         return new class implements EventSubscriberInterface
         {
+            public function onWorkspaceResourcesLoaded(WorkspaceResourcesLoadedEvent $event)
+            {
+                $resources = $event->getResources();
+                $resources->addDataProvider(new FileDataProvider(__DIR__.'/_config/common.yaml'));
+            }
+
             public static function getSubscribedEvents()
             {
-                return [];
+                return [
+                    WorkspaceResourcesLoadedEvent::NAME => 'onWorkspaceResourcesLoaded'
+                ];
             }
         };
     }
@@ -103,6 +114,6 @@ class BenchPackage implements ToolPackage
      */
     public function getCommandProxy()
     {
-        return null;
+        return new BenchCommandProxy();
     }
 }
