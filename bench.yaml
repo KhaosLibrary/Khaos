@@ -1,12 +1,27 @@
 ---
-schema: command
+schema: event
+data:
+  id: application.start
+  title: Start Application
+---
+schema: listener
+data:
+  id: test
+  event: application.start
+  action: console.write("kind of fun")
+---
+schema: listener
 data:
   id: test1
-  command: test1
-  action: 2 + 2
+  event: application.start
+  action: console.write("yay it works")
 ---
 schema: command
 data:
-  id: test2
-  command: test2
-  action: self.namespace
+  id: hello
+  title: Hello World
+  description: This is a test of the event/listener system
+  namespace: bench
+  command: hello
+  usage: bench hello
+  action: bench.dispatch("application.start")

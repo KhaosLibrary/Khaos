@@ -1,22 +1,27 @@
 <?php
 
-namespace Khaos\Bench2\Tool\Bench\Resource\CommandNamespace;
+namespace Khaos\Bench2\Tool\Bench\Resource\Event;
 
 use Khaos\Bench2\Expression;
 use Khaos\Bench2\Resource\GenericResource\GenericResource;
 use Khaos\Bench2\Resource\Resource;
 
-class CommandNamespace extends GenericResource implements Resource
+class Event extends GenericResource implements Resource
 {
     /**
-     * CommandNamespace constructor.
+     * Event constructor.
      *
      * @param Expression $expression
      * @param object $data
      */
     public function __construct(Expression $expression, $data)
     {
-        parent::__construct($expression,CommandNamespaceSchema::SCHEMA, $data);
+        parent::__construct($expression, EventSchema::SCHEMA, $data);
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 
     public function getTitle()
@@ -27,10 +32,5 @@ class CommandNamespace extends GenericResource implements Resource
     public function getDescription()
     {
         return $this->description ?? null;
-    }
-
-    public function getNamespace()
-    {
-        return $this->namespace;
     }
 }

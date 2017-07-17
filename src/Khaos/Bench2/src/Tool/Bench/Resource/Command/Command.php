@@ -27,6 +27,16 @@ class Command extends GenericResource implements Resource
         return $this->id;
     }
 
+    public function getTitle()
+    {
+        return $this->title ?? null;
+    }
+
+    public function getDescription()
+    {
+        return $this->description ?? null;
+    }
+
     public function getNamespace()
     {
         return $this->namespace ?? 'bench';

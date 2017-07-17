@@ -1,13 +1,13 @@
 <?php
 
-namespace Khaos\Bench2\Tool\Bench\Resource\CommandNamespace;
+namespace Khaos\Bench2\Tool\Bench\Resource\Listener;
 
 use Khaos\Bench2\Expression;
 use Khaos\Schema\Schema;
 
-class CommandNamespaceSchema implements Schema
+class ListenerSchema implements Schema
 {
-    const NAME = 'namespace';
+    const NAME = 'listener';
 
     const SCHEMA = [
         'description' => '',
@@ -19,7 +19,8 @@ class CommandNamespaceSchema implements Schema
             'id'          => ['type' => 'string'],
             'title'       => ['type' => 'string'],
             'description' => ['type' => 'string'],
-            'namespace'   => ['type' => 'string'],
+            'event'       => ['type' => 'string'],
+            'action'      => ['type' => 'string', 'expression' => true]
         ]
     ];
 
@@ -29,7 +30,7 @@ class CommandNamespaceSchema implements Schema
     private $expression;
 
     /**
-     * CommandNamespaceSchema constructor.
+     * ListenerSchema constructor.
      *
      * @param Expression $expression
      */
@@ -38,11 +39,17 @@ class CommandNamespaceSchema implements Schema
         $this->expression = $expression;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return self::NAME;
     }
 
+    /**
+     * @return array
+     */
     public function getSchema()
     {
         return self::SCHEMA;
@@ -55,6 +62,6 @@ class CommandNamespaceSchema implements Schema
      */
     public function getInstance($data)
     {
-        return new CommandNamespace($this->expression, $data);
+        return new Listener($this->expression, $data);
     }
 }

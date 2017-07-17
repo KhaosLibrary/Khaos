@@ -1,0 +1,28 @@
+---
+schema: namespace
+data:
+  id: bench
+  title: Bench
+  description: Hello World Here
+  namespace: bench
+---
+schema: command
+data:
+  id: help
+  namespace: bench
+  title: Help
+  description: This is an example description.
+  options:
+    - '-h, --help  Get help for command'
+  command: help
+  usage: bench [<command>...] --help
+  action: bench.help(input)
+---
+schema: command
+data:
+  id: version
+  namespace: bench
+  title: Version
+  description: This is a different description.
+  command: version
+  action: bench.version()

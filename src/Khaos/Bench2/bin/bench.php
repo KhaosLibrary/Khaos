@@ -1,14 +1,12 @@
 #!/usr/bin/php
 <?php
 
-use Khaos\Bench2\Bench;
+use Khaos\Bench2\BenchApplication;
 
 $start = microtime(true);
 
-/** @var Bench $bench */
+/** @var BenchApplication $bench */
 $bench = include __DIR__.'/bootstrap.inc.php';
-//$bench->enable('docker');
-//$bench->enable('twig');
 $bench->import('bench.yaml');
 $bench->run($argv);
 

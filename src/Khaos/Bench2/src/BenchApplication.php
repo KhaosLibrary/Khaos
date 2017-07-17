@@ -10,15 +10,12 @@ use Khaos\Bench2\Tool\Bench\Resource\Command\CommandSchema;
 use Khaos\Bench2\Tool\ToolPackageRepository;
 use Khaos\Console\Usage\Parser\UsageParserBuilder;
 use Khaos\Schema\FileDataProvider;
-use Khaos\Schema\InstanceFactoryCollection;
 use Khaos\Schema\SchemaInstanceRepository;
 use Khaos\Schema\SchemaInstanceValidator;
 use Khaos\Schema\SchemaRepository;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
-class Bench implements EventSubscriberInterface
+class BenchApplication
 {
     /**
      * @var SchemaInstanceRepository
@@ -28,7 +25,7 @@ class Bench implements EventSubscriberInterface
     /**
      * @var ToolPackageRepository
      */
-    private $tools;
+    private $packages;
 
     /**
      * @var EventDispatcher
@@ -38,14 +35,14 @@ class Bench implements EventSubscriberInterface
     /**
      * Enabled Tools
      *
-     * @var bool[]
+     * @var object[]
      */
-    private $enabledTools = [];
+    private $tools = [];
 
     /**
      * @var string
      */
-    private $workingDirectory;
+    private $cwd;
 
     /**
      * @var Expression
@@ -55,25 +52,33 @@ class Bench implements EventSubscriberInterface
     /**
      * Bench constructor.
      *
-     * @param ToolPackageRepository $tools
-     * @param string $workingDirectory
+     * @param ToolPackageRepository $packages
+     * @param string $cwd
      * @param SchemaInstanceRepository $resources
      * @param EventDispatcher $eventDispatcher
      * @param Expression $expression
      */
-    public function __construct(
-        ToolPackageRepository $tools,
-        string $workingDirectory               = null,
-        SchemaInstanceRepository $resources    = null,
-        EventDispatcher $eventDispatcher       = null,
-        Expression $expression = null
-    )
+    public function __construct(ToolPackageRepository $packages, $cwd = null, SchemaInstanceRepository $resources = null, EventDispatcher $eventDispatcher = null, Expression $expression = null)
     {
-        $this->tools            = $tools;
-        $this->workingDirectory = $workingDirectory ?? self::getWorkingDirectory(getcwd());
-        $this->resources        = $resources ?? $this->prepareInstanceSchemaRepository();
-        $this->dispatcher       = $eventDispatcher ?? new EventDispatcher();
-        $this->expression       = $expression ?? new Expression();
+        $this->packages    = $packages;
+        $this->cwd         = $cwd ?? self::getWorkingDirectory(getcwd());
+        $this->dispatcher  = $eventDispatcher ?? new EventDispatcher();
+        $this->expression  = $expression ?? new Expression();
+        $this->resources   = $resources;
+
+        if ($this->resources == null)
+        {
+            $schemaInstanceValidator = new SchemaInstanceValidator();
+            $schemaCollection        = new SchemaRepository();
+
+            $schemaInstanceValidator
+                ->addKeyword(new ExpressionKeyword());
+
+            $this->resources = new SchemaInstanceRepository(
+                $schemaInstanceValidator,
+                $schemaCollection
+            );
+        }
 
         $this->enable('bench');
     }
@@ -81,26 +86,46 @@ class Bench implements EventSubscriberInterface
     /**
      * Enable Tool
      *
-     * @param string $tool
+     * @param string $toolName
      */
-    public function enable($tool)
+    public function enable($toolName)
     {
-        if (isset($this->enabledTools[$tool]))
+        if (isset($this->tools[$toolName]))
             return;
 
-        $package = $this->tools->get($tool);
-        $package->setBench($this);
+        $package = $this->packages->get($toolName);
 
-        $this->resources->addSchemaProvider($package->getSchemaProvider());
-        $this->dispatcher->addSubscriber($package->getSubscriber());
+        if (($schemaProvider = $package->getSchemaProvider($this)) !== null)
+            $this->resources->addSchemaProvider($schemaProvider);
 
-        if (($commandProxy = $package->getCommandProxy()) !== null)
-            $this->expression->addValue($tool, $commandProxy);
+        if (($eventSubscriber = $package->getSubscriber($this)) !== null)
+            $this->dispatcher->addSubscriber($eventSubscriber);
 
-        $this->enabledTools[$tool] = true;
+        if (($tool = $this->tools[$toolName] = $package->getTool($this)) !== null)
+            $this->expression->addValue($toolName, $tool);
 
-        foreach ($package->getDependencies() as $dependency)
-            $this->enable($dependency);
+        if (($dependencies = $package->getDependencies()) !== null)
+        {
+            foreach ($dependencies as $dependency)
+                $this->enable($dependency);
+        }
+    }
+
+    /**
+     * Get Tool
+     *
+     * @param string $toolName
+     *
+     * @return object
+     *
+     * @throws Exception
+     */
+    public function tool($toolName)
+    {
+        if (!isset($this->tools[$toolName]))
+            throw new Exception();
+
+        return $this->tools[$toolName];
     }
 
     /**
@@ -111,7 +136,7 @@ class Bench implements EventSubscriberInterface
     public function import($file)
     {
         if (!file_exists($file))
-            $file = $this->workingDirectory.'/'.$file;
+            $file = $this->cwd.'/'.$file;
 
         $this->resources->addDataProvider(new FileDataProvider($file));
     }
@@ -138,6 +163,7 @@ class Bench implements EventSubscriberInterface
 
             if (($input = $parser->parse($args)) !== false)
             {
+                $this->expression->addValue('input', $input);
                 $command->run($input);
                 break;
             }
@@ -148,29 +174,22 @@ class Bench implements EventSubscriberInterface
     }
 
     /**
-     * @return SchemaInstanceRepository
+     * @return Expression
      */
-    private function prepareInstanceSchemaRepository()
+    public function getExpressionHandler()
     {
-        $schemaInstanceValidator = new SchemaInstanceValidator();
-        $schemaCollection        = new SchemaRepository();
-
-        $schemaInstanceValidator
-            ->addKeyword(new ExpressionKeyword());
-
-        return new SchemaInstanceRepository(
-            $schemaInstanceValidator,
-            $schemaCollection
-        );
+        return $this->expression;
     }
 
     /**
      * @param $search
      * @param string $file
+     *
      * @return string
+     *
      * @throws Exception
      */
-    public static function getWorkingDirectory($search, $file = 'bench.yml')
+    public static function getWorkingDirectory($search, $file = 'bench.yaml')
     {
         $search = $search.DIRECTORY_SEPARATOR;
         $length = strlen($search) + 1;
@@ -182,22 +201,22 @@ class Bench implements EventSubscriberInterface
                 return dirname($candidate);
         }
 
-        throw new Exception('bench.yml could be found.');
+        throw new Exception('bench.yaml could be found.');
     }
 
     /**
-     * @inheritdoc
+     * @return SchemaInstanceRepository
      */
-    public static function getSubscribedEvents()
+    public function getResources()
     {
-        // TODO: Implement getSubscribedEvents() method.
+        return $this->resources;
     }
 
     /**
-     * @return Expression
+     * @return string
      */
-    public function getExpressionHandler()
+    public function getBenchRoot()
     {
-        return $this->expression;
+        return $this->cwd;
     }
 }

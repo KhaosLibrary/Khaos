@@ -1,13 +1,13 @@
 <?php
 
-namespace Khaos\Bench2\Tool\Bench\Resource\CommandNamespace;
+namespace Khaos\Bench2\Tool\Bench\Resource\Event;
 
 use Khaos\Bench2\Expression;
 use Khaos\Schema\Schema;
 
-class CommandNamespaceSchema implements Schema
+class EventSchema implements Schema
 {
-    const NAME = 'namespace';
+    const NAME = 'event';
 
     const SCHEMA = [
         'description' => '',
@@ -18,8 +18,7 @@ class CommandNamespaceSchema implements Schema
         'properties' => [
             'id'          => ['type' => 'string'],
             'title'       => ['type' => 'string'],
-            'description' => ['type' => 'string'],
-            'namespace'   => ['type' => 'string'],
+            'description' => ['type' => 'string']
         ]
     ];
 
@@ -29,7 +28,7 @@ class CommandNamespaceSchema implements Schema
     private $expression;
 
     /**
-     * CommandNamespaceSchema constructor.
+     * EventSchema constructor.
      *
      * @param Expression $expression
      */
@@ -38,11 +37,17 @@ class CommandNamespaceSchema implements Schema
         $this->expression = $expression;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return self::NAME;
     }
 
+    /**
+     * @return array
+     */
     public function getSchema()
     {
         return self::SCHEMA;
@@ -55,6 +60,6 @@ class CommandNamespaceSchema implements Schema
      */
     public function getInstance($data)
     {
-        return new CommandNamespace($this->expression, $data);
+        return new Event($this->expression, $data);
     }
 }

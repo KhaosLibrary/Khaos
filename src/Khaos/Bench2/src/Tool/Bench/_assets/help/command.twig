@@ -1,0 +1,16 @@
+
+<heading>{{ command.title }}</heading>
+{{ command.description }}
+
+<heading>Usage</heading>
+{{ command.usage|raw }}
+
+<heading>Options</heading>
+{% for option in options %}
+    <green>{{ option.name }}</green>    {{ option.description }}
+{% endfor %}
+
+<heading>Global Options</heading>
+{% for option in global %}
+    <green>{{ option.name }}</green>    {{ option.description }}
+{% endfor %}

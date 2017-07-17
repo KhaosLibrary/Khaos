@@ -2,14 +2,13 @@
 
 namespace Khaos\Bench2\Tool;
 
-use Khaos\Bench2\Bench;
+use Khaos\Bench2\BenchApplication;
 
 interface ToolPackage
 {
-    public function setBench(Bench $bench);
-    public function getSchemaProvider();
-    public function getSubscriber();
+    public function getSchemaProvider(BenchApplication $bench);
+    public function getSubscriber(BenchApplication $bench);
+    public function getTool(BenchApplication $bench);
     public function getDependencies();
     public function getName();
-    public function getCommandProxy();
 }

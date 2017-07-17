@@ -19,6 +19,12 @@ class CommandSchema implements Schema
             'id' => [
                 'type' => 'string'
             ],
+            'title' => [
+                'type' => 'string'
+            ],
+            'description' => [
+                'type' => 'string'
+            ],
             'namespace' => [
                 'type' => 'string'
             ],

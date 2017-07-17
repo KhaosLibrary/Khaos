@@ -1,0 +1,13 @@
+
+<heading>{{ namespace.title }}</heading>
+{{ namespace.description }}
+
+<heading>Commands</heading>
+{% for command in commands %}
+    <green>{{ command.name }}</green>    {{ command.description }}
+{% endfor %}
+
+<heading>Global Options</heading>
+{% for option in options %}
+    <green>{{ option.name }}</green>    {{ option.description }}
+{% endfor %}
